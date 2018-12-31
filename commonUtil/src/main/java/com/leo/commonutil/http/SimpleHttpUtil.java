@@ -35,7 +35,7 @@ public class SimpleHttpUtil {
         requestProPertyMap = new HashMap<>();
     }
 
-    public SimpleHttpUtil getInstance() {
+    public static SimpleHttpUtil getInstance() {
         if (null == httpUtil) {
             synchronized (SimpleHttpUtil.class) {
                 if (null == httpUtil) {
