@@ -8,7 +8,6 @@ import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.text.format.Time;
 
-import com.leo.commonutil.storage.IOUtil;
 import com.leo.commonutil.enumerate.CalendarAddResult;
 import com.leo.commonutil.enumerate.UnitTime;
 
@@ -42,7 +41,13 @@ public final class CalendarUtil {
                 return -1;
             }
         } finally {
-            IOUtil.closeQuietly(userCursor);
+            try {
+                if (null != userCursor) {
+                    userCursor.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
