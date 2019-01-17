@@ -14,8 +14,16 @@ import javax.crypto.spec.SecretKeySpec;
  * AES对称加解密工具类
  */
 public final class AESUtil {
-    public static final String DEFAULT_KEY = "3d74ddfa93e536e";
+    public static String DEFAULT_KEY = "3d74ddfa93e536e";
     public static String DEFAULT_IV = "ZnSQKCKP5R3RP5bJ";
+
+    public static void setKey(String defaultKey) {
+        DEFAULT_KEY = defaultKey;
+    }
+
+    public static void setIv(String defaultIv) {
+        DEFAULT_IV = defaultIv;
+    }
 
     public static String encrypt(String sSrc, String sKey, @AESType String aesType) {
         if (sKey == null) {
