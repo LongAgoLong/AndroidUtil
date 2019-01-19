@@ -53,7 +53,7 @@ public class DateUtil {
     }
 
     public static String format(@UnitTime int type, String time, String format) {
-        Long longTime = Long.valueOf(time);
+        long longTime = Long.valueOf(time);
         return format(type, longTime, format);
     }
 
@@ -135,7 +135,7 @@ public class DateUtil {
             return false;
         }
         final long interval = ms1 - ms2;
-        return interval < MILLIS_IN_DAY && interval > -1L * MILLIS_IN_DAY && toDay(ms1) == toDay(ms2);
+        return Math.abs(interval) < MILLIS_IN_DAY && toDay(ms1) == toDay(ms2);
     }
 
     private static final int SECONDS_IN_DAY = 60 * 60 * 24;

@@ -14,7 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.leo.commonutil.callback.OnEditTextClearFocusCallback;
-import com.leo.commonutil.storage.SpUtil;
+import com.leo.commonutil.storage.SharedPreferencesUril;
 
 /**
  * Created by xy on 15/12/23.
@@ -23,9 +23,9 @@ public class SystemUtils {
     public static int getKeyboardHeight(Activity paramActivity) {
         int height = SystemUtils.getScreenHeight(paramActivity) - SystemUtils.getStatusBarHeight(paramActivity) - SystemUtils.getAppHeight(paramActivity);
         if (height == 0) {
-            height = SpUtil.getSp(paramActivity).getInt("KeyboardHeight", dip2px(paramActivity, 295));//295dp-787为默认软键盘高度 基本差不离
+            height = SharedPreferencesUril.getInstance().getInt(paramActivity,"KeyboardHeight", dip2px(paramActivity, 295));//295dp-787为默认软键盘高度 基本差不离
         } else {
-            SpUtil.getUtil().put(paramActivity, "KeyboardHeight", height);
+            SharedPreferencesUril.getInstance().put(paramActivity, "KeyboardHeight", height);
         }
         return height;
     }
