@@ -21,9 +21,12 @@ import com.leo.commonutil.storage.SharedPreferencesUril;
  */
 public class SystemUtils {
     public static int getKeyboardHeight(Activity paramActivity) {
-        int height = SystemUtils.getScreenHeight(paramActivity) - SystemUtils.getStatusBarHeight(paramActivity) - SystemUtils.getAppHeight(paramActivity);
+        int height = SystemUtils.getScreenHeight(paramActivity)
+                - SystemUtils.getStatusBarHeight(paramActivity)
+                - SystemUtils.getAppHeight(paramActivity);
         if (height == 0) {
-            height = SharedPreferencesUril.getInstance().getInt(paramActivity,"KeyboardHeight", dip2px(paramActivity, 295));//295dp-787为默认软键盘高度 基本差不离
+            height = SharedPreferencesUril.getInstance().getInt(paramActivity, "KeyboardHeight",
+                    dip2px(paramActivity, 295));//295dp-787为默认软键盘高度 基本差不离
         } else {
             SharedPreferencesUril.getInstance().put(paramActivity, "KeyboardHeight", height);
         }
@@ -209,7 +212,9 @@ public class SystemUtils {
         //控件内容的总高度
         int scrollRange = editText.getLayout().getHeight();
         //控件实际显示的高度
-        int scrollExtent = editText.getHeight() - editText.getCompoundPaddingTop() - editText.getCompoundPaddingBottom();
+        int scrollExtent = editText.getHeight()
+                - editText.getCompoundPaddingTop()
+                - editText.getCompoundPaddingBottom();
         //控件内容总高度与实际显示高度的差值
         int scrollDifference = scrollRange - scrollExtent;
         if (scrollDifference == 0) {

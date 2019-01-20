@@ -70,9 +70,13 @@ public class AppInfoUtil {
 
     public static String getPhoneInfo(Context context, boolean withAppName) {
         if (withAppName) {
-            return "手机型号:" + Build.MODEL + ",SDK版本:" + Build.VERSION.SDK_INT + ",系统版本:" + Build.VERSION.RELEASE + ",APP版本:" + getAppVersionName(context) + ",APP名称:" + getAppName(context);
+            return "手机型号:" + Build.MODEL + ",SDK版本:" + Build.VERSION.SDK_INT
+                    + ",系统版本:" + Build.VERSION.RELEASE + ",APP版本:"
+                    + getAppVersionName(context) + ",APP名称:" + getAppName(context);
         } else {
-            return "手机型号:" + Build.MODEL + ",SDK版本:" + Build.VERSION.SDK_INT + ",系统版本:" + Build.VERSION.RELEASE + ",APP版本:" + getAppVersionName(context);
+            return "手机型号:" + Build.MODEL + ",SDK版本:" + Build.VERSION.SDK_INT
+                    + ",系统版本:" + Build.VERSION.RELEASE + ",APP版本:"
+                    + getAppVersionName(context);
         }
     }
 
@@ -156,7 +160,9 @@ public class AppInfoUtil {
     }
 
     public static boolean isInstallQQ(Context context) {
-        return isInstallAPP(context, QQ_PACKAGE_NAME) || isInstallAPP(context, TIM_PACKAGE_NAME) || isInstallAPP(context, EIM_PACKAGE_NAME);
+        return isInstallAPP(context, QQ_PACKAGE_NAME)
+                || isInstallAPP(context, TIM_PACKAGE_NAME)
+                || isInstallAPP(context, EIM_PACKAGE_NAME);
     }
 
     public static boolean goToMarket(Context context, String packageName) {
@@ -175,7 +181,8 @@ public class AppInfoUtil {
         try {
             Intent intent = new Intent();
             // 组件名称 用于打开其他应用程序中的Activity或服务
-            ComponentName cmp = new ComponentName(WECHAT_PACKAGE_NAME, "com.tencent.mm.ui.LauncherUI");
+            ComponentName cmp = new ComponentName(WECHAT_PACKAGE_NAME,
+                    "com.tencent.mm.ui.LauncherUI");
             intent.setAction(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -195,15 +202,18 @@ public class AppInfoUtil {
      * @param emailTitle   邮件标题
      * @param emailContent 邮件内容
      */
-    public static boolean goToEmail(Context context, String emailAccount, String emailTitle, String emailContent) {
+    public static boolean goToEmail(Context context, String emailAccount, String emailTitle,
+                                    String emailContent) {
         try {
             // 必须明确使用mailto前缀来修饰邮件地址,如果使用
             Uri uri = Uri.parse("mailto:" + emailAccount);
             String[] email = {emailAccount};
             Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
             intent.putExtra(Intent.EXTRA_CC, email); // 抄送人
-            intent.putExtra(Intent.EXTRA_SUBJECT, !TextUtils.isEmpty(emailTitle) ? emailTitle : "请填写邮件主题"); // 主题
-            intent.putExtra(Intent.EXTRA_TEXT, !TextUtils.isEmpty(emailContent) ? emailContent : "请填写邮件正文"); // 正文
+            intent.putExtra(Intent.EXTRA_SUBJECT, !TextUtils.isEmpty(emailTitle)
+                    ? emailTitle : "请填写邮件主题"); // 主题
+            intent.putExtra(Intent.EXTRA_TEXT, !TextUtils.isEmpty(emailContent)
+                    ? emailContent : "请填写邮件正文"); // 正文
             context.startActivity(Intent.createChooser(intent, "请选择邮件类应用"));
             return true;
         } catch (ActivityNotFoundException e) {
@@ -219,7 +229,8 @@ public class AppInfoUtil {
      */
     public static boolean goToQQChat(Context context, String qqAccount) {
         try {
-            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("mqqwpa://im/chat?chat_type=wpa&uin=" + qqAccount + "&version=1")));
+            context.startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("mqqwpa://im/chat?chat_type=wpa&uin=" + qqAccount + "&version=1")));
             return true;
         } catch (ActivityNotFoundException e) {
             e.printStackTrace();
@@ -294,12 +305,13 @@ public class AppInfoUtil {
      * 判断是否打开了允许虚拟位置
      */
     public static boolean isAllowMockLocation(final Activity context) {
-        boolean isOpen = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.ALLOW_MOCK_LOCATION, 0) != 0;
+        boolean isOpen = Settings.Secure.getInt(context.getContentResolver(),
+                Settings.Secure.ALLOW_MOCK_LOCATION, 0) != 0;
         /*
          * 该判断API是androidM以下的API,由于Android M中已经没有了关闭允许模拟位置的入口,所以这里一旦检测到开启了模拟位置,并且是android M以上,则
          * 默认设置为未有开启模拟位置
          * */
-        if (isOpen && Build.VERSION.SDK_INT > 22) {
+        if (isOpen && Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
             isOpen = false;
         }
         return isOpen;
