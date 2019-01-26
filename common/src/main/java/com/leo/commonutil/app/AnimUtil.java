@@ -8,12 +8,16 @@ import android.view.animation.AnimationUtils;
 
 import com.leo.commonutil.R;
 import com.leo.commonutil.callback.AnimationListenerAdapter;
+
 /**
  * Created by LEO
  * on 2018/12/24
  * view显示隐藏动画工具类
  */
-public class AnimUtil {
+public final class AnimUtil {
+    private AnimUtil() {
+    }
+
     /*
      * View 从底部滑出隐藏
      * */
