@@ -13,9 +13,8 @@ import java.util.TimeZone;
  * OverWrite by LEO
  * on 2018/9/21
  * at 16:24
- * in MoeLove Company
  */
-public class DateUtil {
+public final class DateUtil {
     public static final String DATA_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
     public static final String DATA_YYYY_MM_DD_HH_MM_SS2 = "yyyyMMddHHmmss";
     public static final String DATA_YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
@@ -35,6 +34,9 @@ public class DateUtil {
     public static final String DATA_MM_DD3 = "MM月-dd";
     public static final String DATA_HH_MM = "HH:mm";
     public static final String DATA_HH_MM_SS = "HH:mm:ss";
+
+    private DateUtil() {
+    }
 
     public static String format(@UnitTime int type, long longTime, String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.CHINA);

@@ -5,11 +5,14 @@ import com.leo.commonutil.enumerate.DataDecimal;
 
 import java.text.DecimalFormat;
 
-public class FormatUtil {
+public final class FormatUtil {
     private static final int THOUSAND = 1000;
     private static final String UNIT_THOUSAND = "千";
     private static final int TEN_THOUSAND = 10000;
     private static final String UNIT_TEN_THOUSAND = "万";
+
+    private FormatUtil() {
+    }
 
     /*
      * 格式化数字

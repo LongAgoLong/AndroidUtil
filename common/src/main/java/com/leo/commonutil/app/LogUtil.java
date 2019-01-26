@@ -7,9 +7,12 @@ import com.leo.commonutil.enumerate.LogType;
 /**
  * 日志公共类
  */
-public class LogUtil {
+public final class LogUtil {
     private static final String TAG_ = LogUtil.class.getSimpleName();
     private static int type = LogType.DEBUG;
+
+    private LogUtil() {
+    }
 
     public static void setType(@LogType int type) {
         LogUtil.type = type;

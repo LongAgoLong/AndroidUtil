@@ -39,7 +39,8 @@ public class NetUtil {
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
     public static int netState(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (null != cm && null != cm.getActiveNetworkInfo() && cm.getActiveNetworkInfo().isConnectedOrConnecting()) {
+        if (null != cm && null != cm.getActiveNetworkInfo()
+                && cm.getActiveNetworkInfo().isConnectedOrConnecting()) {
             NetworkInfo ni = cm.getActiveNetworkInfo();
             switch (ni.getType()) {
                 case ConnectivityManager.TYPE_WIFI:

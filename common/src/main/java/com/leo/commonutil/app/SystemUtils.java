@@ -19,7 +19,10 @@ import com.leo.commonutil.storage.SharedPreferencesUril;
 /**
  * Created by xy on 15/12/23.
  */
-public class SystemUtils {
+public final class SystemUtils {
+    private SystemUtils() {
+    }
+
     public static int getKeyboardHeight(Activity paramActivity) {
         int height = SystemUtils.getScreenHeight(paramActivity)
                 - SystemUtils.getStatusBarHeight(paramActivity)
