@@ -19,6 +19,9 @@ import java.io.IOException;
  * 消息提醒
  */
 public final class NotifyUtils {
+    private NotifyUtils() {
+    }
+
     /**
      * @param context      Context实例
      * @param milliseconds 震动时长 , 单位毫秒

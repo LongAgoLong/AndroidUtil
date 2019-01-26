@@ -14,7 +14,10 @@ import com.leo.commonutil.enumerate.NetType;
  * on 2018/12/24
  * 网络状态工具类
  */
-public class NetUtil {
+public final class NetUtil {
+    private NetUtil() {
+    }
+
     /**
      * 判断当前设备是否为手机
      *
