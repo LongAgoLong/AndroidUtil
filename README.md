@@ -1,3 +1,3 @@
 # AndroidUtil
-比较常用的Android常用工具类
-持续更新
+封装了一些Android常用的代码块  
+会持续整理更新  
