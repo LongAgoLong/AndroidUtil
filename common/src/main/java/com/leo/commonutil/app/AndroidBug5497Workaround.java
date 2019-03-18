@@ -5,7 +5,11 @@ import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-
+/**
+ * Created by LEO
+ * on 2019/3/18
+ * 修复透明化状态栏后底部布局无法随输入法上升
+ */
 public class AndroidBug5497Workaround {
 
     // For more information, see https://code.google.com/p/android/issues/detail?id=5497
