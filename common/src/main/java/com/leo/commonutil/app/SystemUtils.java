@@ -16,6 +16,8 @@ import android.widget.EditText;
 import com.leo.commonutil.callback.OnEditTextClearFocusCallback;
 import com.leo.commonutil.storage.SharedPreferencesUril;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by xy on 15/12/23.
  */
@@ -29,7 +31,7 @@ public final class SystemUtils {
                 - SystemUtils.getAppHeight(paramActivity);
         if (height == 0) {
             height = SharedPreferencesUril.getInstance().getInt(paramActivity, "KeyboardHeight",
-                    dip2px(paramActivity, 295));//295dp-787为默认软键盘高度 基本差不离
+                    dp2px(paramActivity, 295));//295dp-787为默认软键盘高度 基本差不离
         } else {
             SharedPreferencesUril.getInstance().put(paramActivity, "KeyboardHeight", height);
         }
@@ -82,17 +84,17 @@ public final class SystemUtils {
      **/
     public static int getActionBarHeight(Activity paramActivity) {
         if (true) {
-            return SystemUtils.dip2px(paramActivity, 48);
+            return SystemUtils.dp2px(paramActivity, 48);
         }
         int[] attrs = new int[]{android.R.attr.actionBarSize};
         TypedArray ta = paramActivity.obtainStyledAttributes(attrs);
-        return ta.getDimensionPixelSize(0, SystemUtils.dip2px(paramActivity, 48));
+        return ta.getDimensionPixelSize(0, SystemUtils.dp2px(paramActivity, 48));
     }
 
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
-    public static int dip2px(Context context, float dpValue) {
+    public static int dp2px(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
@@ -100,7 +102,7 @@ public final class SystemUtils {
     /**
      * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
      */
-    public static int px2dip(Context context, float pxValue) {
+    public static int px2dp(Context context, float pxValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
@@ -118,13 +120,16 @@ public final class SystemUtils {
     /**
      * 显示键盘
      **/
-    public static void showKeyBoard(final EditText paramEditText, Context mContext) {
+    public static void showKeyBoard(Context mContext, final EditText paramEditText) {
+        WeakReference<Context> weakReference = new WeakReference<>(mContext);
         paramEditText.requestFocus();
         paramEditText.post(() -> {
-            if (null == mContext) {
+            Context context = weakReference.get();
+            if (null == context) {
                 return;
             }
-            InputMethodManager imm = (InputMethodManager) mContext.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) context.getApplicationContext()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
             if (null != imm) {
                 imm.showSoftInput(paramEditText, 0);
             }
@@ -140,7 +145,8 @@ public final class SystemUtils {
     public static void hideSoftKeyboard(EditText mEditText, Context mContext) {
         try {
             mEditText.clearFocus();
-            InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) mContext
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
             if (null != imm) {
                 imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
             }
@@ -151,7 +157,8 @@ public final class SystemUtils {
 
     public static void hideSoftKeyboard(Activity activity) {
         try {
-            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            InputMethodManager inputMethodManager = (InputMethodManager) activity
+                    .getSystemService(Activity.INPUT_METHOD_SERVICE);
             if (null != inputMethodManager) {
                 View currentFocus = activity.getCurrentFocus();
                 if (null != currentFocus) {
@@ -163,14 +170,18 @@ public final class SystemUtils {
         }
     }
 
-    /*
+    /**
      * 设置外部点击隐藏软键盘,传入根布局.
-     * */
+     *
+     * @param context
+     * @param view
+     */
     public static void setCanceledOnTouchOutsideET(final Context context, View view) {
         setCanceledOnTouchOutsideET(context, view, null);
     }
 
-    public static void setCanceledOnTouchOutsideET(final Context context, View view, @Nullable final OnEditTextClearFocusCallback onEditTextClearFocusCallback) {
+    public static void setCanceledOnTouchOutsideET(final Context context, View view,
+                                                   @Nullable final OnEditTextClearFocusCallback onEditTextClearFocusCallback) {
         //Set up touch listener for non-text box views to hide keyboard.
         if (!(view instanceof EditText)) {
             view.setOnTouchListener((v, event) -> {
@@ -191,9 +202,12 @@ public final class SystemUtils {
         }
     }
 
-    /*
+    /**
      * 设置scrollview中的Edittext可滚动
-     * */
+     *
+     * @param mEditEt
+     * @param event
+     */
     public static void setScrollEditText(EditText mEditEt, MotionEvent event) {
         if (canVerticalScroll(mEditEt)) {
             mEditEt.getParent().requestDisallowInterceptTouchEvent(true);//告诉父view，我的事件自己处理
@@ -226,9 +240,11 @@ public final class SystemUtils {
         return (scrollY > 0) || (scrollY < scrollDifference - 1);
     }
 
-    /*
+    /**
      * 逐个删除EditText的输入元素
-     * */
+     *
+     * @param editText
+     */
     public static void editTextDel(EditText editText) {
         int keyCode = KeyEvent.KEYCODE_DEL;
         KeyEvent keyEventDown = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode);

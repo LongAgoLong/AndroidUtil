@@ -14,9 +14,13 @@ public class SpanUtil {
     public static final String NUMBER = "[0-9]\\d*";
     public static final String IDENTIFY_CARD = "^(^[1-9]\\d{7}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d{3}$)|(^[1-9]\\d{5}[1-9]\\d{3}((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])((\\d{4})|\\d{3}[Xx])$)$";
 
-    /*
+    /**
      * 匹配数字
-     * */
+     *
+     * @param source
+     * @param color
+     * @return
+     */
     public static SpannableString matchNumber(String source, int color) {
         SpannableString spannableString = new SpannableString(source);
         Pattern pattern = Pattern.compile(NUMBER);
@@ -50,8 +54,9 @@ public class SpanUtil {
      * 身份证正则匹配
      * */
     public static boolean isIdentifyCard(String identifyCord) {
-        if (TextUtils.isEmpty(identifyCord))
+        if (TextUtils.isEmpty(identifyCord)) {
             return false;
+        }
         Pattern pattern = Pattern.compile(IDENTIFY_CARD);
         Matcher matcher = pattern.matcher(identifyCord);
         return matcher.matches();
