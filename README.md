@@ -1,7 +1,7 @@
 # AndroidUtil
 封装了一些Android常用的代码块  
 会持续整理更新  
-[![](https://jitpack.io/v/LongAgoLong/AndroidUtil.svg)](https://jitpack.io/#LongAgoLong/AndroidUtil)
+[![](https://jitpack.io/v/LongAgoLong/AndroidUtil.svg)](https://jitpack.io/#LongAgoLong/AndroidUtil)  
 **gradle依赖**
 ```java
 allprojects {
