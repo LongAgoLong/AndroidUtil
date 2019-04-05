@@ -364,4 +364,24 @@ public final class SystemUtils {
         }
         return isGranted;
     }
+
+    private static long lastClickTime;
+
+    public static boolean isFastClick() {//这里设置的时间间隔是2s-判断是否频繁点击
+        return isFastClick(1000);
+    }
+
+    /**
+     * @param intervalTime 时间间隔
+     * @return
+     */
+    public static boolean isFastClick(int intervalTime) {//判断是否频繁点击
+        long time = System.currentTimeMillis();
+        long timeD = time - lastClickTime;
+        if (0 < timeD && timeD < intervalTime) {
+            return true;
+        }
+        lastClickTime = time;
+        return false;
+    }
 }
