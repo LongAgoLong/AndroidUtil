@@ -322,7 +322,7 @@ public final class SystemUtils {
     /**
      * 安装APK
      */
-    public void installApk(Context context, File file) {
+    public static void installApk(Context context, File file) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
@@ -339,7 +339,7 @@ public final class SystemUtils {
      * @param context
      * @param file
      */
-    public void notifyMediaScan(Context context, File file) {
+    public static void notifyMediaScan(Context context, File file) {
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);//发送更新图片信息广播
         Uri uri = Uri.fromFile(file);
         intent.setData(uri);
@@ -353,7 +353,7 @@ public final class SystemUtils {
      * @param permissions 权限数组
      * @return 返回检查结果
      */
-    public boolean checkPermissions(Context context, String... permissions) {
+    public static boolean checkPermissions(Context context, String... permissions) {
         if (null == permissions || permissions.length == 0)
             return true;
         boolean isGranted = true;
