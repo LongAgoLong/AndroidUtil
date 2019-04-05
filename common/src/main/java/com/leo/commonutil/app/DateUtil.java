@@ -1,5 +1,8 @@
 package com.leo.commonutil.app;
 
+import android.content.Context;
+
+import com.leo.commonutil.R;
 import com.leo.commonutil.enumerate.UnitTime;
 
 import java.text.ParseException;
@@ -129,9 +132,13 @@ public final class DateUtil {
         }
     }
 
-    /*
+    /**
      * 判断两个时间戳是否同一天-毫秒级
-     * */
+     *
+     * @param ms1
+     * @param ms2
+     * @return
+     */
     public static boolean isSameDay(long ms1, long ms2) {
         if (ms1 == 0L || ms2 == 0L) {
             return false;
@@ -145,5 +152,64 @@ public final class DateUtil {
 
     private static long toDay(long millis) {
         return (millis + TimeZone.getDefault().getOffset(millis)) / MILLIS_IN_DAY;
+    }
+
+    /**
+     * 时间戳间隔格式化成中文时间差
+     *
+     * @param context
+     * @param duration
+     * @return
+     */
+    public static String toTimeFormat(Context context, long duration) {
+        // 毫秒
+        long ssec = duration % 1000;
+        // 秒
+        long sec = (duration / 1000) % 60;
+        // 分钟
+        long min = (duration / 1000 / 60) % 60;
+        // 小时
+        long hour = (duration / 1000 / 60 / 60) % 24;
+        // 天
+        long day = duration / 1000 / 60 / 60 / 24;
+
+        if (day > 0) {
+            return context.getString(R.string.text_day_hour_min_second,
+                    String.format(Locale.CHINA, "%02d", day),
+                    String.format(Locale.CHINA, "%02d", hour),
+                    String.format(Locale.CHINA, "%02d", min),
+                    String.format(Locale.CHINA, "%02d", sec));
+        }
+        if (hour > 0) {
+            return context.getString(R.string.text_hour_min_second,
+                    String.format(Locale.CHINA, "%02d", hour),
+                    String.format(Locale.CHINA, "%02d", min),
+                    String.format(Locale.CHINA, "%02d", sec));
+        }
+        if (min > 0) {
+            return context.getString(R.string.text_min_second,
+                    String.format(Locale.CHINA, "%02d", min),
+                    String.format(Locale.CHINA, "%02d", sec));
+        }
+        return context.getString(R.string.text_second,
+                String.format(Locale.CHINA, "%02d", sec));
+    }
+
+    /**
+     * 时间转换为时间戳
+     *
+     * @param timeStr 时间 例如: 2016-03-09
+     * @param format  时间对应格式  例如: yyyy-MM-dd
+     */
+    public static long toTimeStamp(String timeStr, String format) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.CHINA);
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse(timeStr);
+            return date.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">CommonUtil</string>
+    <string name="text_second">%1$s秒</string>
+    <string name="text_min_second">%1$s分钟%2$s秒</string>
+    <string name="text_hour_min_second">%1$s小时%2$s分钟%3$s秒</string>
+    <string name="text_day_hour_min_second">%1$s天%2$s小时%3$s分钟%4$s秒</string>
 </resources>
