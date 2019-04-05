@@ -202,48 +202,4 @@ public class AppStackManager {
         killAllActivity();
         System.exit(0);
     }
-
-    /**
-     * 安装APK
-     */
-    public void installApk(Context context, File file) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-        } else {
-            Uri apkUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-        }
-        context.startActivity(intent);
-    }
-
-    /*
-     * 通知Media扫描
-     * */
-    public void notifyMediaScan(Context context, File file) {
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);//发送更新图片信息广播
-        Uri uri = Uri.fromFile(file);
-        intent.setData(uri);
-        context.getApplicationContext().sendBroadcast(intent);
-    }
-
-    /**
-     * 权限检查
-     *
-     * @param context     上下文
-     * @param permissions 权限数组
-     * @return 返回检查结果
-     */
-    public boolean checkPermissions(Context context, String... permissions) {
-        if (null == permissions || permissions.length == 0)
-            return true;
-        boolean isGranted = true;
-        for (String permission : permissions) {
-            isGranted = ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
-            if (!isGranted)
-                break;
-        }
-        return isGranted;
-    }
 }

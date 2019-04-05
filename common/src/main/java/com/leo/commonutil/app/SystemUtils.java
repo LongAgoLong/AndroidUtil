@@ -2,20 +2,31 @@ package com.leo.commonutil.app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
+import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.leo.commonutil.callback.OnEditTextClearFocusCallback;
 import com.leo.commonutil.storage.SharedPreferencesUril;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 
 /**
@@ -251,5 +262,106 @@ public final class SystemUtils {
         KeyEvent keyEventUp = new KeyEvent(KeyEvent.ACTION_UP, keyCode);
         editText.onKeyDown(keyCode, keyEventDown);
         editText.onKeyUp(keyCode, keyEventUp);
+    }
+
+    /**
+     * 是否启用了代理
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isWifiProxy(Context context) {
+        final boolean IS_ICS_OR_LATER = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+        String proxyAddress;
+        int proxyPort;
+        if (IS_ICS_OR_LATER) {
+            proxyAddress = System.getProperty("http.proxyHost");
+            String portStr = System.getProperty("http.proxyPort");
+            proxyPort = Integer.parseInt((portStr != null ? portStr : "-1"));
+        } else {
+            proxyAddress = android.net.Proxy.getHost(context);
+            proxyPort = android.net.Proxy.getPort(context);
+        }
+        return (!TextUtils.isEmpty(proxyAddress)) && (proxyPort != -1);
+    }
+
+    /**
+     * 移除所有代理
+     */
+    public static void removeAllWifiProxy() {
+        System.getProperties().remove("http.proxyHost");
+        System.getProperties().remove("http.proxyPort");
+        System.getProperties().remove("https.proxyHost");
+        System.getProperties().remove("https.proxyPort");
+    }
+
+    /**
+     * 更改状态栏
+     *
+     * @param activity
+     * @param color
+     */
+    public static void setStatuBarColorRes(Activity activity, @ColorRes int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && null != activity) {
+            Window window = activity.getWindow();
+            if (null != window) {
+                window.setStatusBarColor(activity.getResources().getColor(color));
+            }
+        }
+    }
+
+    public static void setStatuBarColor(Activity activity, @ColorInt int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && null != activity) {
+            Window window = activity.getWindow();
+            if (null != window) {
+                window.setStatusBarColor(color);
+            }
+        }
+    }
+
+    /**
+     * 安装APK
+     */
+    public void installApk(Context context, File file) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+        } else {
+            Uri apkUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+        }
+        context.startActivity(intent);
+    }
+
+    /**
+     * 通知Media扫描
+     * @param context
+     * @param file
+     */
+    public void notifyMediaScan(Context context, File file) {
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);//发送更新图片信息广播
+        Uri uri = Uri.fromFile(file);
+        intent.setData(uri);
+        context.getApplicationContext().sendBroadcast(intent);
+    }
+
+    /**
+     * 权限检查
+     *
+     * @param context     上下文
+     * @param permissions 权限数组
+     * @return 返回检查结果
+     */
+    public boolean checkPermissions(Context context, String... permissions) {
+        if (null == permissions || permissions.length == 0)
+            return true;
+        boolean isGranted = true;
+        for (String permission : permissions) {
+            isGranted = ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
+            if (!isGranted)
+                break;
+        }
+        return isGranted;
     }
 }
