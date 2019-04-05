@@ -25,7 +25,7 @@ import javax.crypto.NoSuchPaddingException;
  * on 2018/2/24.
  */
 
-public class RSAUtil {
+public final class RSAUtil {
     public static final String KEY_ALGORITHM = "RSA";
     /**
      * 貌似默认是RSA/NONE/PKCS1Padding，未验证
