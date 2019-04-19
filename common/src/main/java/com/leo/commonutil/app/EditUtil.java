@@ -6,7 +6,7 @@ import android.widget.EditText;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ETUtil {
+public class EditUtil {
     /**
      * 禁止EditText输入空格和换行符
      *

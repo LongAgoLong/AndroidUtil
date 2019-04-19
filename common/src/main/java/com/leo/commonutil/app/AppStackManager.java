@@ -1,17 +1,14 @@
 package com.leo.commonutil.app;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -166,7 +163,7 @@ public class AppStackManager {
         }
         mActivities.clear();
     }
-    
+
     /**
      * 判断某个activity是否在前台显示
      */

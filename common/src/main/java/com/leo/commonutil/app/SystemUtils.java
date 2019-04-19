@@ -29,9 +29,6 @@ import com.leo.commonutil.storage.SharedPreferencesUril;
 import java.io.File;
 import java.lang.ref.WeakReference;
 
-/**
- * Created by xy on 15/12/23.
- */
 public final class SystemUtils {
     private SystemUtils() {
     }
