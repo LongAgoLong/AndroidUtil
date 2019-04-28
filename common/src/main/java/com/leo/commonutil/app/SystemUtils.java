@@ -1,18 +1,26 @@
 package com.leo.commonutil.app;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Looper;
+import android.os.Process;
+import android.provider.Settings;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
@@ -26,8 +34,15 @@ import android.widget.EditText;
 import com.leo.commonutil.callback.OnEditTextClearFocusCallback;
 import com.leo.commonutil.storage.SharedPreferencesUril;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.UUID;
 
 public final class SystemUtils {
     private SystemUtils() {
@@ -333,6 +348,7 @@ public final class SystemUtils {
 
     /**
      * 通知Media扫描
+     *
      * @param context
      * @param file
      */
@@ -380,5 +396,136 @@ public final class SystemUtils {
         }
         lastClickTime = time;
         return false;
+    }
+
+    /**
+     * 是否主进程
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isMainProcess(Context context) {
+        ActivityManager am = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE));
+        if (null != am) {
+            List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
+            String mainProcessName = context.getPackageName();
+            int myPid = Process.myPid();
+            for (ActivityManager.RunningAppProcessInfo info : processInfos) {
+                if (info.pid == myPid && mainProcessName.equals(info.processName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 获取系统基带
+     *
+     * @return
+     */
+    public static String getSystemBaseband() {
+        try {
+            Class cl = Class.forName("android.os.SystemProperties");
+            Object invoker = cl.newInstance();
+            Method m = cl.getMethod("get", new Class[]{String.class, String.class});
+            Object result = m.invoke(invoker, new Object[]{"gsm.version.baseband", ""});
+            return (String) result;
+        } catch (Exception e) {
+
+        }
+        return "";
+    }
+
+    /**
+     * 判断是否打开了允许虚拟位置
+     */
+    public static boolean isAllowMockLocation(final Activity context) {
+        boolean isOpen = Settings.Secure.getInt(context.getContentResolver(),
+                Settings.Secure.ALLOW_MOCK_LOCATION, 0) != 0;
+        /*
+         * 该判断API是androidM以下的API,由于Android M中已经没有了关闭允许模拟位置的入口,所以这里一旦检测到开启了模拟位置,并且是android M以上,则
+         * 默认设置为未有开启模拟位置
+         * */
+        if (isOpen && Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            isOpen = false;
+        }
+        return isOpen;
+    }
+
+    /**
+     * 获取进程号对应的进程名
+     *
+     * @param pid 进程号
+     * @return 进程名
+     */
+    public static String getProcessName(int pid) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader("/proc/" + pid + "/cmdline"));
+            String processName = reader.readLine();
+            if (!TextUtils.isEmpty(processName)) {
+                processName = processName.trim();
+            }
+            return processName;
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 是否主线程
+     *
+     * @return
+     */
+    public static boolean isMainThread() {
+        return Looper.getMainLooper().getThread() == Thread.currentThread();
+    }
+
+    //获取UDID
+    protected static final String PREFS_FILE = "gank_device_id.xml";
+    protected static final String PREFS_DEVICE_ID = "gank_device_id";
+    protected static String uuid;
+
+    @RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
+    public static String getUDID(Context context) {
+        if (uuid == null) {
+            synchronized (PREFS_FILE) {
+                if (uuid == null) {
+                    final SharedPreferences prefs = context.getApplicationContext().getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
+                    final String id = prefs.getString(PREFS_DEVICE_ID, null);
+                    if (id != null) {
+                        uuid = id;
+                    } else {
+                        final String androidId = Settings.Secure.getString(context.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                        try {
+                            if (!"9774d56d682e549c".equals(androidId)) {
+                                uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8")).toString();
+                            } else {
+                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                                    final String deviceId = ((TelephonyManager) context.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+                                    uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")).toString() : UUID.randomUUID().toString();
+                                } else {
+                                    uuid = UUID.randomUUID().toString();
+                                }
+                            }
+                        } catch (UnsupportedEncodingException e) {
+                            throw new RuntimeException(e);
+                        }
+                        prefs.edit().putString(PREFS_DEVICE_ID, uuid).commit();
+                    }
+                }
+            }
+        }
+        return uuid;
     }
 }

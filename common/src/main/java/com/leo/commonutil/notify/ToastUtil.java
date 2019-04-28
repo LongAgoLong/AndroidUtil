@@ -13,7 +13,7 @@ public class ToastUtil {
 
     private static Toast toast;
 
-    public static void show(Context context,@NonNull String text) {
+    public static void show(Context context, @NonNull String text) {
         if (toast == null) {
             toast = Toast.makeText(context.getApplicationContext(), text, Toast.LENGTH_LONG);
         } else {
@@ -34,9 +34,9 @@ public class ToastUtil {
     }
 
     /*
-    * duration - Toast.LENGTH_LONG or Toast.LENGTH_SHORT
-    * */
-    public static void show(Context context,@NonNull String text, int duration) {
+     * duration - Toast.LENGTH_LONG or Toast.LENGTH_SHORT
+     * */
+    public static void show(Context context, @NonNull String text, int duration) {
         if (toast == null) {
             toast = Toast.makeText(context.getApplicationContext(), text, duration);
         } else {
@@ -57,11 +57,12 @@ public class ToastUtil {
     }
 
     public static void cancel() {
-        if (null != toast)
+        if (null != toast) {
             toast.cancel();
+        }
     }
 
-    public static void showBottom(Context context,@NonNull String text) {
+    public static void showBottom(Context context, @NonNull String text) {
         Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, 0);
         toast.setText(text);

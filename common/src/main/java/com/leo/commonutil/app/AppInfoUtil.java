@@ -20,6 +20,8 @@ import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.leo.commonutil.enumerate.PkgName;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -80,7 +82,12 @@ public class AppInfoUtil {
         }
     }
 
-    //获取App安装包信息
+    /**
+     * 获取App安装包信息
+     *
+     * @param context
+     * @return
+     */
     public static PackageInfo getPackageInfo(Context context) {
         PackageInfo info = null;
         try {
@@ -93,78 +100,45 @@ public class AppInfoUtil {
         return info;
     }
 
-    //获取UDID
-    protected static final String PREFS_FILE = "gank_device_id.xml";
-    protected static final String PREFS_DEVICE_ID = "gank_device_id";
-    protected static String uuid;
-
-    @RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
-    public static String getUDID(Context context) {
-        if (uuid == null) {
-            synchronized (PREFS_FILE) {
-                if (uuid == null) {
-                    final SharedPreferences prefs = context.getApplicationContext().getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE);
-                    final String id = prefs.getString(PREFS_DEVICE_ID, null);
-                    if (id != null) {
-                        uuid = id;
-                    } else {
-                        final String androidId = Settings.Secure.getString(context.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-                        try {
-                            if (!"9774d56d682e549c".equals(androidId)) {
-                                uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8")).toString();
-                            } else {
-                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                                    final String deviceId = ((TelephonyManager) context.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-                                    uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")).toString() : UUID.randomUUID().toString();
-                                } else {
-                                    uuid = UUID.randomUUID().toString();
-                                }
-                            }
-                        } catch (UnsupportedEncodingException e) {
-                            throw new RuntimeException(e);
-                        }
-                        prefs.edit().putString(PREFS_DEVICE_ID, uuid).commit();
-                    }
-                }
-            }
-        }
-        return uuid;
-    }
-
-    public static boolean isMainThread() {
-        return Looper.getMainLooper().getThread() == Thread.currentThread();
-    }
-
-    /*
+    /**
      * 判断对应包名app是否已经安装
-     * */
-    public final static String SINA_PACKAGE_NAME = "com.sina.weibo";//新浪微博包名
-    public final static String QQ_PACKAGE_NAME = "com.tencent.mobileqq";//QQ包名
-    public final static String TIM_PACKAGE_NAME = "com.tencent.tim";//TIM包名
-    public final static String EIM_PACKAGE_NAME = "com.tencent.eim";//EIM(企业QQ)包名
-    public final static String WECHAT_PACKAGE_NAME = "com.tencent.mm";//微信包名
-    public final static String GAODEMAPAGENAME = "com.autonavi.minimap";//高德地图包名
-    public final static String TENTEXMAPAGENAME = "com.tencent.map";//腾讯地图包名
-    public final static String BAIDUMAPAGENAME = "com.baidu.BaiduMap";//百度地图包名
-    public final static String GOOGLEMAPAGENAME = "com.google.android.apps.maps";//谷歌地图包名
-
+     *
+     * @param context
+     * @param packageName
+     * @return
+     */
     public static boolean isInstallAPP(Context context, String packageName) {
-        if (TextUtils.isEmpty(packageName))
+        if (TextUtils.isEmpty(packageName)) {
             return false;
+        }
         try {
-            context.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_UNINSTALLED_PACKAGES);
+            context.getPackageManager()
+                    .getApplicationInfo(packageName, PackageManager.GET_UNINSTALLED_PACKAGES);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
     }
 
+    /**
+     * 是否安装了QQ
+     *
+     * @param context
+     * @return
+     */
     public static boolean isInstallQQ(Context context) {
-        return isInstallAPP(context, QQ_PACKAGE_NAME)
-                || isInstallAPP(context, TIM_PACKAGE_NAME)
-                || isInstallAPP(context, EIM_PACKAGE_NAME);
+        return isInstallAPP(context, PkgName.QQ_PACKAGE_NAME)
+                || isInstallAPP(context, PkgName.TIM_PACKAGE_NAME)
+                || isInstallAPP(context, PkgName.EIM_PACKAGE_NAME);
     }
 
+    /**
+     * 前往应用市场某个应用界面
+     *
+     * @param context
+     * @param packageName
+     * @return
+     */
     public static boolean goToMarket(Context context, String packageName) {
         Uri uri = Uri.parse("market://details?id=" + packageName);
         Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
@@ -177,11 +151,17 @@ public class AppInfoUtil {
         }
     }
 
+    /**
+     * 打开微信
+     *
+     * @param context
+     * @return
+     */
     public static boolean goToWechat(Context context) {
         try {
             Intent intent = new Intent();
             // 组件名称 用于打开其他应用程序中的Activity或服务
-            ComponentName cmp = new ComponentName(WECHAT_PACKAGE_NAME,
+            ComponentName cmp = new ComponentName(PkgName.WECHAT_PACKAGE_NAME,
                     "com.tencent.mm.ui.LauncherUI");
             intent.setAction(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -236,84 +216,5 @@ public class AppInfoUtil {
             e.printStackTrace();
             return false;
         }
-    }
-
-    /**
-     * 获取进程号对应的进程名
-     *
-     * @param pid 进程号
-     * @return 进程名
-     */
-    public static String getProcessName(int pid) {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader("/proc/" + pid + "/cmdline"));
-            String processName = reader.readLine();
-            if (!TextUtils.isEmpty(processName)) {
-                processName = processName.trim();
-            }
-            return processName;
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    /*
-     * 是否主进程
-     * */
-    public static boolean isMainProcess(Context context) {
-        ActivityManager am = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE));
-        if (null != am) {
-            List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
-            String mainProcessName = context.getPackageName();
-            int myPid = Process.myPid();
-            for (ActivityManager.RunningAppProcessInfo info : processInfos) {
-                if (info.pid == myPid && mainProcessName.equals(info.processName)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /*
-     * 获取系统基带
-     * */
-    public static String getSystemBaseband() {
-        try {
-            Class cl = Class.forName("android.os.SystemProperties");
-            Object invoker = cl.newInstance();
-            Method m = cl.getMethod("get", new Class[]{String.class, String.class});
-            Object result = m.invoke(invoker, new Object[]{"gsm.version.baseband", ""});
-            return (String) result;
-        } catch (Exception e) {
-
-        }
-        return "";
-    }
-
-    /**
-     * 判断是否打开了允许虚拟位置
-     */
-    public static boolean isAllowMockLocation(final Activity context) {
-        boolean isOpen = Settings.Secure.getInt(context.getContentResolver(),
-                Settings.Secure.ALLOW_MOCK_LOCATION, 0) != 0;
-        /*
-         * 该判断API是androidM以下的API,由于Android M中已经没有了关闭允许模拟位置的入口,所以这里一旦检测到开启了模拟位置,并且是android M以上,则
-         * 默认设置为未有开启模拟位置
-         * */
-        if (isOpen && Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-            isOpen = false;
-        }
-        return isOpen;
     }
 }

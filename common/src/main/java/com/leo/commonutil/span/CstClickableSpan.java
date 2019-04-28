@@ -14,10 +14,10 @@ import android.view.View;
  * @author Rabbit_Lee
  */
 
-public class CustomClickableSpan extends ClickableSpan {
+public class CstClickableSpan extends ClickableSpan {
     private int textColor;
 
-    public CustomClickableSpan(@ColorRes int color) {
+    public CstClickableSpan(@ColorRes int color) {
         this.textColor = color;
     }
 

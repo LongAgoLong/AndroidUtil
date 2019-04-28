@@ -47,7 +47,7 @@ public final class NotifyUtils {
         }
     }
 
-    public static void playBee(final Context context, @RawRes int mediaId, @Nullable OnPlayerCompleteListener listener) {
+    public static void playBee(final Context context, @RawRes int mediaId, @Nullable OnCompleteListener listener) {
         AudioManager audioService = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         if (null == audioService) {
             return;
@@ -85,7 +85,7 @@ public final class NotifyUtils {
     }
 
     @RequiresPermission(android.Manifest.permission.VIBRATE)
-    public static void playBeeAndVibrate(final Context context, long milliseconds, @RawRes int mediaId, @Nullable OnPlayerCompleteListener listener) {
+    public static void playBeeAndVibrate(final Context context, long milliseconds, @RawRes int mediaId, @Nullable OnCompleteListener listener) {
         //震动
         vibrate(context, milliseconds);
         //提示音

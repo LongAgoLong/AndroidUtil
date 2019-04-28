@@ -215,10 +215,10 @@ public class RegexUtils {
     }
 
 
-    public static CustomMovementMethod highLightAndClickHtml(final Context context, TextView textView, String source, String replaceStr,
-                                                             @ColorRes int color, CustomClickCallback customClickCallback) {
+    public static CstMovementMethod highLightAndClickHtml(final Context context, TextView textView, String source, String replaceStr,
+                                                          @ColorRes int color, CstClickCallback cstClickCallback) {
         SpannableStringBuilder spannableString = new SpannableStringBuilder(source);
-        CustomMovementMethod movementMethod = CustomMovementMethod.getInstance(context);
+        CstMovementMethod movementMethod = CstMovementMethod.getInstance(context);
         //设置正则
         Pattern pattern = Pattern.compile(Html);
         Matcher matcher = pattern.matcher(spannableString);
@@ -236,11 +236,11 @@ public class RegexUtils {
             if (end <= spannableString.length()) {
                 SpannableString spannableString1 = new SpannableString(replaceStr);
                 spannableString.replace(start, end, spannableString1);
-                CustomClickableSpan clickableSpan = new CustomClickableSpan(color) {
+                CstClickableSpan clickableSpan = new CstClickableSpan(color) {
                     @Override
                     public void onClick(View widget) {
-                        if (null != customClickCallback) {
-                            customClickCallback.onClick(widget, html);
+                        if (null != cstClickCallback) {
+                            cstClickCallback.onClick(widget, html);
                         }
                     }
                 };

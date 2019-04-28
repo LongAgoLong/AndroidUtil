@@ -2,6 +2,6 @@ package com.leo.commonutil.span;
 
 import android.view.View;
 
-public interface CustomClickCallback {
+public interface CstClickCallback {
     void onClick(View widget, String html);
 }

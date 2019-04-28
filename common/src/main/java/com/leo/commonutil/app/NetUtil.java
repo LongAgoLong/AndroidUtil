@@ -41,7 +41,8 @@ public final class NetUtil {
      */
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
     public static int netState(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (null != cm && null != cm.getActiveNetworkInfo()
                 && cm.getActiveNetworkInfo().isConnectedOrConnecting()) {
             NetworkInfo ni = cm.getActiveNetworkInfo();
@@ -50,12 +51,12 @@ public final class NetUtil {
                     return NetType.WIFI;
                 case ConnectivityManager.TYPE_MOBILE:
                     switch (ni.getSubtype()) {
-                        case TelephonyManager.NETWORK_TYPE_GPRS: //联通2g
-                        case TelephonyManager.NETWORK_TYPE_CDMA: //电信2g
-                        case TelephonyManager.NETWORK_TYPE_EDGE: //移动2g
+                        case TelephonyManager.NETWORK_TYPE_GPRS: // 联通2g
+                        case TelephonyManager.NETWORK_TYPE_CDMA: // 电信2g
+                        case TelephonyManager.NETWORK_TYPE_EDGE: // 移动2g
                         case TelephonyManager.NETWORK_TYPE_1xRTT:
                         case TelephonyManager.NETWORK_TYPE_IDEN:
-                        case TelephonyManager.NETWORK_TYPE_EVDO_A: //电信3g
+                        case TelephonyManager.NETWORK_TYPE_EVDO_A: // 电信3g
                         case TelephonyManager.NETWORK_TYPE_UMTS:
                         case TelephonyManager.NETWORK_TYPE_EVDO_0:
                         case TelephonyManager.NETWORK_TYPE_HSDPA:
