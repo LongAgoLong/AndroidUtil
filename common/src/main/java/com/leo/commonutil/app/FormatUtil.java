@@ -14,9 +14,13 @@ public final class FormatUtil {
     private FormatUtil() {
     }
 
-    /*
+    /**
      * 格式化数字
-     * */
+     *
+     * @param o
+     * @param format
+     * @return
+     */
     public static String formatUnit(Object o, @DataDecimal String format) {
         try {
             DecimalFormat df = new DecimalFormat(format);
@@ -96,9 +100,13 @@ public final class FormatUtil {
         return "";
     }
 
-    /*
+    /**
      * 格式化-小数位数
-     * */
+     *
+     * @param o
+     * @param format
+     * @return
+     */
     public static String formatDecimal(Object o, @DataDecimal String format) {
         DecimalFormat df = new DecimalFormat(format);
         try {

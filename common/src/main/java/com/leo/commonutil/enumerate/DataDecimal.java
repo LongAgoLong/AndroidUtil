@@ -2,6 +2,9 @@ package com.leo.commonutil.enumerate;
 
 import android.support.annotation.StringDef;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 @StringDef({
         DataDecimal.ONE_DECIMAL,
         DataDecimal.TWO_DECIMAL,
@@ -10,6 +13,7 @@ import android.support.annotation.StringDef;
         DataDecimal.FIVE_DECIMAL,
         DataDecimal.SIX_DECIMAL
 })
+@Retention(RetentionPolicy.SOURCE)
 public @interface DataDecimal {
     String ONE_DECIMAL = "#.0";
     String TWO_DECIMAL = "#.00";
