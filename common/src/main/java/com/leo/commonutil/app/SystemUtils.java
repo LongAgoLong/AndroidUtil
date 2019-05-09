@@ -3,6 +3,8 @@ package com.leo.commonutil.app;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.KeyguardManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +14,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.os.Process;
 import android.provider.Settings;
 import android.support.annotation.ColorInt;
@@ -491,7 +494,71 @@ public final class SystemUtils {
         return Looper.getMainLooper().getThread() == Thread.currentThread();
     }
 
-    //获取UDID
+    /**
+     * 获取服务是否开启
+     */
+    public static boolean isServiceRunning(Context context, String className) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        //获取正在运行的服务
+        List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(1000);//maxNum 返回正在运行的服务的上限个数,最多返回多少个服务
+        for (ActivityManager.RunningServiceInfo runningServiceInfo : runningServices) {
+            ComponentName service = runningServiceInfo.service;
+            //获取正在运行的服务的全类名
+            String className2 = service.getClassName();
+            //将获取到的正在运行的服务的全类名和传递过来的服务的全类名比较,一直表示服务正在运行  返回true,不一致表示服务没有运行  返回false
+            if (className.equals(className2)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断当前App是否处于后台
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isApplicationBackground(final Context context) {
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
+        if (!tasks.isEmpty()) {
+            ComponentName topActivity = tasks.get(0).topActivity;
+            if (!topActivity.getPackageName().equals(context.getPackageName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 唤醒屏幕并解锁
+     *
+     * @param context
+     */
+    @RequiresPermission(Manifest.permission.DISABLE_KEYGUARD)
+    public static void wakeUpAndUnlock(Context context) {
+        try {
+            KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+            KeyguardManager.KeyguardLock kl = km.newKeyguardLock("unLock");
+            //解锁
+            kl.disableKeyguard();
+            //获取电源管理器对象
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            //获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
+            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
+            //点亮屏幕
+            wl.acquire();
+            //释放
+            wl.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取UDID
+     */
     protected static final String PREFS_FILE = "gank_device_id.xml";
     protected static final String PREFS_DEVICE_ID = "gank_device_id";
     protected static String uuid;
