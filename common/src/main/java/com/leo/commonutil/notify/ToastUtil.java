@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.Toast;
 
 /**
@@ -11,7 +12,7 @@ import android.widget.Toast;
  */
 public class ToastUtil {
 
-    private static Toast toast;
+    public static Toast toast;
 
     public static void show(Context context, @NonNull String text) {
         if (toast == null) {
