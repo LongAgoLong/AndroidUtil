@@ -8,7 +8,7 @@ import com.leo.commonutil.enumerate.LogType;
  * 日志公共类
  */
 public final class LogUtil {
-    private static final String TAG_ = LogUtil.class.getSimpleName();
+    private static final String TAG_ = AppInfoUtil.getAppName();
     private static int type = LogType.DEBUG;
 
     private LogUtil() {
@@ -30,7 +30,7 @@ public final class LogUtil {
     }
 
     public static void d(String tag, String msg) {
-        if (type == LogType.DEBUG) {
+        if (type == LogType.DEBUG || type == LogType.ABTEST) {
             // 控制台输出
             if (null != msg) {
                 Log.d(TAG_ + tag, msg);
@@ -41,7 +41,7 @@ public final class LogUtil {
     }
 
     public static void e(String tag, String msg) {
-        if (type == LogType.DEBUG) {
+        if (type == LogType.DEBUG || type == LogType.ABTEST) {
             // 控制台输出
             if (null != msg) {
                 Log.e(TAG_ + tag, msg);

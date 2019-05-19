@@ -1,34 +1,18 @@
 package com.leo.commonutil.app;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Looper;
-import android.os.Process;
-import android.provider.Settings;
-import android.support.annotation.RequiresPermission;
-import android.support.v4.app.ActivityCompat;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import com.leo.commonutil.enumerate.PkgName;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.UUID;
+import java.lang.ref.WeakReference;
 
 /**
  * Create by LEO
@@ -36,22 +20,49 @@ import java.util.UUID;
  * at 16:55
  */
 public class AppInfoUtil {
+    private static WeakReference<Context> weakReference;
+
     private AppInfoUtil() {
+    }
+
+    /**
+     * 必须在Application中调用
+     *
+     * @param context
+     */
+    public static void setContext(Context context) {
+        AppInfoUtil.weakReference = new WeakReference<>(context.getApplicationContext());
+    }
+
+    public static Context getContext() {
+        if (null == weakReference) {
+            throw new RuntimeException("must setContext() in application");
+        }
+        Context context = weakReference.get();
+        if (null == context) {
+            throw new RuntimeException("must setContext() in application");
+        }
+        return context;
     }
 
     /**
      * 获取app名称
      *
-     * @param context
      * @return
      */
-    public static String getAppName(Context context) {
+    public static String getAppName() {
+        Context context = getContext();
         PackageManager pm = context.getPackageManager();
         return context.getApplicationInfo().loadLabel(pm).toString();
     }
 
-    //获取当前版本号
-    public static String getAppVersionName(Context context) {
+    /**
+     * 获取当前版本号
+     *
+     * @return
+     */
+    public static String getAppVersionName() {
+        Context context = getContext();
         String versionName = "0";
         try {
             PackageManager packageManager = context.getPackageManager();
@@ -66,53 +77,50 @@ public class AppInfoUtil {
         return versionName;
     }
 
-    public static String getPhoneInfo(Context context) {
-        return getPhoneInfo(context, true);
+    public static String getPhoneInfo() {
+        return getPhoneInfo(true);
     }
 
-    public static String getPhoneInfo(Context context, boolean withAppName) {
+    public static String getPhoneInfo(boolean withAppName) {
         if (withAppName) {
             return "手机型号:" + Build.MODEL + ",SDK版本:" + Build.VERSION.SDK_INT
                     + ",系统版本:" + Build.VERSION.RELEASE + ",APP版本:"
-                    + getAppVersionName(context) + ",APP名称:" + getAppName(context);
+                    + getAppVersionName() + ",APP名称:" + getAppName();
         } else {
             return "手机型号:" + Build.MODEL + ",SDK版本:" + Build.VERSION.SDK_INT
                     + ",系统版本:" + Build.VERSION.RELEASE + ",APP版本:"
-                    + getAppVersionName(context);
+                    + getAppVersionName();
         }
     }
 
     /**
      * 获取App安装包信息
      *
-     * @param context
      * @return
      */
-    public static PackageInfo getPackageInfo(Context context) {
+    public static PackageInfo getPackageInfo() {
+        Context context = getContext();
         PackageInfo info = null;
         try {
             info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace(System.err);
         }
-        if (info == null)
-            info = new PackageInfo();
         return info;
     }
 
     /**
      * 判断对应包名app是否已经安装
      *
-     * @param context
      * @param packageName
      * @return
      */
-    public static boolean isInstallAPP(Context context, String packageName) {
+    public static boolean isInstallAPP(String packageName) {
         if (TextUtils.isEmpty(packageName)) {
             return false;
         }
         try {
-            context.getPackageManager()
+            getContext().getPackageManager()
                     .getApplicationInfo(packageName, PackageManager.GET_UNINSTALLED_PACKAGES);
             return true;
         } catch (PackageManager.NameNotFoundException e) {
@@ -123,13 +131,12 @@ public class AppInfoUtil {
     /**
      * 是否安装了QQ
      *
-     * @param context
      * @return
      */
-    public static boolean isInstallQQ(Context context) {
-        return isInstallAPP(context, PkgName.QQ_PACKAGE_NAME)
-                || isInstallAPP(context, PkgName.TIM_PACKAGE_NAME)
-                || isInstallAPP(context, PkgName.EIM_PACKAGE_NAME);
+    public static boolean isInstallQQ() {
+        return isInstallAPP(PkgName.QQ_PACKAGE_NAME)
+                || isInstallAPP(PkgName.TIM_PACKAGE_NAME)
+                || isInstallAPP(PkgName.EIM_PACKAGE_NAME);
     }
 
     /**
