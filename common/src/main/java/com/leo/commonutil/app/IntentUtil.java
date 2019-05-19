@@ -77,14 +77,14 @@ public final class IntentUtil {
 	 * @param context
 	 * @param cls
 	 * @param bundle
-	 * @param request_code
+	 * @param requestCode
 	 */
-	public static void startActivityForResut(Context context, Class<?> cls, Bundle bundle, int request_code) {
+	public static void redirectForResult(Context context, Class<?> cls, Bundle bundle, int requestCode) {
 		Intent intentRecharge = new Intent();
 		if (bundle != null) {
 			intentRecharge.putExtras(bundle);
 		}
 		intentRecharge.setClass(context, cls);
-		((Activity) context).startActivityForResult(intentRecharge, request_code);
+		((Activity) context).startActivityForResult(intentRecharge, requestCode);
 	}
 }
