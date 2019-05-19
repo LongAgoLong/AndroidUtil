@@ -34,7 +34,7 @@ public class SystemLocationUtil implements LocationListener {
 
     private static SystemLocationUtil mInstance;
     private WeakReference<Context> weakReference;
-    private SystemLocationListener mSystemLocationListener;
+    private OnLocationCallback mOnLocationCallback;
     private Location mLocationWGS84;
     private Location mLocationGCJ02;
     private Location mLocationBD09LL;
@@ -54,15 +54,15 @@ public class SystemLocationUtil implements LocationListener {
     /**
      * 开始定位
      *
-     * @param context                 context
-     * @param provider                LocationManager.GPS_PROVIDER/LocationManager.NETWORK_PROVIDER
-     * @param minMillisecond          定位时间间隔
-     * @param mSystemLocationListener 回调接口
+     * @param context             context
+     * @param provider            LocationManager.GPS_PROVIDER/LocationManager.NETWORK_PROVIDER
+     * @param minMillisecond      定位时间间隔
+     * @param mOnLocationCallback 回调接口
      */
     @RequiresPermission(anyOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    public void start(Context context, String provider, long minMillisecond, @Nullable SystemLocationListener mSystemLocationListener) {
+    public void start(Context context, String provider, long minMillisecond, @Nullable OnLocationCallback mOnLocationCallback) {
         weakReference = new WeakReference<>(context);
-        this.mSystemLocationListener = mSystemLocationListener;
+        this.mOnLocationCallback = mOnLocationCallback;
         // NETWORK_PROVIDER,使用网络定位
         // 定位时间间隔,单位ms；不应小于1000
         LocationManager locationManager =
@@ -90,7 +90,7 @@ public class SystemLocationUtil implements LocationListener {
     @RequiresPermission(anyOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     public void stop() {
         weakReference.clear();
-        mSystemLocationListener = null;
+        mOnLocationCallback = null;
         if (null == weakReference) {
             return;
         }
@@ -143,19 +143,23 @@ public class SystemLocationUtil implements LocationListener {
     }
 
     public String getAddressStr() {
-        if (null != addr) {
+        return getAddressStr(addr);
+    }
+
+    public String getAddressStr(Address address) {
+        if (null != address) {
             // 省-市-区/县-街道/路
             StringBuilder builder = new StringBuilder();
-            builder.append(addr.getAdminArea());
+            builder.append(address.getAdminArea());
             // 直辖市返回的省、市相同，做差异判断
-            if (!TextUtils.equals(addr.getAdminArea(), addr.getLocality())) {
-                builder.append(addr.getLocality());
+            if (!TextUtils.equals(address.getAdminArea(), address.getLocality())) {
+                builder.append(address.getLocality());
             }
-            builder.append(addr.getSubLocality())
-                    .append(addr.getThoroughfare());
-            if (addr.getMaxAddressLineIndex() > 0) {
+            builder.append(address.getSubLocality())
+                    .append(address.getThoroughfare());
+            if (address.getMaxAddressLineIndex() > 0) {
                 // 门址
-                builder.append(addr.getAddressLine(0));
+                builder.append(address.getAddressLine(0));
             }
             return builder.toString();
         }
@@ -163,12 +167,16 @@ public class SystemLocationUtil implements LocationListener {
     }
 
     /**
-     * 获取具体位置信息（必须异步）
+     * 根据国标WGS84坐标系经纬度获取具体位置信息
      *
      * @param latitude  经度
      * @param longitude 纬度
      */
-    public void reverGeo(final double latitude, final double longitude) {
+    public void reverGeo(double latitude, double longitude) {
+        reverGeo(latitude, longitude, null);
+    }
+
+    public void reverGeo(final double latitude, final double longitude, OnReverGeoCallback onReverGeoCallback) {
         IOUtil.getThreadPool().execute(() -> {
             if (null == weakReference) {
                 return;
@@ -189,8 +197,11 @@ public class SystemLocationUtil implements LocationListener {
                 if (null != addresses && !addresses.isEmpty()) {
                     // 第一个位置
                     addr = addresses.get(0);
-                    if (null != mSystemLocationListener) {
-                        mSystemLocationListener.onLocationReverGeoResult();
+                    if (null != mOnLocationCallback) {
+                        mOnLocationCallback.onLocationReverGeoResult();
+                    }
+                    if (null != onReverGeoCallback) {
+                        onReverGeoCallback.onReverGeo(addr);
                     }
                     LogUtil.i(TAG, getAddressStr());
                 }
@@ -211,8 +222,8 @@ public class SystemLocationUtil implements LocationListener {
             if (null != mLocationGCJ02) {
                 mLocationBD09LL = convertGCJ02ToBD09LL(mLocationGCJ02);
             }
-            if (null != mSystemLocationListener) {
-                mSystemLocationListener.onLocationChanged();
+            if (null != mOnLocationCallback) {
+                mOnLocationCallback.onLocationChanged();
             }
         }
     }

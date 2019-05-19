@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * Created by NyatoLEO on 2017/2/4.
+ * Created by LEO on 2017/2/4.
  * 管理栈中的activity
  */
 public class AppStackManager {

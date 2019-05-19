@@ -34,7 +34,7 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.leo.commonutil.callback.OnEditTextClearFocusCallback;
+import com.leo.commonutil.callback.OnETClearFocusCallback;
 import com.leo.commonutil.storage.SPHelp;
 
 import java.io.BufferedReader;
@@ -165,10 +165,10 @@ public final class SystemUtils {
     /**
      * 关闭软键盘
      *
-     * @param mEditText 获得焦点的输入框
      * @param mContext  上下文
+     * @param mEditText 获得焦点的输入框
      */
-    public static void hideSoftKeyboard(EditText mEditText, Context mContext) {
+    public static void hideSoftKeyboard(Context mContext, EditText mEditText) {
         try {
             mEditText.clearFocus();
             InputMethodManager imm = (InputMethodManager) mContext
@@ -191,7 +191,7 @@ public final class SystemUtils {
                     inputMethodManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
                 }
             }
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -207,13 +207,13 @@ public final class SystemUtils {
     }
 
     public static void setCanceledOnTouchOutsideET(final Context context, View view,
-                                                   @Nullable final OnEditTextClearFocusCallback onEditTextClearFocusCallback) {
+                                                   @Nullable final OnETClearFocusCallback onETClearFocusCallback) {
         //Set up touch listener for non-text box views to hide keyboard.
         if (!(view instanceof EditText)) {
             view.setOnTouchListener((v, event) -> {
                 SystemUtils.hideSoftKeyboard((Activity) context);
-                if (null != onEditTextClearFocusCallback) {
-                    onEditTextClearFocusCallback.editTextClearFocusListener();
+                if (null != onETClearFocusCallback) {
+                    onETClearFocusCallback.editTextClearFocusListener();
                 }
                 return false;
             });
@@ -223,7 +223,7 @@ public final class SystemUtils {
         if (view instanceof ViewGroup) {
             for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
                 View innerView = ((ViewGroup) view).getChildAt(i);
-                setCanceledOnTouchOutsideET(context, innerView, onEditTextClearFocusCallback);
+                setCanceledOnTouchOutsideET(context, innerView, onETClearFocusCallback);
             }
         }
     }

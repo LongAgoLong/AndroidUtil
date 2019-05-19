@@ -63,7 +63,7 @@ public final class WindowUtils {
     /**
      * 当前是否是横屏
      *
-     * @param context  context
+     * @param context context
      * @return boolean
      */
     public static final boolean isLandscape(Context context) {
@@ -73,7 +73,7 @@ public final class WindowUtils {
     /**
      * 当前是否是竖屏
      *
-     * @param context  context
+     * @param context context
      * @return boolean
      */
     public static final boolean isPortrait(Context context) {
@@ -81,21 +81,24 @@ public final class WindowUtils {
     }
 
     /**
-     *  调整窗口的透明度  1.0f,0.5f 变暗
-     * @param from  from>=0&&from<=1.0f
-     * @param to  to>=0&&to<=1.0f
-     * @param context  当前的activity
+     * 调整窗口的透明度  1.0f,0.5f 变暗
+     *
+     * @param from    from>=0&&from<=1.0f
+     * @param to      to>=0&&to<=1.0f
+     * @param context 当前的activity
      */
     public static void dimBackground(final float from, final float to, Activity context) {
         final Window window = context.getWindow();
+        if (null == window) {
+            return;
+        }
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(from, to);
         valueAnimator.setDuration(500);
         valueAnimator.addUpdateListener(
                 new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
-                        WindowManager.LayoutParams params
-                                = window.getAttributes();
+                        WindowManager.LayoutParams params = window.getAttributes();
                         params.alpha = (Float) animation.getAnimatedValue();
                         window.setAttributes(params);
                     }
@@ -103,12 +106,16 @@ public final class WindowUtils {
         valueAnimator.start();
     }
 
+    /**
+     * 透明状态栏
+     *
+     * @param context
+     */
     public static void setStatusBarTranslucent(Context context) {
         if (!(context instanceof Activity)) {
             return;
         }
         Activity activity = (Activity) context;
-        // 5.0以上系统状态栏透明
         Window window = activity.getWindow();
         if (null == window) {
             return;

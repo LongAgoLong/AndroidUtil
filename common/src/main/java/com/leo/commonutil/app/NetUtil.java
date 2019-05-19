@@ -15,6 +15,8 @@ import com.leo.commonutil.enumerate.NetType;
  * 网络状态工具类
  */
 public final class NetUtil {
+    private static final String TAG = NetUtil.class.getSimpleName();
+
     private NetUtil() {
     }
 
@@ -40,7 +42,7 @@ public final class NetUtil {
      * @return
      */
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-    public static int netState(Context context) {
+    public static int netType(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (null != cm && null != cm.getActiveNetworkInfo()
@@ -78,6 +80,15 @@ public final class NetUtil {
         return NetType.NONE;
     }
 
-
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    public static boolean isNetConnect(Context context) {
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        // 获取代表联网状态的NetWorkInfo对象
+        NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
+        if (networkInfo == null) {
+            return false;
+        }
+        return networkInfo.isAvailable();
+    }
 }
 
