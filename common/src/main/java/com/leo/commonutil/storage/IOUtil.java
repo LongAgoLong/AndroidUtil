@@ -71,21 +71,24 @@ public class IOUtil {
      * @param append   是否累加
      * @return 是否成功
      */
-    public static boolean saveTextValue(String fileName, String content, boolean append) {
-        try {
-            File textFile = new File(fileName);
-            if (!append && textFile.exists()) {
-                textFile.delete();
+    public static void saveTextValue(String fileName, String content, boolean append) {
+        getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    File textFile = new File(fileName);
+                    if (!append && textFile.exists()) {
+                        textFile.delete();
+                    }
+
+                    FileOutputStream os = new FileOutputStream(textFile);
+                    os.write(content.getBytes("UTF-8"));
+                    os.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-
-            FileOutputStream os = new FileOutputStream(textFile);
-            os.write(content.getBytes("UTF-8"));
-            os.close();
-        } catch (Exception ee) {
-            return false;
-        }
-
-        return true;
+        });
     }
 
 

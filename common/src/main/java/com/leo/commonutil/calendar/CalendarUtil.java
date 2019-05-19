@@ -65,9 +65,18 @@ public final class CalendarUtil {
         return "";
     }
 
-    /*
+    /**
      * 添加日历事件
-     * */
+     *
+     * @param context
+     * @param title     标题
+     * @param content   内容
+     * @param UnitTime  时间单位
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @param hasAlarm  是否需要闹钟提醒
+     * @return
+     */
     @CalendarAddResult
     public static int addCalendarEvent(Context context, @NonNull String title, @NonNull String content, @UnitTime int UnitTime,
                                        long startTime, long endTime, boolean hasAlarm) {
