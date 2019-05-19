@@ -8,29 +8,49 @@ import android.support.annotation.NonNull;
  * Created by LEO
  * on 2017/5/19.
  */
-public class SharedPreferencesUril {
+public class SPHelp {
     private static final String KEY = "com.leo.sp_key";
-    private static SharedPreferencesUril preferencesUtil;
+    private static SPHelp preferencesUtil;
 
-    private SharedPreferencesUril() {
+    private SPHelp() {
     }
 
     private SharedPreferences getSp(Context context) {
         return context.getSharedPreferences(KEY, Context.MODE_PRIVATE);
     }
 
-    public static SharedPreferencesUril getInstance() {
+    public static SPHelp getInstance() {
         if (null == preferencesUtil) {
-            synchronized (SharedPreferencesUril.class) {
+            synchronized (SPHelp.class) {
                 if (null == preferencesUtil) {
-                    preferencesUtil = new SharedPreferencesUril();
+                    preferencesUtil = new SPHelp();
                 }
             }
         }
         return preferencesUtil;
     }
 
-    public boolean put(Context context, @NonNull String key, @NonNull Object o) {
+    public void put(Context context, @NonNull String key, @NonNull Object o) {
+        SharedPreferences sp = getSp(context);
+        if (o instanceof String) {
+            String s = (String) o;
+            sp.edit().putString(key, s).apply();
+        } else if (o instanceof Boolean) {
+            boolean b = (boolean) o;
+            sp.edit().putBoolean(key, b).apply();
+        } else if (o instanceof Float) {
+            float f = (float) o;
+            sp.edit().putFloat(key, f).apply();
+        } else if (o instanceof Integer) {
+            int i = (int) o;
+            sp.edit().putInt(key, i).apply();
+        } else if (o instanceof Long) {
+            long l = (long) o;
+            sp.edit().putLong(key, l).apply();
+        }
+    }
+
+    public boolean putSync(Context context, @NonNull String key, @NonNull Object o) {
         SharedPreferences sp = getSp(context);
         if (o instanceof String) {
             String s = (String) o;
@@ -89,7 +109,6 @@ public class SharedPreferencesUril {
 
     public long getLong(Context context, @NonNull String key) {
         return getLong(context, key, 0L);
-
     }
 
     public long getLong(Context context, @NonNull String key, long defaultValue) {

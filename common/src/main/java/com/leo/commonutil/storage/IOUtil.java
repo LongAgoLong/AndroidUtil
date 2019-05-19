@@ -6,9 +6,17 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class IOUtil {
+    private static ExecutorService mThreadPool = Executors.newFixedThreadPool(5);
+
     private IOUtil() {
+    }
+
+    public static ExecutorService getThreadPool() {
+        return mThreadPool;
     }
 
     //从流中读取数据

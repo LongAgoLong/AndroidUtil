@@ -35,7 +35,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.leo.commonutil.callback.OnEditTextClearFocusCallback;
-import com.leo.commonutil.storage.SharedPreferencesUril;
+import com.leo.commonutil.storage.SPHelp;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -56,10 +56,10 @@ public final class SystemUtils {
                 - SystemUtils.getStatusBarHeight(paramActivity)
                 - SystemUtils.getAppHeight(paramActivity);
         if (height == 0) {
-            height = SharedPreferencesUril.getInstance().getInt(paramActivity, "KeyboardHeight",
+            height = SPHelp.getInstance().getInt(paramActivity, "KeyboardHeight",
                     dp2px(paramActivity, 295));//295dp-787为默认软键盘高度 基本差不离
         } else {
-            SharedPreferencesUril.getInstance().put(paramActivity, "KeyboardHeight", height);
+            SPHelp.getInstance().put(paramActivity, "KeyboardHeight", height);
         }
         return height;
     }

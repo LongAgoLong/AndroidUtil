@@ -1,4 +1,4 @@
-package com.leo.commonutil.callback;
+package com.leo.commonutil.location;
 
 public interface SystemLocationListener {
     void onLocationChanged();

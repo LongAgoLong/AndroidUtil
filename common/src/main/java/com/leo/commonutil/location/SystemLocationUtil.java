@@ -14,13 +14,11 @@ import android.text.TextUtils;
 
 import com.leo.commonutil.app.LogUtil;
 import com.leo.commonutil.app.SystemUtils;
-import com.leo.commonutil.callback.SystemLocationListener;
+import com.leo.commonutil.storage.IOUtil;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -30,7 +28,6 @@ import static android.content.Context.LOCATION_SERVICE;
  */
 public class SystemLocationUtil implements LocationListener {
     private static final String TAG = SystemLocationUtil.class.getSimpleName();
-    private static ExecutorService mThreadPool = Executors.newSingleThreadExecutor();
     private static final double pi = 3.1415926535897932384626;
     private static final double a = 6378245.0;
     private static final double ee = 0.00669342162296594323;
@@ -172,7 +169,7 @@ public class SystemLocationUtil implements LocationListener {
      * @param longitude 纬度
      */
     public void reverGeo(final double latitude, final double longitude) {
-        mThreadPool.execute(() -> {
+        IOUtil.getThreadPool().execute(() -> {
             if (null == weakReference) {
                 return;
             }

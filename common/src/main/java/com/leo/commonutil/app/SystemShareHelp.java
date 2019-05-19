@@ -12,7 +12,7 @@ import android.text.TextUtils;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ShareUtil {
+public class SystemShareHelp {
     /**
      * 分享文件
      */
