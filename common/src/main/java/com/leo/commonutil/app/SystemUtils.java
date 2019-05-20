@@ -35,6 +35,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.leo.commonutil.callback.OnETClearFocusCallback;
+import com.leo.commonutil.storage.IOUtil;
 import com.leo.commonutil.storage.SPHelp;
 
 import java.io.BufferedReader;
@@ -474,13 +475,7 @@ public final class SystemUtils {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
+            IOUtil.closeQuietly(reader);
         }
         return null;
     }

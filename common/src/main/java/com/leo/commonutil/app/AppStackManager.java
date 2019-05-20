@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -99,9 +101,11 @@ public class AppStackManager {
         }
     }
 
-    /*
+    /**
      * 结束指定Activity外其余Activity
-     * */
+     *
+     * @param cls
+     */
     public void keepOnlyActivity(Class<?> cls) {
         try {
             if (null == mStack || mStack.empty()) {
@@ -211,6 +215,15 @@ public class AppStackManager {
             activity.finish();
         }
         mStack.clear();
+    }
+
+    public boolean isActivityRecycler(@NonNull Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            if (activity.isDestroyed()) {
+                return true;
+            }
+        }
+        return activity.isFinishing();
     }
 
     /**

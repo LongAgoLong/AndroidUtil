@@ -133,30 +133,58 @@ public class SDcardUtil {
         }
     }
 
-    public static synchronized void save(Context context, @NonNull String s, String pathName) {
-        File file = new File(pathName);
-        byte[] encode = Base64.encode(s.getBytes(), Base64.NO_WRAP);
-        String s1 = new String(encode);
-        //Write the file to disk
-        OutputStreamWriter writer = null;
-        try {
-            OutputStream out = new FileOutputStream(file);
-            writer = new OutputStreamWriter(out, "UTF-8");
-            writer.write(s1);
-            writer.flush();
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    /**
+     * 保存并加密文本到指定文件
+     *
+     * @param filePath 文件路径
+     * @param fileName 文件名字
+     * @param content  内容
+     * @param append   是否累加
+     */
+    public static synchronized void saveText(@NonNull String filePath, String fileName, String content, boolean append) {
+        IOUtil.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                File file = new File(filePath, fileName);
+                if (!append && file.exists()) {
+                    file.delete();
+                }
+                byte[] encode = Base64.encode(content.getBytes(), Base64.NO_WRAP);
+                String s1 = new String(encode);
+                //Write the file to disk
+                OutputStreamWriter writer = null;
+                OutputStream out = null;
+                try {
+                    out = new FileOutputStream(file, append);
+                    writer = new OutputStreamWriter(out, "UTF-8");
+                    writer.write(s1);
+                    writer.flush();
+                    writer.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    IOUtil.closeQuietly(writer, out);
+                }
+            }
+        });
     }
 
-    public static String get(Context context, @NonNull String pathName) {
-        StringBuilder jsonString = new StringBuilder("");
-        File file = new File(pathName);
+    /**
+     * 从指定文件获取文本并解密
+     *
+     * @param filePath
+     * @param fileName
+     * @return
+     */
+    public static String getText(@NonNull String filePath, @NonNull String fileName) {
+        StringBuilder jsonString = new StringBuilder();
+        File file = new File(filePath, fileName);
         if (file.exists()) {
+            InputStreamReader input = null;
+            BufferedReader reader = null;
             try {
-                InputStreamReader input = new InputStreamReader(new FileInputStream(file), "UTF-8");
-                BufferedReader reader = new BufferedReader(input);
+                input = new InputStreamReader(new FileInputStream(file), "UTF-8");
+                reader = new BufferedReader(input);
                 String empString = null;
                 while ((empString = reader.readLine()) != null) {
                     jsonString.append(empString);
@@ -164,6 +192,8 @@ public class SDcardUtil {
                 reader.close();
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                IOUtil.closeQuietly(reader, input);
             }
         }
         String s = jsonString.toString();
