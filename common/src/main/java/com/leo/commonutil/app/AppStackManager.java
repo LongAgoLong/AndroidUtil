@@ -57,9 +57,11 @@ public class AppStackManager {
         return mStack.lastElement();
     }
 
-    /*
+    /**
      * 获取栈底的Activity
-     * */
+     *
+     * @return
+     */
     public Activity getFirstActivity() {
         if (null == mStack || mStack.empty()) {
             return null;
@@ -70,7 +72,7 @@ public class AppStackManager {
     /**
      * 结束指定的Activity
      */
-    public void killSingleActivity(Activity activity) {
+    public void killActivity(Activity activity) {
         if (activity == null) {
             return;
         }
@@ -83,7 +85,7 @@ public class AppStackManager {
     /**
      * 结束指定的Activity
      */
-    public void killSingleActivity(Class<?> cls) {
+    public void killActivity(Class<?> cls) {
         try {
             if (null == mStack || mStack.empty()) {
                 return;
@@ -148,7 +150,7 @@ public class AppStackManager {
     /**
      * 结束多个Activity
      */
-    public void killMoreActivity(ArrayList<Class<?>> activities) {
+    public void killActivitys(ArrayList<Class<?>> activities) {
         if (null == mStack || mStack.empty()) {
             return;
         }

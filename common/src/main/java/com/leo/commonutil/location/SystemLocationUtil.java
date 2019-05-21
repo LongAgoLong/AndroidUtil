@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.text.TextUtils;
 
+import com.leo.commonutil.app.AppInfoUtil;
 import com.leo.commonutil.app.LogUtil;
 import com.leo.commonutil.app.SystemUtils;
 import com.leo.commonutil.storage.IOUtil;
@@ -49,6 +50,24 @@ public class SystemLocationUtil implements LocationListener {
             }
         }
         return mInstance;
+    }
+
+    public String getBestProvider() {
+        LocationManager locationManager =
+                (LocationManager) AppInfoUtil.getContext().getSystemService(LOCATION_SERVICE);
+        if (null == locationManager) {
+            LogUtil.e(TAG, "LocationManager is null");
+            return null;
+        }
+        List<String> providers = locationManager.getProviders(true);
+        // 测试一般在室内，室内没有gps信号，所以优先网络
+        if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+            return LocationManager.NETWORK_PROVIDER;
+        } else if (providers.contains(LocationManager.GPS_PROVIDER)) {
+            return LocationManager.GPS_PROVIDER;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -155,8 +174,8 @@ public class SystemLocationUtil implements LocationListener {
             if (!TextUtils.equals(address.getAdminArea(), address.getLocality())) {
                 builder.append(address.getLocality());
             }
-            builder.append(address.getSubLocality())
-                    .append(address.getThoroughfare());
+            builder.append(!TextUtils.isEmpty(address.getSubLocality()) ? address.getSubLocality() : "")
+                    .append(!TextUtils.isEmpty(address.getThoroughfare()) ? address.getThoroughfare() : "");
             if (address.getMaxAddressLineIndex() > 0) {
                 // 门址
                 builder.append(address.getAddressLine(0));
@@ -172,20 +191,13 @@ public class SystemLocationUtil implements LocationListener {
      * @param latitude  经度
      * @param longitude 纬度
      */
-    public void reverGeo(double latitude, double longitude) {
-        reverGeo(latitude, longitude, null);
-    }
-
-    public void reverGeo(final double latitude, final double longitude, OnReverGeoCallback onReverGeoCallback) {
+    private void reverGeo(double latitude, double longitude) {
         IOUtil.getThreadPool().execute(() -> {
             if (null == weakReference) {
                 return;
             }
             Context context = weakReference.get();
             if (null == context) {
-                return;
-            }
-            if (null == mLocationGCJ02) {
                 return;
             }
             Geocoder geocoder = new Geocoder(context);
@@ -200,6 +212,34 @@ public class SystemLocationUtil implements LocationListener {
                     if (null != mOnLocationCallback) {
                         mOnLocationCallback.onLocationReverGeoResult();
                     }
+                    LogUtil.i(TAG, getAddressStr());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    /**
+     * 对外提供根据国标WGS84坐标系经纬度获取具体位置信息Geo
+     *
+     * @param context
+     * @param latitude
+     * @param longitude
+     * @param onReverGeoCallback
+     */
+    public void reverGeo(Context context, final double latitude, final double longitude,
+                         OnReverGeoCallback onReverGeoCallback) {
+        IOUtil.getThreadPool().execute(() -> {
+            Geocoder geocoder = new Geocoder(context);
+            int maxResults = 1;
+            try {
+                // 最大结果条数
+                List<Address> addresses = geocoder.getFromLocation(latitude,
+                        longitude, maxResults);
+                if (null != addresses && !addresses.isEmpty()) {
+                    // 第一个位置
+                    Address addr = addresses.get(0);
                     if (null != onReverGeoCallback) {
                         onReverGeoCallback.onReverGeo(addr);
                     }
@@ -246,7 +286,7 @@ public class SystemLocationUtil implements LocationListener {
      * @param location 源坐标：gcj02坐标系
      * @return
      */
-    private Location convertGCJ02ToBD09LL(Location location) {
+    public Location convertGCJ02ToBD09LL(Location location) {
         // 纬度
         double x = location.getLongitude();
         // 经度
@@ -267,7 +307,7 @@ public class SystemLocationUtil implements LocationListener {
      * @param locationWGS84 源坐标：wgs84坐标系
      * @return
      */
-    private Location convertWGS84ToGCJ02(Location locationWGS84) {
+    public Location convertWGS84ToGCJ02(Location locationWGS84) {
         double lat = locationWGS84.getLatitude();
         double lon = locationWGS84.getLongitude();
         if (isOutOfChina(lat, lon)) {
@@ -299,7 +339,7 @@ public class SystemLocationUtil implements LocationListener {
         return false;
     }
 
-    public static double transformLat(double x, double y) {
+    public double transformLat(double x, double y) {
         double ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y
                 + 0.2 * Math.sqrt(Math.abs(x));
         ret += (20.0 * Math.sin(6.0 * x * pi) + 20.0 * Math.sin(2.0 * x * pi)) * 2.0 / 3.0;
@@ -308,7 +348,7 @@ public class SystemLocationUtil implements LocationListener {
         return ret;
     }
 
-    public static double transformLon(double x, double y) {
+    public double transformLon(double x, double y) {
         double ret = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1
                 * Math.sqrt(Math.abs(x));
         ret += (20.0 * Math.sin(6.0 * x * pi) + 20.0 * Math.sin(2.0 * x * pi)) * 2.0 / 3.0;

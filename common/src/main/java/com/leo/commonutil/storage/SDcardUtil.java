@@ -8,6 +8,9 @@ import android.os.StatFs;
 import android.support.annotation.NonNull;
 import android.util.Base64;
 
+import com.leo.commonutil.asyn.BaseAsyncTask;
+import com.leo.commonutil.asyn.OnAsynListener;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -170,7 +173,7 @@ public class SDcardUtil {
     }
 
     /**
-     * 从指定文件获取文本并解密
+     * 从指定文件获取文本并解密（同步）
      *
      * @param filePath
      * @param fileName
@@ -203,5 +206,26 @@ public class SDcardUtil {
         } else {
             return new String(decode);
         }
+    }
+
+    /**
+     * 从指定文件获取文本并解密（异步）
+     *
+     * @param filePath
+     * @param fileName
+     * @param listener
+     */
+    public static void getTextAsyn(@NonNull String filePath, @NonNull String fileName,
+                               @NonNull OnAsynListener<String> listener) {
+        BaseAsyncTask<String> task = new BaseAsyncTask<String>() {
+            @Override
+            protected String doInBackground(Object... objects) {
+                String path = (String) objects[0];
+                String name = (String) objects[1];
+                return getText(path, name);
+            }
+        };
+        task.setOnAsynListener(listener);
+        task.execute(filePath, fileName);
     }
 }
