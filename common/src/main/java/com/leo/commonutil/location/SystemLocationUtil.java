@@ -12,13 +12,12 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.text.TextUtils;
 
-import com.leo.commonutil.app.AppInfoUtil;
+import com.leo.commonutil.app.ContextHelp;
 import com.leo.commonutil.app.LogUtil;
 import com.leo.commonutil.app.SystemUtils;
 import com.leo.commonutil.storage.IOUtil;
 
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -34,7 +33,6 @@ public class SystemLocationUtil implements LocationListener {
     private static final double ee = 0.00669342162296594323;
 
     private static SystemLocationUtil mInstance;
-    private WeakReference<Context> weakReference;
     private OnLocationCallback mOnLocationCallback;
     private Location mLocationWGS84;
     private Location mLocationGCJ02;
@@ -54,7 +52,7 @@ public class SystemLocationUtil implements LocationListener {
 
     public String getBestProvider() {
         LocationManager locationManager =
-                (LocationManager) AppInfoUtil.getContext().getSystemService(LOCATION_SERVICE);
+                (LocationManager) ContextHelp.getContext().getSystemService(LOCATION_SERVICE);
         if (null == locationManager) {
             LogUtil.e(TAG, "LocationManager is null");
             return null;
@@ -73,14 +71,16 @@ public class SystemLocationUtil implements LocationListener {
     /**
      * 开始定位
      *
-     * @param context             context
      * @param provider            LocationManager.GPS_PROVIDER/LocationManager.NETWORK_PROVIDER
      * @param minMillisecond      定位时间间隔
      * @param mOnLocationCallback 回调接口
      */
     @RequiresPermission(anyOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    public void start(Context context, String provider, long minMillisecond, @Nullable OnLocationCallback mOnLocationCallback) {
-        weakReference = new WeakReference<>(context);
+    public void start(String provider, long minMillisecond, @Nullable OnLocationCallback mOnLocationCallback) {
+        Context context = ContextHelp.getContext();
+        if (null == context) {
+            return;
+        }
         this.mOnLocationCallback = mOnLocationCallback;
         // NETWORK_PROVIDER,使用网络定位
         // 定位时间间隔,单位ms；不应小于1000
@@ -108,12 +108,8 @@ public class SystemLocationUtil implements LocationListener {
      */
     @RequiresPermission(anyOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     public void stop() {
-        weakReference.clear();
         mOnLocationCallback = null;
-        if (null == weakReference) {
-            return;
-        }
-        Context context = weakReference.get();
+        Context context = ContextHelp.getContext();
         if (null == context) {
             return;
         }
@@ -193,10 +189,7 @@ public class SystemLocationUtil implements LocationListener {
      */
     private void reverGeo(double latitude, double longitude) {
         IOUtil.getThreadPool().execute(() -> {
-            if (null == weakReference) {
-                return;
-            }
-            Context context = weakReference.get();
+            Context context = ContextHelp.getContext();
             if (null == context) {
                 return;
             }

@@ -2,7 +2,7 @@ package com.leo.androidutil;
 
 import android.app.Application;
 
-import com.leo.commonutil.app.AppInfoUtil;
+import com.leo.commonutil.app.ContextHelp;
 import com.leo.commonutil.app.LogUtil;
 import com.leo.commonutil.enumerate.LogType;
 
@@ -13,7 +13,7 @@ public class LeoApplication extends Application {
         /**
          * 优先调用AppInfoUtil.setContext
          */
-        AppInfoUtil.setContext(this);
+        ContextHelp.setContext(this);
         LogUtil.setType(LogType.DEBUG);
     }
 }

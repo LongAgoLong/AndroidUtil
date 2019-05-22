@@ -20,29 +20,9 @@ import java.lang.ref.WeakReference;
  * at 16:55
  */
 public class AppInfoUtil {
-    private static WeakReference<Context> weakReference;
+
 
     private AppInfoUtil() {
-    }
-
-    /**
-     * 必须在Application中调用
-     *
-     * @param context
-     */
-    public static void setContext(Context context) {
-        AppInfoUtil.weakReference = new WeakReference<>(context.getApplicationContext());
-    }
-
-    public static Context getContext() {
-        if (null == weakReference) {
-            throw new RuntimeException("must setContext() in application");
-        }
-        Context context = weakReference.get();
-        if (null == context) {
-            throw new RuntimeException("must setContext() in application");
-        }
-        return context;
     }
 
     /**
@@ -51,7 +31,7 @@ public class AppInfoUtil {
      * @return
      */
     public static String getAppName() {
-        Context context = getContext();
+        Context context = ContextHelp.getContext();
         PackageManager pm = context.getPackageManager();
         return context.getApplicationInfo().loadLabel(pm).toString();
     }
@@ -62,7 +42,7 @@ public class AppInfoUtil {
      * @return
      */
     public static String getAppVersionName() {
-        Context context = getContext();
+        Context context = ContextHelp.getContext();
         String versionName = "0";
         try {
             PackageManager packageManager = context.getPackageManager();
@@ -99,7 +79,7 @@ public class AppInfoUtil {
      * @return
      */
     public static PackageInfo getPackageInfo() {
-        Context context = getContext();
+        Context context = ContextHelp.getContext();
         PackageInfo info = null;
         try {
             info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
@@ -120,7 +100,7 @@ public class AppInfoUtil {
             return false;
         }
         try {
-            getContext().getPackageManager()
+            ContextHelp.getContext().getPackageManager()
                     .getApplicationInfo(packageName, PackageManager.GET_UNINSTALLED_PACKAGES);
             return true;
         } catch (PackageManager.NameNotFoundException e) {

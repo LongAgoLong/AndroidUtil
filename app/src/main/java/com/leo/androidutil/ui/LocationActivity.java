@@ -1,4 +1,4 @@
-package com.leo.androidutil;
+package com.leo.androidutil.ui;
 
 import android.Manifest;
 import android.location.Address;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.leo.androidutil.R;
 import com.leo.commonutil.app.DateUtil;
 import com.leo.commonutil.app.LogUtil;
 import com.leo.commonutil.asyn.WeakHandler;
@@ -17,6 +18,9 @@ import com.leo.commonutil.location.OnLocationCallback;
 import com.leo.commonutil.location.SystemLocationUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+/**
+ * 系统定位demo
+ */
 public class LocationActivity extends BaseActivity implements OnLocationCallback, View.OnClickListener {
     private static final String TAG = LocationActivity.class.getSimpleName();
     private TextView mResultTv;
@@ -55,7 +59,7 @@ public class LocationActivity extends BaseActivity implements OnLocationCallback
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
@@ -69,7 +73,7 @@ public class LocationActivity extends BaseActivity implements OnLocationCallback
                 .subscribe(aBoolean -> {
                     if (aBoolean) {
                         String bestProvider = SystemLocationUtil.getInstance().getBestProvider();
-                        SystemLocationUtil.getInstance().start(this, bestProvider,
+                        SystemLocationUtil.getInstance().start( bestProvider,
                                 10000, this);
                     } else {
                         LogUtil.e(TAG, "lack of permission");

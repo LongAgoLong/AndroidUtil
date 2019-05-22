@@ -1,10 +1,11 @@
-package com.leo.androidutil;
+package com.leo.androidutil.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 
+import com.leo.androidutil.R;
 import com.leo.commonutil.app.IntentUtil;
 
 public class RootActivity extends BaseActivity implements View.OnClickListener {
