@@ -8,8 +8,8 @@ import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.text.format.Time;
 
-import com.leo.commonutil.enumerate.CalendarAddResult;
-import com.leo.commonutil.enumerate.UnitTime;
+import com.leo.commonutil.enume.CalendarAddResult;
+import com.leo.commonutil.enume.UnitTime;
 
 /**
  * Created by LEO

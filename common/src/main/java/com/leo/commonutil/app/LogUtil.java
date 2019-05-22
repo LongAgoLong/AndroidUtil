@@ -2,7 +2,7 @@ package com.leo.commonutil.app;
 
 import android.util.Log;
 
-import com.leo.commonutil.enumerate.LogType;
+import com.leo.commonutil.enume.LogType;
 
 /**
  * 日志公共类

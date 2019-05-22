@@ -74,7 +74,12 @@ public class NotificationCompatUtil extends ContextWrapper {
         return manager;
     }
 
-    //自定义布局根据通知栏背景色获取文本应适配颜色
+    /**
+     * 自定义布局根据通知栏背景色获取文本应适配颜色
+     *
+     * @param context
+     * @return
+     */
     public static int getNotificationTextColor(Context context) {
         return isSimilarColor(Color.BLACK, getNotificationThemeColor(context)) ? Color.BLACK : Color.WHITE;
     }
@@ -130,19 +135,21 @@ public class NotificationCompatUtil extends ContextWrapper {
         return color;
     }
 
-    /*
-    * 普通样式
-    * bigContent不为空-宽视图文字样式
-    *
-    * Class<?> cls为空不跳转
-    * */
+    /**
+     * 普通样式
+     * bigContent不为空-宽视图文字样式
+     * Class<?> cls为空不跳转
+     *
+     * @param context
+     * @param pendingIntent
+     * @param title
+     * @param content
+     * @param iconBitmap
+     * @param bigContent
+     * @param sound
+     * @return
+     */
     public Notification createOrdinaryNotification(Context context, PendingIntent pendingIntent, @NonNull String title, @NonNull String content, @DrawableRes int iconBitmap, String bigContent, boolean sound) {
-//        PendingIntent pendingIntent = null;
-//        if (cls != null) {
-//            Intent jumpIntent = new Intent(context, cls);
-//            jumpIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            pendingIntent = PendingIntent.getActivity(context, 0, jumpIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        }
         Notification notification;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel(sound);
@@ -189,8 +196,8 @@ public class NotificationCompatUtil extends ContextWrapper {
     }
 
     /*
-    * 宽视图图文样式
-    * */
+     * 宽视图图文样式
+     * */
     public Notification createBigImgNotification(Context context, Class<?> cls, @NonNull String title, @NonNull String content, @DrawableRes int iconBitmap, @NonNull Bitmap bigBitmap) {
         return createBigImgNotification(context, cls, title, content, iconBitmap, bigBitmap, false);
     }
@@ -240,8 +247,8 @@ public class NotificationCompatUtil extends ContextWrapper {
     }
 
     /*
-    * 自定义布局样式
-    * */
+     * 自定义布局样式
+     * */
     public Notification createCustomNotification(Context context, Class<?> cls, @NonNull String title, @NonNull String content, @DrawableRes int iconBitmap, @LayoutRes int layoutId) {
         return createCustomNotification(context, cls, title, content, iconBitmap, layoutId, false);
     }

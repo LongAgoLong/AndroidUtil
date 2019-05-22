@@ -1,7 +1,7 @@
 package com.leo.commonutil.app;
 
 
-import com.leo.commonutil.enumerate.DataDecimal;
+import com.leo.commonutil.enume.DataDecimal;
 
 import java.text.DecimalFormat;
 

@@ -10,9 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
 
-import com.leo.commonutil.enumerate.PkgName;
-
-import java.lang.ref.WeakReference;
+import com.leo.commonutil.enume.PkgName;
 
 /**
  * Create by LEO

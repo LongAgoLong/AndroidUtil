@@ -1,4 +1,4 @@
-package com.leo.commonutil.app;
+package com.leo.commonutil.share;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +7,8 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+
+import com.leo.commonutil.app.AppStackManager;
 
 import java.io.File;
 import java.util.ArrayList;

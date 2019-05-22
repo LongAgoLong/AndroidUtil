@@ -2,7 +2,7 @@ package com.leo.commonutil.safety;
 
 import android.util.Base64;
 
-import com.leo.commonutil.enumerate.AESType;
+import com.leo.commonutil.enume.AESType;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;

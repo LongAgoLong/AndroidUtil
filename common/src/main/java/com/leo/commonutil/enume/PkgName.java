@@ -1,4 +1,4 @@
-package com.leo.commonutil.enumerate;
+package com.leo.commonutil.enume;
 
 public class PkgName {
     private PkgName() {
