@@ -1,4 +1,4 @@
-package com.leo.commonutil.app;
+package com.leo.commonutil.system;
 
 import android.Manifest;
 import android.app.Activity;
@@ -9,8 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.TypedArray;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Looper;
@@ -25,7 +23,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,111 +33,31 @@ import android.widget.EditText;
 
 import com.leo.commonutil.callback.OnETClearFocusCallback;
 import com.leo.commonutil.storage.IOUtil;
-import com.leo.commonutil.storage.SPHelp;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 
+import static com.leo.commonutil.system.WindowUtils.getAppHeight;
+import static com.leo.commonutil.system.WindowUtils.getScreenHeight;
+import static com.leo.commonutil.system.WindowUtils.getStatusBarHeight;
+
 public final class SystemUtils {
     private SystemUtils() {
-    }
-
-    public static int getKeyboardHeight(Activity paramActivity) {
-        int height = SystemUtils.getScreenHeight(paramActivity)
-                - SystemUtils.getStatusBarHeight(paramActivity)
-                - SystemUtils.getAppHeight(paramActivity);
-        if (height == 0) {
-            height = SPHelp.getInstance().getInt(paramActivity, "KeyboardHeight",
-                    dp2px(paramActivity, 295));//295dp-787为默认软键盘高度 基本差不离
-        } else {
-            SPHelp.getInstance().put(paramActivity, "KeyboardHeight", height);
-        }
-        return height;
-    }
-
-    /**
-     * 得到设备屏幕的高度
-     **/
-    public static int getScreenHeight(Context context) {
-        DisplayMetrics dm = context.getResources().getDisplayMetrics();
-        return dm.heightPixels;
-    }
-
-    /**
-     * 得到设备屏幕的宽度
-     */
-    public static int getScreenWidth(Context context) {
-        DisplayMetrics dm = context.getResources().getDisplayMetrics();
-        return dm.widthPixels;
-    }
-
-    /**
-     * statusBar高度
-     **/
-    public static int getStatusBarHeight(Activity paramActivity) {
-        Rect localRect = new Rect();
-        paramActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
-        return localRect.top;
-
-    }
-
-    /**
-     * 可见屏幕高度
-     **/
-    public static int getAppHeight(Activity paramActivity) {
-        Rect localRect = new Rect();
-        paramActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
-        return localRect.height();
-    }
-
-    // below actionbar, above softkeyboard
-    public static int getAppContentHeight(Activity paramActivity) {
-        return SystemUtils.getScreenHeight(paramActivity) - SystemUtils.getStatusBarHeight(paramActivity)
-                - SystemUtils.getActionBarHeight(paramActivity) - SystemUtils.getKeyboardHeight(paramActivity);
-    }
-
-    /**
-     * 获取actiobar高度
-     **/
-    public static int getActionBarHeight(Activity paramActivity) {
-        if (true) {
-            return SystemUtils.dp2px(paramActivity, 48);
-        }
-        int[] attrs = new int[]{android.R.attr.actionBarSize};
-        TypedArray ta = paramActivity.obtainStyledAttributes(attrs);
-        return ta.getDimensionPixelSize(0, SystemUtils.dp2px(paramActivity, 48));
-    }
-
-    /**
-     * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
-     */
-    public static int dp2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
-
-    /**
-     * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
-     */
-    public static int px2dp(Context context, float pxValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (pxValue / scale + 0.5f);
     }
 
     /**
      * 键盘是否在显示
      **/
     public static boolean isKeyBoardShow(Activity paramActivity) {
-        int height = SystemUtils.getScreenHeight(paramActivity)
-                - SystemUtils.getStatusBarHeight(paramActivity)
-                - SystemUtils.getAppHeight(paramActivity);
+        int height = getScreenHeight(paramActivity)
+                - getStatusBarHeight(paramActivity)
+                - getAppHeight(paramActivity);
         return height != 0;
     }
 

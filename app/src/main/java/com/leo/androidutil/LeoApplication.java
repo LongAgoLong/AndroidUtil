@@ -2,8 +2,8 @@ package com.leo.androidutil;
 
 import android.app.Application;
 
-import com.leo.commonutil.app.ContextHelp;
-import com.leo.commonutil.app.LogUtil;
+import com.leo.commonutil.system.ContextHelp;
+import com.leo.commonutil.system.LogUtil;
 import com.leo.commonutil.enume.LogType;
 
 public class LeoApplication extends Application {

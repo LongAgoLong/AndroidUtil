@@ -10,6 +10,10 @@ import android.text.format.Time;
 
 import com.leo.commonutil.enume.CalendarAddResult;
 import com.leo.commonutil.enume.UnitTime;
+import com.leo.commonutil.enume.UnitWeek;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by LEO
@@ -111,5 +115,65 @@ public final class CalendarUtil {
             e.printStackTrace();
             return CalendarAddResult.OTHER_ERROR;
         }
+    }
+
+    /**
+     * 时间戳转化具体日历信息
+     *
+     * @param type 时间戳单位
+     * @param time 时间戳
+     * @return
+     */
+    public static CalendarInfo getCalendarInfo(@UnitTime int type, long time) {
+        long millionTime;
+        switch (type) {
+            case UnitTime.MILLIONSECOND:
+                millionTime = time;
+                break;
+            case UnitTime.SECOND:
+                millionTime = time * 1000;
+                break;
+            case UnitTime.MINUTE:
+                millionTime = time * 1000 * 60;
+                break;
+            case UnitTime.HOUR:
+                millionTime = time * 1000 * 3600;
+                break;
+            default:
+                throw new RuntimeException("UnitTime error");
+        }
+        Calendar cd = Calendar.getInstance();
+        cd.setTime(new Date(millionTime));
+        int year = cd.get(Calendar.YEAR);
+        int month = cd.get(Calendar.MONTH);
+        int day = cd.get(Calendar.DAY_OF_MONTH);
+        int w = cd.get(Calendar.DAY_OF_WEEK);
+        int week;
+        switch (w) {
+            case Calendar.SUNDAY:
+                week = UnitWeek.SUNDAY;
+                break;
+            case Calendar.MONDAY:
+                week = UnitWeek.MONDAY;
+                break;
+            case Calendar.TUESDAY:
+                week = UnitWeek.TUESDAY;
+                break;
+            case Calendar.WEDNESDAY:
+                week = UnitWeek.WEDNESDAY;
+                break;
+            case Calendar.THURSDAY:
+                week = UnitWeek.THURSDAY;
+                break;
+            case Calendar.FRIDAY:
+                week = UnitWeek.FRIDAY;
+                break;
+            case Calendar.SATURDAY:
+                week = UnitWeek.SATURDAY;
+                break;
+            default:
+                throw new RuntimeException("DAY_OF_WEEK error");
+        }
+        return new CalendarInfo(year, month, day, week);
     }
 }

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.leo.androidutil.R;
 import com.leo.commonutil.calendar.DateUtil;
-import com.leo.commonutil.app.LogUtil;
+import com.leo.commonutil.system.LogUtil;
 import com.leo.commonutil.asyn.WeakHandler;
 import com.leo.commonutil.enume.UnitTime;
 import com.leo.commonutil.location.OnLocationCallback;

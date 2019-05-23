@@ -1,7 +1,8 @@
-package com.leo.commonutil.app;
+package com.leo.commonutil.system;
 
 import android.util.Log;
 
+import com.leo.commonutil.app.AppInfoUtil;
 import com.leo.commonutil.enume.LogType;
 
 /**

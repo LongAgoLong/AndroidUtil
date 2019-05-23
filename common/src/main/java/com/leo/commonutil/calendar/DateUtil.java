@@ -203,7 +203,7 @@ public final class DateUtil {
      */
     public static long toTimeStamp(String timeStr, String format) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.CHINA);
-        Date date = null;
+        Date date;
         try {
             date = simpleDateFormat.parse(timeStr);
             return date.getTime();

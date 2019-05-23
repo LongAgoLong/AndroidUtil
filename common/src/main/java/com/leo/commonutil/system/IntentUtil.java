@@ -1,4 +1,4 @@
-package com.leo.commonutil.app;
+package com.leo.commonutil.system;
 
 import android.app.Activity;
 import android.content.Context;

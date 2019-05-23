@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.leo.androidutil.R;
-import com.leo.commonutil.app.IntentUtil;
+import com.leo.commonutil.system.IntentUtil;
 
 public class RootActivity extends BaseActivity implements View.OnClickListener {
     private Button mLocationBtn;

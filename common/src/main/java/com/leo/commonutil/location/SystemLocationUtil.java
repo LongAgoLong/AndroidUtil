@@ -12,9 +12,9 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.text.TextUtils;
 
-import com.leo.commonutil.app.ContextHelp;
-import com.leo.commonutil.app.LogUtil;
-import com.leo.commonutil.app.SystemUtils;
+import com.leo.commonutil.system.ContextHelp;
+import com.leo.commonutil.system.LogUtil;
+import com.leo.commonutil.system.SystemUtils;
 import com.leo.commonutil.storage.IOUtil;
 
 import java.io.IOException;

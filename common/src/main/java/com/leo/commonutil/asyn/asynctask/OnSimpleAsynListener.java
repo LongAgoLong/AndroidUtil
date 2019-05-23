@@ -1,4 +1,4 @@
-package com.leo.commonutil.asyn;
+package com.leo.commonutil.asyn.asynctask;
 
 public class OnSimpleAsynListener<T> implements OnAsynListener<T> {
     @Override

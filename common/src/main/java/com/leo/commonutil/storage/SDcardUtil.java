@@ -8,8 +8,8 @@ import android.os.StatFs;
 import android.support.annotation.NonNull;
 import android.util.Base64;
 
-import com.leo.commonutil.asyn.BaseAsyncTask;
-import com.leo.commonutil.asyn.OnAsynListener;
+import com.leo.commonutil.asyn.asynctask.BaseAsyncTask;
+import com.leo.commonutil.asyn.asynctask.OnAsynListener;
 
 import java.io.BufferedReader;
 import java.io.File;

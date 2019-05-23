@@ -1,4 +1,4 @@
-package com.leo.commonutil.asyn;
+package com.leo.commonutil.asyn.asynctask;
 
 public interface OnAsynListener <T> {
     void onPreExecute();
