@@ -21,7 +21,7 @@ public class ThreadPoolHelp {
      * @param <T>
      * @return
      */
-    public <T> T submit(@NonNull ThreadPoolRunnable<T> runnable) {
+    public static  <T> T submit(@NonNull ThreadPoolRunnable<T> runnable) {
         Future<T> future = IOUtil.getThreadPool().submit(new Callable<T>() {
             @Override
             public T call() throws Exception {
