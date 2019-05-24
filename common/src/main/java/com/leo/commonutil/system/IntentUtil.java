@@ -26,8 +26,6 @@ public final class IntentUtil {
     }
 
     /**
-     * 跳转到主页MainActivity
-     *
      * @param context
      * @param cls
      * @param finishSelf
