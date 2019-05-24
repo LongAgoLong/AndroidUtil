@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.leo.commonutil.media.mp3.Mp3Player;
 import com.leo.commonutil.media.util.MediaUtils;
 import com.leo.commonutil.media.util.TimeMode;
+import com.leo.commonutil.system.AudioFocusHelp;
 
 
 /**
@@ -82,6 +83,7 @@ public class AudioMsgPlayer {
 
     /**
      * 开始播放
+     *
      * @param url
      */
     public void startPlay(@NonNull String url) {
@@ -112,6 +114,7 @@ public class AudioMsgPlayer {
     /*播放*/
     public void play() {
         if (mediaPlayer != null) {
+            AudioFocusHelp.getInstance().requestAudioFocus();
             mediaPlayer.seekTo(params.position);
             mediaPlayer.start();
         }
@@ -138,8 +141,11 @@ public class AudioMsgPlayer {
         }
     }
 
-    /*停止*/
+    /**
+     * 停止
+     */
     public void reset() {
+        AudioFocusHelp.getInstance().abandonAudioFocus();
         stop();
         setPlayListener(null);
     }

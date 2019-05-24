@@ -9,6 +9,7 @@ import com.leo.commonutil.asyn.WeakHandler;
 import com.leo.commonutil.media.msg.AudioMsgPlayer;
 import com.leo.commonutil.media.util.MediaUtils;
 import com.leo.commonutil.media.util.TimeMode;
+import com.leo.commonutil.system.AudioFocusHelp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,10 +79,11 @@ public class Mp3Player {
 
     /**
      * 设置播放完成回调
+     *
      * @param listener
      */
-    public void setOnCompletionListener(@NonNull MediaPlayer.OnCompletionListener listener){
-        if (null!=mediaPlayer){
+    public void setOnCompletionListener(@NonNull MediaPlayer.OnCompletionListener listener) {
+        if (null != mediaPlayer) {
             mediaPlayer.setOnCompletionListener(listener);
         }
     }
@@ -148,6 +150,7 @@ public class Mp3Player {
 
     /**
      * 设置播放url并开始播放
+     *
      * @param url
      */
     public void startPlay(@NonNull String url) {
@@ -180,6 +183,7 @@ public class Mp3Player {
      */
     public void play() {
         if (this.mediaPlayer != null) {
+            AudioFocusHelp.getInstance().requestAudioFocus();
             this.mediaPlayer.seekTo(params.position);
             this.mediaPlayer.start();
             mediaDuration = Integer.parseInt(MediaUtils.timeFormat(this.mediaPlayer.getDuration(), TimeMode.MODE_SECOND));
@@ -192,6 +196,25 @@ public class Mp3Player {
             playState = PLAY;
             update();
         }
+    }
+
+    /**
+     * 暂停
+     */
+    public void pause() {
+        if (mediaPlayer != null) {
+            AudioFocusHelp.getInstance().abandonAudioFocus();
+            mediaPlayer.pause();
+            params.position = mediaPlayer.getCurrentPosition();
+            params.pauseTimeMill = System.currentTimeMillis();
+            if (null != onMP3PlayListenerList && !onMP3PlayListenerList.isEmpty()) {
+                for (OnMP3PlayListener mp3PlayListener : onMP3PlayListenerList) {
+                    mp3PlayListener.onMP3Pause();
+                }
+            }
+        }
+        playState = PAUSE;
+        handler.removeCallbacksAndMessages(null);
     }
 
     /**
@@ -226,24 +249,6 @@ public class Mp3Player {
     public void reset() {
         stop();
         removeAllPlayListener();
-    }
-
-    /**
-     * 暂停
-     */
-    public void pause() {
-        if (mediaPlayer != null) {
-            mediaPlayer.pause();
-            params.position = mediaPlayer.getCurrentPosition();
-            params.pauseTimeMill = System.currentTimeMillis();
-            if (null != onMP3PlayListenerList && !onMP3PlayListenerList.isEmpty()) {
-                for (OnMP3PlayListener mp3PlayListener : onMP3PlayListenerList) {
-                    mp3PlayListener.onMP3Pause();
-                }
-            }
-        }
-        playState = PAUSE;
-        handler.removeCallbacksAndMessages(null);
     }
 
     /**
