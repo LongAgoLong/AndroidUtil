@@ -10,6 +10,7 @@ import android.util.Base64;
 
 import com.leo.commonutil.asyn.asynctask.BaseAsyncTask;
 import com.leo.commonutil.asyn.asynctask.OnAsynListener;
+import com.leo.commonutil.asyn.threadPool.ThreadPoolHelp;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -145,7 +146,7 @@ public class SDcardUtil {
      * @param append   是否累加
      */
     public static synchronized void saveText(@NonNull String filePath, String fileName, String content, boolean append) {
-        IOUtil.getThreadPool().execute(new Runnable() {
+        ThreadPoolHelp.execute(new Runnable() {
             @Override
             public void run() {
                 File file = new File(filePath, fileName);

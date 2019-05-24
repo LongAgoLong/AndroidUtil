@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.text.TextUtils;
 
+import com.leo.commonutil.asyn.threadPool.ThreadPoolHelp;
 import com.leo.commonutil.system.ContextHelp;
 import com.leo.commonutil.system.LogUtil;
 import com.leo.commonutil.system.SystemUtils;
@@ -188,7 +189,7 @@ public class SystemLocationUtil implements LocationListener {
      * @param longitude 纬度
      */
     private void reverGeo(double latitude, double longitude) {
-        IOUtil.getThreadPool().execute(() -> {
+        ThreadPoolHelp.execute(() -> {
             Context context = ContextHelp.getContext();
             if (null == context) {
                 return;
@@ -223,7 +224,7 @@ public class SystemLocationUtil implements LocationListener {
      */
     public void reverGeo(Context context, final double latitude, final double longitude,
                          OnReverGeoCallback onReverGeoCallback) {
-        IOUtil.getThreadPool().execute(() -> {
+        ThreadPoolHelp.execute(() -> {
             Geocoder geocoder = new Geocoder(context);
             int maxResults = 1;
             try {
