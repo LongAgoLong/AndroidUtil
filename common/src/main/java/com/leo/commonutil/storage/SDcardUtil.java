@@ -22,6 +22,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * @author Ari
@@ -214,19 +217,19 @@ public class SDcardUtil {
      *
      * @param filePath
      * @param fileName
-     * @param listener
      */
-    public static void getTextAsyn(@NonNull String filePath, @NonNull String fileName,
-                               @NonNull OnAsynListener<String> listener) {
-        BaseAsyncTask<String> task = new BaseAsyncTask<String>() {
+    public static String getTextAsyn(@NonNull String filePath, @NonNull String fileName) {
+        Future<String> future = ThreadPoolHelp.submit(new Callable<String>() {
             @Override
-            protected String doInBackground(Object... objects) {
-                String path = (String) objects[0];
-                String name = (String) objects[1];
-                return getText(path, name);
+            public String call() throws Exception {
+                return getText(filePath, fileName);
             }
-        };
-        task.setOnAsynListener(listener);
-        task.execute(filePath, fileName);
+        });
+        try {
+            return future.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

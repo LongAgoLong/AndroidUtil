@@ -5,12 +5,20 @@ import android.support.annotation.NonNull;
 import com.leo.commonutil.storage.IOUtil;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * 线程池
+ * 线程池辅助类
  */
 public class ThreadPoolHelp {
+    private static ExecutorService mThreadPool = Executors.newFixedThreadPool(5);
+
+    public static ExecutorService getThreadPool() {
+        return mThreadPool;
+    }
+
     private ThreadPoolHelp() {
     }
 
@@ -22,7 +30,7 @@ public class ThreadPoolHelp {
      * @return
      */
     public static <T> Future<T> submit(@NonNull Callable<T> runnable) {
-        return IOUtil.getThreadPool().submit(runnable);
+        return getThreadPool().submit(runnable);
     }
 
     /**
@@ -31,6 +39,6 @@ public class ThreadPoolHelp {
      * @param runnable
      */
     public static void execute(@NonNull Runnable runnable) {
-        IOUtil.getThreadPool().execute(runnable);
+        getThreadPool().execute(runnable);
     }
 }

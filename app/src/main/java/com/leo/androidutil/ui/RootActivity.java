@@ -27,7 +27,7 @@ public class RootActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.locationBtn:
-                IntentUtil.redirect(this, LocationActivity.class);
+                IntentUtil.startActivity(this, LocationActivity.class);
                 break;
         }
     }

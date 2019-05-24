@@ -1,4 +1,4 @@
-package com.leo.commonutil.system;
+package com.leo.commonutil.view;
 
 import android.view.View.MeasureSpec;
 

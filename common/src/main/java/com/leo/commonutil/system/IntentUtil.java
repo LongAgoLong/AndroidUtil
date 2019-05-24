@@ -9,20 +9,20 @@ import android.os.Bundle;
  * @author sunny TODO activity 之间跳转类
  */
 public final class IntentUtil {
-    public static void redirect(Context context, Class<?> cls) {
-        redirect(context, cls, false, null, false, false);
+    public static void startActivity(Context context, Class<?> cls) {
+        startActivity(context, cls, false, null, false, false);
     }
 
     /**
-     * void IntentUtil redirect TODO 执行跳转的方法
+     * void IntentUtil startActivity TODO 执行跳转的方法
      *
      * @param context
      * @param cls
      * @param finishSelf 跳转后是否结束自己
      * @param bundle     要带到下一个activity的数据
      */
-    public static void redirect(Context context, Class<?> cls, boolean finishSelf, Bundle bundle) {
-        redirect(context, cls, finishSelf, bundle, false, false);
+    public static void startActivity(Context context, Class<?> cls, boolean finishSelf, Bundle bundle) {
+        startActivity(context, cls, finishSelf, bundle, false, false);
     }
 
     /**
@@ -34,8 +34,8 @@ public final class IntentUtil {
      * @param bundle
      * @param clear_top
      */
-    public static void redirect(Context context, Class<?> cls, boolean finishSelf, Bundle bundle, boolean clear_top) {
-        redirect(context, cls, finishSelf, bundle, true, true);
+    public static void startActivity(Context context, Class<?> cls, boolean finishSelf, Bundle bundle, boolean clear_top) {
+        startActivity(context, cls, finishSelf, bundle, true, true);
     }
 
     /**
@@ -45,8 +45,8 @@ public final class IntentUtil {
      * @param bundle
      * @param clear_top  是否clearTop
      */
-    public static void redirect(Context context, Class<?> cls, boolean finishSelf, Bundle bundle, boolean clear_top,
-                                boolean single_top) {
+    public static void startActivity(Context context, Class<?> cls, boolean finishSelf, Bundle bundle, boolean clear_top,
+                                     boolean single_top) {
         Intent it = new Intent();
         it.setClass(context, cls);
         if (clear_top) {
@@ -78,7 +78,7 @@ public final class IntentUtil {
      * @param bundle
      * @param requestCode
      */
-    public static void redirectForResult(Context context, Class<?> cls, Bundle bundle, int requestCode) {
+    public static void startActivityForResult(Context context, Class<?> cls, Bundle bundle, int requestCode) {
         Intent intentRecharge = new Intent();
         if (bundle != null) {
             intentRecharge.putExtras(bundle);

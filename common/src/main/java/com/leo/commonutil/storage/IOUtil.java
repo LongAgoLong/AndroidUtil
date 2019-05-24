@@ -14,13 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class IOUtil {
-    private static ExecutorService mThreadPool = Executors.newFixedThreadPool(5);
-
     private IOUtil() {
-    }
-
-    public static ExecutorService getThreadPool() {
-        return mThreadPool;
     }
 
     /**
