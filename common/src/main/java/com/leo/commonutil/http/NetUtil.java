@@ -8,6 +8,14 @@ import android.support.annotation.RequiresPermission;
 import android.telephony.TelephonyManager;
 
 import com.leo.commonutil.enume.NetType;
+import com.leo.commonutil.system.ContextHelp;
+import com.leo.commonutil.system.LogUtil;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.util.Random;
 
 /**
  * Created by LEO
@@ -38,12 +46,11 @@ public final class NetUtil {
     /**
      * 获取当前网络类型
      *
-     * @param context
      * @return
      */
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-    public static int netType(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context
+    public static int getConnectedType() {
+        ConnectivityManager cm = (ConnectivityManager) ContextHelp.getContext()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (null != cm && null != cm.getActiveNetworkInfo()
                 && cm.getActiveNetworkInfo().isConnectedOrConnecting()) {
@@ -80,15 +87,96 @@ public final class NetUtil {
         return NetType.NONE;
     }
 
+    /**
+     * 判断是否有网络连接
+     *
+     * @return
+     */
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-    public static boolean isNetConnect(Context context) {
-        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        // 获取代表联网状态的NetWorkInfo对象
-        NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
-        if (networkInfo == null) {
+    public static boolean isNetworkConnected() {
+        ConnectivityManager mConnectivityManager = (ConnectivityManager) ContextHelp.getContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+        if (mNetworkInfo != null) {
+            return mNetworkInfo.isAvailable();
+        }
+        return false;
+    }
+
+
+    /**
+     * 判断WIFI网络是否可用
+     *
+     * @param context
+     * @return
+     */
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    public static boolean isWifiConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mWiFiNetworkInfo = mConnectivityManager
+                    .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (mWiFiNetworkInfo != null) {
+                return mWiFiNetworkInfo.isAvailable();
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 判断MOBILE网络是否可用
+     *
+     * @param context
+     * @return
+     */
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    public static boolean isMobileConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mMobileNetworkInfo = mConnectivityManager
+                    .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+            if (mMobileNetworkInfo != null) {
+                return mMobileNetworkInfo.isAvailable();
+            }
+        }
+        return false;
+    }
+
+    public static boolean pingIPs(String... dnsAddress) {
+        if (null == dnsAddress || dnsAddress.length == 0) {
+            return true;
+        }
+        int maxIndex = dnsAddress.length;
+        int indexIP = new Random(maxIndex).nextInt();
+        String ip = dnsAddress[indexIP];
+        LogUtil.i(TAG, " begin ping ip; IP = " + ip);
+        boolean result = tcp2DNSServer(ip);
+        if (!result) {
+            final int k = indexIP + 1;
+            for (indexIP = k; indexIP < k + 3; indexIP++) {
+                result = tcp2DNSServer(dnsAddress[indexIP % maxIndex]);
+                if (result) {
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    private static boolean tcp2DNSServer(String dnsServerIP) {
+        try {
+            int timeoutMs = 1500;
+            Socket sock = new Socket();
+            SocketAddress sockaddr = new InetSocketAddress(dnsServerIP, 53);
+            sock.connect(sockaddr, timeoutMs);
+            sock.close();
+            return true;
+        } catch (IOException e) {
             return false;
         }
-        return networkInfo.isAvailable();
     }
 }
 

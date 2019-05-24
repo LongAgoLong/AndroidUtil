@@ -15,24 +15,22 @@ public class ThreadPoolHelp {
     }
 
     /**
-     * 传入一个在子线程中运行的方法
+     * 异步执行，同步获取返回值
      *
      * @param runnable
      * @param <T>
      * @return
      */
-    public static  <T> T submit(@NonNull ThreadPoolRunnable<T> runnable) {
-        Future<T> future = IOUtil.getThreadPool().submit(new Callable<T>() {
-            @Override
-            public T call() throws Exception {
-                return runnable.run();
-            }
-        });
-        try {
-            return future.get();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static <T> Future<T> submit(@NonNull Callable<T> runnable) {
+        return IOUtil.getThreadPool().submit(runnable);
+    }
+
+    /**
+     * 异步执行
+     *
+     * @param runnable
+     */
+    public static void execute(@NonNull Runnable runnable) {
+        IOUtil.getThreadPool().execute(runnable);
     }
 }

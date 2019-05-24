@@ -1,15 +1,17 @@
 package com.leo.commonutil.storage;
 
 import com.leo.commonutil.asyn.threadPool.ThreadPoolHelp;
-import com.leo.commonutil.asyn.threadPool.ThreadPoolRunnable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class IOUtil {
     private static ExecutorService mThreadPool = Executors.newFixedThreadPool(5);
@@ -47,19 +49,18 @@ public class IOUtil {
      * @throws Exception
      */
     public static byte[] readAsyn(InputStream inStream) {
-        return ThreadPoolHelp.submit(new ThreadPoolRunnable<byte[]>() {
+        Future<byte[]> future = ThreadPoolHelp.submit(new Callable<byte[]>() {
             @Override
-            public byte[] run() throws IOException {
-                ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-                byte[] buffer = new byte[1024];
-                int len = 0;
-                while ((len = inStream.read(buffer)) != -1) {
-                    outStream.write(buffer, 0, len);
-                }
-                closeQuietly(inStream);
-                return outStream.toByteArray();
+            public byte[] call() throws Exception {
+                return read(inStream);
             }
         });
+        try {
+            return future.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
