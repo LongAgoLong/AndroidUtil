@@ -436,7 +436,7 @@ public final class SystemUtils {
      * @param context
      * @return
      */
-    public static boolean isApplicationBackground(final Context context) {
+    public static boolean isAppBackground(final Context context) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
         if (!tasks.isEmpty()) {

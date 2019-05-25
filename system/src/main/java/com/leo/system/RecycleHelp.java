@@ -1,8 +1,11 @@
 package com.leo.system;
 
+import android.app.Activity;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.NonNull;
 
 public class RecycleHelp {
     private RecycleHelp() {
@@ -39,5 +42,19 @@ public class RecycleHelp {
                 drawable.setCallback(null);
             }
         }
+    }
+
+    /**
+     * 判断Activity是否已经被回收或者正在被销毁
+     *
+     * @param activity
+     * @return
+     */
+    public static boolean isActivityRecycled(@NonNull Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1
+                && activity.isDestroyed()) {
+            return true;
+        }
+        return activity.isFinishing();
     }
 }
