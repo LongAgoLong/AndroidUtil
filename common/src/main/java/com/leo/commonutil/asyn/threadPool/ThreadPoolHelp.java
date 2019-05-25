@@ -2,8 +2,6 @@ package com.leo.commonutil.asyn.threadPool;
 
 import android.support.annotation.NonNull;
 
-import com.leo.commonutil.storage.IOUtil;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

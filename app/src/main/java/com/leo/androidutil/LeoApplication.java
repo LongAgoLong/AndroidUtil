@@ -2,9 +2,9 @@ package com.leo.androidutil;
 
 import android.app.Application;
 
-import com.leo.commonutil.system.ContextHelp;
-import com.leo.commonutil.system.LogUtil;
-import com.leo.commonutil.enume.LogType;
+import com.leo.system.ContextHelp;
+import com.leo.system.LogUtil;
+import com.leo.system.enume.LogType;
 
 public class LeoApplication extends Application {
     @Override

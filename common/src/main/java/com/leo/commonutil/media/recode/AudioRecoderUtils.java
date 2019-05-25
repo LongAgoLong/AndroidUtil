@@ -5,9 +5,9 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 
 import com.leo.commonutil.calendar.DateUtil;
-import com.leo.commonutil.system.LogUtil;
 import com.leo.commonutil.asyn.WeakHandler;
 import com.leo.commonutil.enume.UnitTime;
+import com.leo.system.LogUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class AudioRecoderUtils {
     private String FolderPath;
 
     private MediaRecorder mMediaRecorder;
-    private static final String TAG = "nyato";
+    private static final String TAG = "Audio";
     private static int MAX_LENGTH = 1000 * 60 * 10;// 最大录音时长1000*60*10;
 
     private OnAudioStatuListener audioStatusUpdateListener;

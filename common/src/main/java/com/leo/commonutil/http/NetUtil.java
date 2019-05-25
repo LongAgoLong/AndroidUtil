@@ -8,8 +8,8 @@ import android.support.annotation.RequiresPermission;
 import android.telephony.TelephonyManager;
 
 import com.leo.commonutil.enume.NetType;
-import com.leo.commonutil.system.ContextHelp;
-import com.leo.commonutil.system.LogUtil;
+import com.leo.system.ContextHelp;
+import com.leo.system.LogUtil;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

@@ -4,9 +4,7 @@ import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 
 import com.leo.commonutil.media.mp3.Mp3Player;
-import com.leo.commonutil.media.util.MediaUtils;
-import com.leo.commonutil.media.util.TimeMode;
-import com.leo.commonutil.system.AudioFocusHelp;
+import com.leo.system.AudioFocusHelp;
 
 
 /**

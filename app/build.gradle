@@ -36,7 +36,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation project(':common')
 //    implementation 'com.github.LongAgoLong:AndroidUtil:1.1'
     /*RxJava*/
     implementation 'io.reactivex.rxjava2:rxjava:2.1.17'
@@ -44,4 +43,7 @@ dependencies {
     implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.2'
     implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.2'
     implementation "com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar"
+    implementation project(path: ':common')
+    implementation project(path: ':system')
+    implementation project(path: ':safety')
 }
