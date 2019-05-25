@@ -97,7 +97,7 @@ public class LocationActivity extends BaseActivity implements OnLocationCallback
                 return;
             }
             mResultTv.append(DateUtil.format(UnitTime.MILLIONSECOND, System.currentTimeMillis(),
-                    DateUtil.DATA_YYYY_MM_DD_HH_MM_SS));
+                    DateUtil.DATA_YMDHMS));
             mResultTv.append("\n");
             String addressStr = locationUtil.getAddressStr(addressBean);
             mResultTv.append(addressStr);

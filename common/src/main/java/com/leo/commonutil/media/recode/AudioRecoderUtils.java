@@ -72,7 +72,7 @@ public class AudioRecoderUtils {
 //            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 
-            String time = DateUtil.format(UnitTime.MILLIONSECOND, System.currentTimeMillis(), DateUtil.DATA_YYYY_MM_DD_HH_MM4);
+            String time = DateUtil.format(UnitTime.MILLIONSECOND, System.currentTimeMillis(), DateUtil.DATA_YMDHM2);
             filePath = FolderPath + time + ".amr";
             mMediaRecorder.setOutputFile(filePath);
             /*
