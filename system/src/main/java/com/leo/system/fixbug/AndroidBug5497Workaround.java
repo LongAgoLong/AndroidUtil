@@ -1,4 +1,4 @@
-package com.leo.commonutil.fixbug;
+package com.leo.system.fixbug;
 
 import android.app.Activity;
 import android.graphics.Rect;
