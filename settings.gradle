@@ -1,1 +1,1 @@
-include ':app', ':common', ':system', ':safety'
+include ':app', ':common', ':system', ':safety', ':imageproxy'
