@@ -167,15 +167,15 @@ public final class SystemUtils {
      * @return true：可以滚动   false：不可以滚动
      */
     public static boolean canVerticalScroll(EditText editText) {
-        //滚动的距离
+        // 滚动的距离
         int scrollY = editText.getScrollY();
-        //控件内容的总高度
+        // 控件内容的总高度
         int scrollRange = editText.getLayout().getHeight();
-        //控件实际显示的高度
+        // 控件实际显示的高度
         int scrollExtent = editText.getHeight()
                 - editText.getCompoundPaddingTop()
                 - editText.getCompoundPaddingBottom();
-        //控件内容总高度与实际显示高度的差值
+        // 控件内容总高度与实际显示高度的差值
         int scrollDifference = scrollRange - scrollExtent;
         if (scrollDifference == 0) {
             return false;
@@ -363,10 +363,10 @@ public final class SystemUtils {
     public static boolean isAllowMockLocation(final Activity context) {
         boolean isOpen = Settings.Secure.getInt(context.getContentResolver(),
                 Settings.Secure.ALLOW_MOCK_LOCATION, 0) != 0;
-        /*
-         * 该判断API是androidM以下的API,由于Android M中已经没有了关闭允许模拟位置的入口,所以这里一旦检测到开启了模拟位置,并且是android M以上,则
-         * 默认设置为未有开启模拟位置
-         * */
+        /**
+         * 该判断API是androidM以下的API,由于Android M中已经没有了关闭允许模拟位置的入口,
+         * 所以这里一旦检测到开启了模拟位置,并且是android M以上,则默认设置为未有开启模拟位置
+         */
         if (isOpen && Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
             isOpen = false;
         }
@@ -416,13 +416,14 @@ public final class SystemUtils {
      */
     public static boolean isServiceRunning(Context context, String className) {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        //获取正在运行的服务
+        // 获取正在运行的服务
         List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(1000);//maxNum 返回正在运行的服务的上限个数,最多返回多少个服务
         for (ActivityManager.RunningServiceInfo runningServiceInfo : runningServices) {
             ComponentName service = runningServiceInfo.service;
-            //获取正在运行的服务的全类名
+            // 获取正在运行的服务的全类名
             String className2 = service.getClassName();
-            //将获取到的正在运行的服务的全类名和传递过来的服务的全类名比较,一直表示服务正在运行  返回true,不一致表示服务没有运行  返回false
+            // 将获取到的正在运行的服务的全类名和传递过来的服务的全类名比较,
+            // 一致表示服务正在运行返回true,不一致表示服务没有运行返回false
             if (className.equals(className2)) {
                 return true;
             }

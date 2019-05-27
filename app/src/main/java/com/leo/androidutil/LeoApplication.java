@@ -13,7 +13,7 @@ public class LeoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         /**
-         * 优先调用AppInfoUtil.setContext
+         * 优先调用ContextHelp.setContext
          */
         ContextHelp.setContext(this);
         LogUtil.setType(LogType.DEBUG);
