@@ -52,7 +52,10 @@ public final class SystemUtils {
 
     /**
      * 键盘是否在显示
-     **/
+     *
+     * @param paramActivity
+     * @return
+     */
     public static boolean isKeyBoardShow(Activity paramActivity) {
         int height = getScreenHeight(paramActivity)
                 - getStatusBarHeight(paramActivity)
@@ -62,7 +65,10 @@ public final class SystemUtils {
 
     /**
      * 显示键盘
-     **/
+     *
+     * @param mContext
+     * @param paramEditText
+     */
     public static void showKeyBoard(Context mContext, final EditText paramEditText) {
         WeakReference<Context> weakReference = new WeakReference<>(mContext);
         paramEditText.requestFocus();
@@ -98,6 +104,11 @@ public final class SystemUtils {
         }
     }
 
+    /**
+     * 关闭软键盘
+     *
+     * @param activity
+     */
     public static void hideSoftKeyboard(Activity activity) {
         try {
             InputMethodManager inputMethodManager = (InputMethodManager) activity
