@@ -16,9 +16,15 @@ import android.view.View;
 
 public class CstClickableSpan extends ClickableSpan {
     private int textColor;
+    private boolean underLine;
 
     public CstClickableSpan(@ColorRes int color) {
-        this.textColor = color;
+        this(color, false);
+    }
+
+    public CstClickableSpan(@ColorRes int textColor, boolean underLine) {
+        this.textColor = textColor;
+        this.underLine = underLine;
     }
 
     @Override
@@ -30,7 +36,7 @@ public class CstClickableSpan extends ClickableSpan {
     public void updateDrawState(TextPaint ds) {
         super.updateDrawState(ds);
         ds.setColor(textColor);
-        ds.setUnderlineText(false);
+        ds.setUnderlineText(underLine);
     }
 
 }
