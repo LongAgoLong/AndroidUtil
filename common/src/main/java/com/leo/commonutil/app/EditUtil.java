@@ -12,7 +12,16 @@ public class EditUtil {
      *
      * @param editText EditText输入框
      */
-    public static void setETNotInputSpace(EditText editText) {
+    public static void setNotInputSpace(EditText editText) {
+        editText.setFilters(new InputFilter[]{getNotSpaceFilter()});
+    }
+
+    /**
+     * 空格换行输入过滤器
+     *
+     * @return
+     */
+    public static InputFilter getNotSpaceFilter() {
         InputFilter filter = (source, start, end, dest, dstart, dend) -> {
             if (source.equals(" ") || source.toString().contentEquals("\n")) {
                 return "";
@@ -20,7 +29,7 @@ public class EditUtil {
                 return null;
             }
         };
-        editText.setFilters(new InputFilter[]{filter});
+        return filter;
     }
 
     /**
@@ -28,7 +37,16 @@ public class EditUtil {
      *
      * @param editText EditText输入框
      */
-    public static void setETNotInputSpecialChar(EditText editText) {
+    public static void setNotInputSpecialChar(EditText editText) {
+        editText.setFilters(new InputFilter[]{getNotSpecialCharFilter()});
+    }
+
+    /**
+     * 特殊字符输入过滤器
+     *
+     * @return
+     */
+    public static InputFilter getNotSpecialCharFilter() {
         InputFilter filter = (source, start, end, dest, dstart, dend) -> {
             String speChat = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
             Pattern pattern = Pattern.compile(speChat);
@@ -41,6 +59,6 @@ public class EditUtil {
                 return null;
             }
         };
-        editText.setFilters(new InputFilter[]{filter});
+        return filter;
     }
 }

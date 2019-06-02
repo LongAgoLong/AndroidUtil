@@ -19,8 +19,6 @@ import com.leo.system.ContextHelp;
  * at 16:55
  */
 public class AppInfoUtil {
-
-
     private AppInfoUtil() {
     }
 
@@ -56,19 +54,22 @@ public class AppInfoUtil {
         return versionName;
     }
 
-    public static String getPhoneInfo() {
-        return getPhoneInfo(true);
+    public static String getInfo() {
+        return getInfo(true);
     }
 
-    public static String getPhoneInfo(boolean withAppName) {
+    public static String getInfo(boolean withAppName) {
         if (withAppName) {
-            return "手机型号:" + Build.MODEL + ",SDK版本:" + Build.VERSION.SDK_INT
-                    + ",系统版本:" + Build.VERSION.RELEASE + ",APP版本:"
-                    + getAppVersionName() + ",APP名称:" + getAppName();
+            return "手机型号:" + Build.MODEL
+                    + ",SDK版本:" + Build.VERSION.SDK_INT
+                    + ",系统版本:" + Build.VERSION.RELEASE
+                    + ",APP版本:" + getAppVersionName()
+                    + ",APP名称:" + getAppName();
         } else {
-            return "手机型号:" + Build.MODEL + ",SDK版本:" + Build.VERSION.SDK_INT
-                    + ",系统版本:" + Build.VERSION.RELEASE + ",APP版本:"
-                    + getAppVersionName();
+            return "手机型号:" + Build.MODEL
+                    + ",SDK版本:" + Build.VERSION.SDK_INT
+                    + ",系统版本:" + Build.VERSION.RELEASE
+                    + ",APP版本:" + getAppVersionName();
         }
     }
 

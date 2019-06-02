@@ -5,7 +5,9 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.v4.graphics.drawable.DrawableCompat;
 
-public class DrawableUtil {
+public final class DrawableHelp {
+    private DrawableHelp() {
+    }
 
     /**
      * 着色
