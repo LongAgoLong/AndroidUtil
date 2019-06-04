@@ -56,7 +56,7 @@ public final class SystemUtils {
      * @param paramActivity
      * @return
      */
-    public static boolean isKeyBoardShow(Activity paramActivity) {
+    public static boolean isSoftKeyboardShow(Activity paramActivity) {
         int height = getScreenHeight(paramActivity)
                 - getStatusBarHeight(paramActivity)
                 - getAppHeight(paramActivity);
@@ -69,7 +69,7 @@ public final class SystemUtils {
      * @param mContext
      * @param paramEditText
      */
-    public static void showKeyBoard(Context mContext, final EditText paramEditText) {
+    public static void showSoftKeyboard(Context mContext, final EditText paramEditText) {
         WeakReference<Context> weakReference = new WeakReference<>(mContext);
         paramEditText.requestFocus();
         paramEditText.post(() -> {
@@ -245,7 +245,10 @@ public final class SystemUtils {
      * @param color
      */
     public static void setStatuBarColorRes(Activity activity, @ColorRes int color) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && null != activity) {
+        if (null == activity) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = activity.getWindow();
             if (null != window) {
                 window.setStatusBarColor(activity.getResources().getColor(color));
@@ -254,7 +257,10 @@ public final class SystemUtils {
     }
 
     public static void setStatuBarColor(Activity activity, @ColorInt int color) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && null != activity) {
+        if (null == activity) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             Window window = activity.getWindow();
             if (null != window) {
                 window.setStatusBarColor(color);

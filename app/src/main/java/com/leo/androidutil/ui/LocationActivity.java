@@ -2,8 +2,10 @@ package com.leo.androidutil.ui;
 
 import android.Manifest;
 import android.location.Address;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.text.InputFilter;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +27,7 @@ public class LocationActivity extends BaseActivity implements OnLocationCallback
     private static final String TAG = LocationActivity.class.getSimpleName();
     private TextView mResultTv;
     private Button mPermissionBtn;
+    private Button mStopBtn;
     private WeakHandler weakHandler = new WeakHandler();
 
     @Override
@@ -35,6 +38,8 @@ public class LocationActivity extends BaseActivity implements OnLocationCallback
         mResultTv = findViewById(R.id.resultTv);
         mPermissionBtn = findViewById(R.id.permissionBtn);
         mPermissionBtn.setOnClickListener(this);
+        mStopBtn = findViewById(R.id.stopBtn);
+        mStopBtn.setOnClickListener(this);
     }
 
     @Override
@@ -73,7 +78,7 @@ public class LocationActivity extends BaseActivity implements OnLocationCallback
                 .subscribe(aBoolean -> {
                     if (aBoolean) {
                         String bestProvider = SystemLocationUtil.getInstance().getBestProvider();
-                        SystemLocationUtil.getInstance().start( bestProvider,
+                        SystemLocationUtil.getInstance().start(bestProvider,
                                 10000, this);
                     } else {
                         LogUtil.e(TAG, "lack of permission");
@@ -96,16 +101,35 @@ public class LocationActivity extends BaseActivity implements OnLocationCallback
             if (null == addressBean) {
                 return;
             }
-            mResultTv.append(DateUtil.format(UnitTime.MILLIONSECOND, System.currentTimeMillis(),
+            mResultTv.setText(DateUtil.format(UnitTime.MILLIONSECOND, System.currentTimeMillis(),
                     DateUtil.DATA_YMDHMS));
             mResultTv.append("\n");
-            String addressStr = locationUtil.getAddressStr(addressBean);
-            mResultTv.append(addressStr);
-            mResultTv.append("-");
-            mResultTv.append(String.valueOf(addressBean.getLatitude()));
-            mResultTv.append("-");
-            mResultTv.append(String.valueOf(addressBean.getLongitude()));
+            mResultTv.append(locationUtil.getAddressStr(addressBean));
             mResultTv.append("\n");
+            Location wgs84 = locationUtil.getLocationWGS84();
+            if (null != wgs84) {
+                mResultTv.append("国标系 (wgs84)：");
+                mResultTv.append("\n");
+                mResultTv.append(wgs84.getLatitude() + " - " + wgs84.getLongitude());
+                mResultTv.append("\n");
+            }
+            Location gcj02 = locationUtil.getLocationGCJ02();
+            if (null != gcj02) {
+                mResultTv.append("火星坐标系 (GCJ-02)：");
+                mResultTv.append("\n");
+                mResultTv.append(gcj02.getLatitude() + " - " + gcj02.getLongitude());
+                mResultTv.append("\n");
+            }
+            Location bd09LL = locationUtil.getLocationBD09LL();
+            if (null != bd09LL) {
+                mResultTv.append("百度坐标系 (BD-09)：");
+                mResultTv.append("\n");
+                mResultTv.append(bd09LL.getLatitude() + " - " + bd09LL.getLongitude());
+                mResultTv.append("\n");
+            }
+            mResultTv.append("反GEO：");
+            mResultTv.append("\n");
+            mResultTv.append(addressBean.getLatitude() + " - " + addressBean.getLongitude());
         });
     }
 
@@ -114,6 +138,9 @@ public class LocationActivity extends BaseActivity implements OnLocationCallback
         switch (v.getId()) {
             case R.id.permissionBtn:
                 location();
+                break;
+            case R.id.stopBtn:
+                SystemLocationUtil.getInstance().stop();
                 break;
         }
     }

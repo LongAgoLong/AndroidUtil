@@ -18,7 +18,7 @@ public class RecycleHelp {
      *
      * @param animationDrawables
      */
-    public static void tryRecycleAnimationDrawable(AnimationDrawable... animationDrawables) {
+    public static void tryRecycleAnimDrawable(AnimationDrawable... animationDrawables) {
         if (animationDrawables != null && animationDrawables.length > 0) {
             for (AnimationDrawable drawable : animationDrawables) {
                 if (null == drawable) {

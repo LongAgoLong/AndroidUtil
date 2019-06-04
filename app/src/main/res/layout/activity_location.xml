@@ -14,6 +14,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/stopBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="终止定位"
+        app:layout_constraintLeft_toRightOf="@+id/permissionBtn"
+        app:layout_constraintTop_toTopOf="@+id/permissionBtn" />
+
     <TextView
         android:id="@+id/resultTv"
         android:layout_width="0dp"

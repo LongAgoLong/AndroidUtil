@@ -59,7 +59,7 @@ public class AudioFocusHelp implements OnAudioFocusChangeListener {
     }
 
     public void setAudioStreamType(int type) {
-        this.AUDIO_STREAM_TYPE = type;
+        AUDIO_STREAM_TYPE = type;
     }
 
     public int getAudioFocus() {
@@ -78,10 +78,16 @@ public class AudioFocusHelp implements OnAudioFocusChangeListener {
         mAudioFocus = focusChange;
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_GAIN:
+                LogUtil.i(TAG,"focusChange：AUDIOFOCUS_GAIN");
+                break;
             case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
+                LogUtil.i(TAG,"focusChange：AUDIOFOCUS_GAIN_TRANSIENT");
                 break;
             case AudioManager.AUDIOFOCUS_LOSS:
+                LogUtil.i(TAG,"focusChange：AUDIOFOCUS_LOSS");
+                break;
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                LogUtil.i(TAG,"focusChange：AUDIOFOCUS_LOSS_TRANSIENT");
                 break;
             default:
                 break;

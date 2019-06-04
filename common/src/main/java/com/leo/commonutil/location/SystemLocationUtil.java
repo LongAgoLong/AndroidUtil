@@ -72,7 +72,6 @@ public class SystemLocationUtil implements LocationListener {
      * @param minMillisecond      定位时间间隔
      * @param mOnLocationCallback 回调接口
      */
-    @RequiresPermission(anyOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     public void start(String provider, long minMillisecond, @Nullable OnLocationCallback mOnLocationCallback) {
         Context context = ContextHelp.getContext();
         if (null == context) {
@@ -103,7 +102,6 @@ public class SystemLocationUtil implements LocationListener {
     /**
      * 停止定位
      */
-    @RequiresPermission(anyOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     public void stop() {
         mOnLocationCallback = null;
         Context context = ContextHelp.getContext();
@@ -141,7 +139,7 @@ public class SystemLocationUtil implements LocationListener {
      *
      * @return
      */
-    public Location getmLocationWGS84() {
+    public Location getLocationWGS84() {
         return mLocationWGS84;
     }
 
