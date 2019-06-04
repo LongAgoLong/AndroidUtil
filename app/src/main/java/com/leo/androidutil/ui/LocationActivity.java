@@ -5,15 +5,14 @@ import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.text.InputFilter;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.leo.androidutil.R;
-import com.leo.commonutil.calendar.DateUtil;
 import com.leo.commonutil.asyn.WeakHandler;
+import com.leo.commonutil.calendar.DateUtil;
 import com.leo.commonutil.enume.UnitTime;
 import com.leo.commonutil.location.OnLocationCallback;
 import com.leo.commonutil.location.SystemLocationUtil;

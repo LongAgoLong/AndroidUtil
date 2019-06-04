@@ -260,7 +260,7 @@ public final class SystemUtils {
         if (null == activity) {
             return;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = activity.getWindow();
             if (null != window) {
                 window.setStatusBarColor(color);
@@ -304,8 +304,9 @@ public final class SystemUtils {
      * @return 返回检查结果
      */
     public static boolean checkPermissions(Context context, String... permissions) {
-        if (null == permissions || permissions.length == 0)
+        if (null == permissions || permissions.length == 0) {
             return true;
+        }
         boolean isGranted = true;
         for (String permission : permissions) {
             isGranted = ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
