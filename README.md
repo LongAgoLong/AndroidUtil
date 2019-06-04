@@ -17,9 +17,10 @@ implementation 'com.github.LongAgoLong:AndroidUtil:$JitPack-Version$'
 ```
 **单独依赖**
 ```java
+implementation 'com.github.LongAgoLong.AndroidUtil:system:$JitPack-Version$'
 implementation 'com.github.LongAgoLong.AndroidUtil:common:$JitPack-Version$'
 implementation 'com.github.LongAgoLong.AndroidUtil:safety:$JitPack-Version$'
-implementation 'com.github.LongAgoLong.AndroidUtil:system:$JitPack-Version$'
+implementation 'com.github.LongAgoLong.AndroidUtil:imageproxy:$JitPack-Version$'
 ```
 **maven依赖**
 ```java
