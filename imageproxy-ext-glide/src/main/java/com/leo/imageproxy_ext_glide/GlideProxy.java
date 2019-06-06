@@ -1,4 +1,4 @@
-package com.leo.androidutil.bitmapproxy;
+package com.leo.imageproxy_ext_glide;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -20,13 +20,18 @@ import com.leo.imageproxy.IImageProxy;
 import com.leo.imageproxy.IImageProxyBitmapView;
 import com.leo.imageproxy.IImageProxyDrawableView;
 import com.leo.imageproxy.enume.ImageMode;
+import com.leo.imageproxy.enume.ImageTransType;
 
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import jp.wasabeef.glide.transformations.CropSquareTransformation;
 import jp.wasabeef.glide.transformations.MaskTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
-
-public class BitmapProxy implements IImageProxy {
+/**
+ * Created by LEO
+ * On 2019/6/7
+ * Description:图片加载库的glide实现
+ */
+public class GlideProxy implements IImageProxy {
     @Override
     public void loadImage(Context context, @ImageMode int mode, @DrawableRes int drawId, @NonNull String url, boolean isBitmap, ImageView imageView) {
         RequestBuilder<Bitmap> bitmapBuilder = null;
@@ -102,7 +107,7 @@ public class BitmapProxy implements IImageProxy {
     }
 
     @Override
-    public void loadImage(Context context, @ImageMode int mode, @DrawableRes int drawId, @NonNull String url, IImageProxyBitmapView bitmapView) {
+    public void loadImage(Context context, @ImageMode int mode, @DrawableRes int drawId, @NonNull String url, final IImageProxyBitmapView bitmapView) {
         RequestBuilder<Bitmap> bitmapBuilder = Glide.with(context)
                 .asBitmap()
                 .load(url);
@@ -161,7 +166,7 @@ public class BitmapProxy implements IImageProxy {
     }
 
     @Override
-    public void loadImage(Context context, @ImageMode int mode, @DrawableRes int drawId, @NonNull String url, IImageProxyDrawableView drawableView) {
+    public void loadImage(Context context, @ImageMode int mode, @DrawableRes int drawId, @NonNull String url, final IImageProxyDrawableView drawableView) {
         RequestBuilder<Drawable> gifBuilder = Glide.with(context)
                 .asDrawable()
                 .load(url);
@@ -239,7 +244,7 @@ public class BitmapProxy implements IImageProxy {
     }
 
     @Override
-    public void loadCircularBeadImage(Context context, @NonNull String url, int px, IImageProxyBitmapView bitmapView) {
+    public void loadCircularBeadImage(Context context, @NonNull String url, int px, final IImageProxyBitmapView bitmapView) {
         Glide.with(context)
                 .asBitmap()
                 .load(url)
@@ -254,7 +259,7 @@ public class BitmapProxy implements IImageProxy {
     }
 
     @Override
-    public void loadCircularBeadImage(Context context, @NonNull String url, int px, IImageProxyDrawableView drawableView) {
+    public void loadCircularBeadImage(Context context, @NonNull String url, int px, final IImageProxyDrawableView drawableView) {
         Glide.with(context)
                 .asGif()
                 .load(url)
@@ -269,7 +274,38 @@ public class BitmapProxy implements IImageProxy {
     }
 
     @Override
-    public void loadTransImage(Context context, @NonNull String url, int transType, float... value) {
-
+    public void loadTransImage(Context context, @NonNull String url, @ImageTransType int transType, float... value) {
+        switch (transType) {
+            case ImageTransType.COLOR_FILTER:
+                break;
+            case ImageTransType.GRAY_SCALE:
+                break;
+            case ImageTransType.BLUR:
+                break;
+            case ImageTransType.SUPPORT_RS_BLUR:
+                break;
+            case ImageTransType.TOON:
+                break;
+            case ImageTransType.SEPIA:
+                break;
+            case ImageTransType.CONTRAST:
+                break;
+            case ImageTransType.INVERT:
+                break;
+            case ImageTransType.PIXEL:
+                break;
+            case ImageTransType.SKETCH:
+                break;
+            case ImageTransType.SWIRL:
+                break;
+            case ImageTransType.BRIGHTNESS:
+                break;
+            case ImageTransType.KUAWAHARA:
+                break;
+            case ImageTransType.VIGNETTE:
+                break;
+            default:
+                break;
+        }
     }
 }

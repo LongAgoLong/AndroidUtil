@@ -56,4 +56,5 @@ dependencies {
     implementation project(path: ':system')
     implementation project(path: ':safety')
     implementation project(path: ':imageproxy')
+    implementation project(path: ':imageproxy-ext-glide')
 }

@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/imageproxy" />
+            <option value="$PROJECT_DIR$/imageproxy-ext-glide" />
             <option value="$PROJECT_DIR$/safety" />
             <option value="$PROJECT_DIR$/system" />
           </set>

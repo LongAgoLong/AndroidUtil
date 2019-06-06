@@ -33,7 +33,10 @@ public class SystemShareHelp {
         }
     }
 
-    //分享文字
+    /**
+     * 分享文字
+     * @param shareText
+     */
     public static void shareText(@NonNull String shareText) {
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
