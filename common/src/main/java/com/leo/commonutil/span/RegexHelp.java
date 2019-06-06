@@ -33,8 +33,8 @@ import java.util.regex.Pattern;
 /**
  * <h2>正则表达式工具类，提供一些常用的正则表达式</h2>
  */
-public class RegexUtils {
-    private RegexUtils() {
+public class RegexHelp {
+    private RegexHelp() {
     }
 
     public static final String NUMBER = "[0-9]\\d*";
