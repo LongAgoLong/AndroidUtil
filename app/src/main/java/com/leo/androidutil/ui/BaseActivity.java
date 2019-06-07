@@ -1,7 +1,7 @@
 package com.leo.androidutil.ui;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.leo.commonutil.app.AppStackManager;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;

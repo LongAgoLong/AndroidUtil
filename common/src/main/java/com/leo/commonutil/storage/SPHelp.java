@@ -2,7 +2,7 @@ package com.leo.commonutil.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by LEO

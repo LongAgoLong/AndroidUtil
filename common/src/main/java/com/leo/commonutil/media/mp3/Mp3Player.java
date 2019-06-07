@@ -3,7 +3,7 @@ package com.leo.commonutil.media.mp3;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.media.MediaPlayer;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.leo.commonutil.asyn.WeakHandler;
 import com.leo.commonutil.media.msg.AudioMsgPlayer;

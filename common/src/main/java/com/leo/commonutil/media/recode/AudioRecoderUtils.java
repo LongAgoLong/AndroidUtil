@@ -2,7 +2,7 @@ package com.leo.commonutil.media.recode;
 
 import android.media.MediaRecorder;
 import android.os.Environment;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.leo.commonutil.calendar.DateUtil;
 import com.leo.commonutil.asyn.WeakHandler;

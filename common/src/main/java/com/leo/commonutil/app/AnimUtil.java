@@ -1,8 +1,8 @@
 package com.leo.commonutil.app;
 
 import android.content.Context;
-import android.support.annotation.AnimRes;
-import android.support.annotation.Nullable;
+import androidx.annotation.AnimRes;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;

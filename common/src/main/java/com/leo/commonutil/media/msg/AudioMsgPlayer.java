@@ -1,7 +1,7 @@
 package com.leo.commonutil.media.msg;
 
 import android.media.MediaPlayer;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.leo.commonutil.media.mp3.Mp3Player;
 import com.leo.system.AudioFocusHelp;
@@ -11,7 +11,7 @@ import com.leo.system.AudioFocusHelp;
  * Create by LEO
  * on 2018/9/11
  * at 10:11
- * in MoeLove Company
+
  * 语音消息播放器
  */
 public class AudioMsgPlayer {

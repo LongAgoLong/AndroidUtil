@@ -2,7 +2,7 @@ package com.leo.system;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ArrayRes;
+import androidx.annotation.ArrayRes;
 
 import static com.leo.system.ContextHelp.getContext;
 

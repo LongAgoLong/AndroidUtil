@@ -6,9 +6,9 @@ import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Vibrator;
-import android.support.annotation.Nullable;
-import android.support.annotation.RawRes;
-import android.support.annotation.RequiresPermission;
+import androidx.annotation.Nullable;
+import androidx.annotation.RawRes;
+import androidx.annotation.RequiresPermission;
 
 import com.leo.system.ContextHelp;
 import com.leo.system.LogUtil;

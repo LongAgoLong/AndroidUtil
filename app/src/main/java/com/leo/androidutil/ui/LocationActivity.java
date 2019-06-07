@@ -4,7 +4,7 @@ import android.Manifest;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
+import androidx.appcompat.app.ActionBar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;

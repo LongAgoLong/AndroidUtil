@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Base64;
 
-import com.leo.commonutil.asyn.asynctask.BaseAsyncTask;
-import com.leo.commonutil.asyn.asynctask.OnAsynListener;
 import com.leo.commonutil.asyn.threadPool.ThreadPoolHelp;
 
 import java.io.BufferedReader;
@@ -23,7 +21,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**

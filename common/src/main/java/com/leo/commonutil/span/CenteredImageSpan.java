@@ -5,14 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.style.ImageSpan;
 
 /**
  * Create by LEO
  * on 2018/6/7
  * at 10:11
- * in MoeLove Company
+
  * TextView图文混排居中
  */
 

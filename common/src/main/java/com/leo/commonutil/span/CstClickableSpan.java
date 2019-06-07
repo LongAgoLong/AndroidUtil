@@ -1,6 +1,6 @@
 package com.leo.commonutil.span;
 
-import android.support.annotation.ColorRes;
+import androidx.annotation.ColorRes;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;

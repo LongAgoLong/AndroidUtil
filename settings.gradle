@@ -1,1 +1,1 @@
-include ':app', ':common', ':system', ':safety', ':imageproxy', ':imageproxy-ext-glide'
+include ':app', ':common', ':system', ':safety', ':imageproxy', ':imageproxy-ext-glide', ':recyclerview-help'

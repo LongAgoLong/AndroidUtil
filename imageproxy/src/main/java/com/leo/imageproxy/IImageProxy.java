@@ -1,8 +1,8 @@
 package com.leo.imageproxy;
 
 import android.content.Context;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.leo.imageproxy.enume.ImageMode;

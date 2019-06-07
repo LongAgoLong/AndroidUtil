@@ -2,8 +2,8 @@ package com.leo.system;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorRes;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import androidx.annotation.ColorRes;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 public final class DrawableHelp {
     private DrawableHelp() {
