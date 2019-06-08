@@ -4,9 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import androidx.recyclerview.widget.GridLayoutManager;
-
-public class CstGridLayoutManager extends GridLayoutManager {
-    private boolean isScrollEnabled;
+/**
+ * Created by LEO
+ * On 2019/6/8
+ * Description:可设置是否滚动的GridLayoutManager
+ */
+public class CstGridLayoutManager extends GridLayoutManager implements IScrollEnable {
+    private boolean isScrollEnable;
 
     public CstGridLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -20,12 +24,18 @@ public class CstGridLayoutManager extends GridLayoutManager {
         super(context, spanCount, orientation, reverseLayout);
     }
 
-    public void setScrollEnabled(boolean flag) {
-        this.isScrollEnabled = flag;
+    @Override
+    public boolean canScrollVertically() {
+        return isScrollEnable && super.canScrollVertically();
     }
 
     @Override
-    public boolean canScrollVertically() {
-        return isScrollEnabled && super.canScrollVertically();
+    public void setScrollEnable(boolean enable) {
+        this.isScrollEnable = enable;
+    }
+
+    @Override
+    public boolean getScrollEnable() {
+        return isScrollEnable;
     }
 }

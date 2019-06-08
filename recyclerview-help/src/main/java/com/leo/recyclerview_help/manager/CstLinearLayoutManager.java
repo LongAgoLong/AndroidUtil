@@ -5,8 +5,13 @@ import android.util.AttributeSet;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-public class CstLinearLayoutManager extends LinearLayoutManager {
-    private boolean isScrollEnabled;
+/**
+ * Created by LEO
+ * On 2019/6/8
+ * Description:可设置是否滚动的LinearLayoutManager
+ */
+public class CstLinearLayoutManager extends LinearLayoutManager implements IScrollEnable {
+    private boolean isScrollEnable;
 
     public CstLinearLayoutManager(Context context) {
         super(context);
@@ -20,12 +25,18 @@ public class CstLinearLayoutManager extends LinearLayoutManager {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void setScrollEnabled(boolean flag) {
-        this.isScrollEnabled = flag;
+    @Override
+    public boolean canScrollVertically() {
+        return isScrollEnable && super.canScrollVertically();
     }
 
     @Override
-    public boolean canScrollVertically() {
-        return isScrollEnabled && super.canScrollVertically();
+    public void setScrollEnable(boolean enable) {
+        this.isScrollEnable = enable;
+    }
+
+    @Override
+    public boolean getScrollEnable() {
+        return isScrollEnable;
     }
 }
