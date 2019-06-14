@@ -2,6 +2,7 @@ package com.leo.safety;
 
 import android.util.Base64;
 
+import androidx.annotation.Nullable;
 
 import com.leo.safety.enume.AESType;
 
@@ -15,18 +16,17 @@ import javax.crypto.spec.SecretKeySpec;
  * AES对称加解密工具类
  */
 public final class AESUtil {
-    public static String DEFAULT_KEY = "3d74ddfa93e536e";
-    public static String DEFAULT_IV = "ZnSQKCKP5R3RP5bJ";
 
-    public static void setKey(String defaultKey) {
-        DEFAULT_KEY = defaultKey;
-    }
-
-    public static void setIv(String defaultIv) {
-        DEFAULT_IV = defaultIv;
-    }
-
-    public static String encrypt(String sSrc, String sKey, @AESType String aesType) {
+    /**
+     * 加密
+     *
+     * @param sSrc
+     * @param sKey
+     * @param sIv
+     * @param aesType
+     * @return
+     */
+    public static String encrypt(String sSrc, String sKey, @Nullable String sIv, @AESType String aesType) {
         if (sKey == null) {
             System.out.print("Key为空null");
             return null;
@@ -41,7 +41,10 @@ public final class AESUtil {
         try {
             Cipher cipher = Cipher.getInstance(aesType);//"算法/模式/补码方式"
             if (aesType.equals(AESType.CBC)) {
-                IvParameterSpec iv = new IvParameterSpec(DEFAULT_IV.getBytes());// 使用CBC模式，需要一个向量iv，可增加加密算法的强度
+                if (null == sIv || sIv.equals("")) {
+                    throw new RuntimeException("sIv can't be null or empty when CBC");
+                }
+                IvParameterSpec iv = new IvParameterSpec(sIv.getBytes());// 使用CBC模式，需要一个向量iv，可增加加密算法的强度
                 cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
             } else {
                 cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
@@ -54,8 +57,16 @@ public final class AESUtil {
         return null;
     }
 
-    // 解密
-    public static String decrypt(String sSrc, String sKey, @AESType String aesType) {
+    /**
+     * 解密
+     *
+     * @param sSrc
+     * @param sKey
+     * @param sIv
+     * @param aesType
+     * @return
+     */
+    public static String decrypt(String sSrc, String sKey, @Nullable String sIv, @AESType String aesType) {
         try {
             // 判断Key是否正确
             if (sKey == null) {
@@ -71,7 +82,10 @@ public final class AESUtil {
             SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
             Cipher cipher = Cipher.getInstance(aesType);
             if (aesType.equals(AESType.CBC)) {
-                IvParameterSpec iv = new IvParameterSpec(DEFAULT_IV.getBytes());// 使用CBC模式，需要一个向量iv，可增加加密算法的强度
+                if (null == sIv || sIv.equals("")) {
+                    throw new RuntimeException("sIv can't be null or empty when CBC");
+                }
+                IvParameterSpec iv = new IvParameterSpec(sIv.getBytes());// 使用CBC模式，需要一个向量iv，可增加加密算法的强度
                 cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
             } else {
                 cipher.init(Cipher.DECRYPT_MODE, skeySpec);
