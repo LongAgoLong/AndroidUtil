@@ -4,9 +4,15 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.leo.system.callback.OnDBToBeanCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by LEO
@@ -16,6 +22,7 @@ import androidx.annotation.Nullable;
 public class DBExcuteHelp {
     private static DBExcuteHelp dbExcuteHelp;
     private SQLiteDatabase sqliteDb;
+    private OnDBToBeanCallback onDBToBeanCallback;
 
     private DBExcuteHelp() {
     }
@@ -29,6 +36,10 @@ public class DBExcuteHelp {
             }
         }
         return dbExcuteHelp;
+    }
+
+    public void setOnDBToBeanCallback(OnDBToBeanCallback onDBToBeanCallback) {
+        this.onDBToBeanCallback = onDBToBeanCallback;
     }
 
     /**
@@ -119,6 +130,19 @@ public class DBExcuteHelp {
      */
     public Cursor query(@NonNull String tableName, @Nullable String selection, @Nullable String... selectionArgs) {
         return sqliteDb.query(tableName, null, selection, selectionArgs, null, null, null);
+    }
+
+    public <T> List<T> query(@NonNull String tableName, Class<T> cls, @Nullable String selection, @Nullable String... selectionArgs) {
+        List<T> list = new ArrayList<>();
+        Cursor cursor = query(tableName, selection, selectionArgs);
+        while (cursor.moveToNext()) {
+            if (null != onDBToBeanCallback) {
+                T t = onDBToBeanCallback.onTrans(cursor, cls);
+                list.add(t);
+            }
+        }
+        cursor.close();
+        return list;
     }
 
     /**
