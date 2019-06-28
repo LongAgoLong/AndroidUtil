@@ -12,6 +12,7 @@ import com.leo.recyclerview_help.slide.swap.listener.OnItemTouchCallback;
  * on 2018/7/26
  * at 14:57
  * 半自动拖动交换位置
+ * 主动调用mItemTouchHelper.startDrag使能某些 item 可拖动
  */
 public class SemiAutoItemDragCallback extends ItemTouchHelper.Callback {
     private int dragFlags = 0;    //拖动
