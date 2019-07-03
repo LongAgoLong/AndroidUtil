@@ -17,7 +17,7 @@ import java.io.IOException;
  * on 2017/5/11.
  * 录音封装类
  */
-public class AudioRecoderUtils {
+public class AudioRecordUtils {
     //文件路径
     private String filePath;
     //文件夹路径
@@ -33,16 +33,16 @@ public class AudioRecoderUtils {
     /**
      * 文件存储默认sdcard/record
      */
-    public AudioRecoderUtils() {
+    public AudioRecordUtils() {
         //默认保存路径为/sdcard/record/下
         this(Environment.getExternalStorageDirectory() + "/record/");
     }
 
-    public AudioRecoderUtils(@NonNull String filePath) {
+    public AudioRecordUtils(@NonNull String filePath) {
         this(filePath, 600);
     }
 
-    public AudioRecoderUtils(@NonNull String filePath, int timeSecond) {
+    public AudioRecordUtils(@NonNull String filePath, int timeSecond) {
         MAX_LENGTH = timeSecond * 1000;
         File path = new File(filePath);
         if (!path.exists()) {
