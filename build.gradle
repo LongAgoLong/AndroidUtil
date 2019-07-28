@@ -4,6 +4,10 @@ buildscript {
     ext {
         kotlin_version = '1.3.41'
         ktx_version = '1.0.2'
+        xappcompat_version = '1.0.2'
+        xrecyclerview_version = '1.0.0'
+        xjunit_version = '1.1.1'
+        xespresso_core_version = '3.2.0'
     }
 
     repositories {
