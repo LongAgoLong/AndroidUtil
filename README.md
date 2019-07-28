@@ -21,6 +21,9 @@ implementation 'com.github.LongAgoLong.AndroidUtil:system:$JitPack-Version$'
 implementation 'com.github.LongAgoLong.AndroidUtil:common:$JitPack-Version$'
 implementation 'com.github.LongAgoLong.AndroidUtil:safety:$JitPack-Version$'
 implementation 'com.github.LongAgoLong.AndroidUtil:imageproxy:$JitPack-Version$'
+implementation 'com.github.LongAgoLong.AndroidUtil:imageproxy-ext-glide:$JitPack-Version$'
+implementation 'com.github.LongAgoLong.AndroidUtil:recyclerview-help:$JitPack-Version$'
+implementation 'com.github.LongAgoLong.AndroidUtil:pinyinlib:$JitPack-Version$'
 ```
 **maven依赖**
 ```java
