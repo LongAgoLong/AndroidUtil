@@ -57,4 +57,5 @@ dependencies {
     implementation project(path: ':safety')
     implementation project(path: ':imageproxy')
     implementation project(path: ':imageproxy-ext-glide')
+    implementation project(path: ':pinyinlib')
 }
