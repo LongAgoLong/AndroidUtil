@@ -3,10 +3,11 @@ package com.leo.imageproxy_ext_glide;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -275,37 +276,6 @@ public class GlideProxy implements IImageProxy {
 
     @Override
     public void loadTransImage(Context context, @NonNull String url, @ImageTransType int transType, float... value) {
-        switch (transType) {
-            case ImageTransType.COLOR_FILTER:
-                break;
-            case ImageTransType.GRAY_SCALE:
-                break;
-            case ImageTransType.BLUR:
-                break;
-            case ImageTransType.SUPPORT_RS_BLUR:
-                break;
-            case ImageTransType.TOON:
-                break;
-            case ImageTransType.SEPIA:
-                break;
-            case ImageTransType.CONTRAST:
-                break;
-            case ImageTransType.INVERT:
-                break;
-            case ImageTransType.PIXEL:
-                break;
-            case ImageTransType.SKETCH:
-                break;
-            case ImageTransType.SWIRL:
-                break;
-            case ImageTransType.BRIGHTNESS:
-                break;
-            case ImageTransType.KUAWAHARA:
-                break;
-            case ImageTransType.VIGNETTE:
-                break;
-            default:
-                break;
-        }
+
     }
 }

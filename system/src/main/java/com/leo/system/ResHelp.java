@@ -73,7 +73,6 @@ public final class ResHelp {
      * get an asset using ACCESS_STREAMING mode. This provides access to files that have been bundled with an
      * application as assets -- that is, files placed in to the "assets" directory.
      *
-     * @param context  context
      * @param fileName The name of the asset to open. This name can be hierarchical.
      * @return geFileFromAssets
      */
@@ -82,7 +81,7 @@ public final class ResHelp {
             return null;
         }
 
-        StringBuilder s = new StringBuilder("");
+        StringBuilder s = new StringBuilder();
         try {
             InputStreamReader in = new InputStreamReader(getResources().getAssets().open(fileName));
             BufferedReader br = new BufferedReader(in);

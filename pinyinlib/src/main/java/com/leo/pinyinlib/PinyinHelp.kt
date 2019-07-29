@@ -13,6 +13,7 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
  */
 class PinyinHelp {
     private val format: HanyuPinyinOutputFormat = HanyuPinyinOutputFormat()
+    private val filterMap: HashMap<String, String> = HashMap()
 
     companion object {
         val instance by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -24,6 +25,25 @@ class PinyinHelp {
         format.caseType = HanyuPinyinCaseType.LOWERCASE
         format.toneType = HanyuPinyinToneType.WITHOUT_TONE
         format.vCharType = HanyuPinyinVCharType.WITH_V
+        initCstParsing()
+    }
+
+    private fun initCstParsing() {
+        /**
+         * pinyin4j会将‘这’转换为‘zhei’，‘那’转换为‘nei’
+         * 因此提供一个HashMap用于注入部分自定义纠正
+         */
+        filterMap["这"] = "zhe"
+        filterMap["那"] = "na"
+    }
+
+    /**
+     * 提供给外部注入纠正解析的方法
+     */
+    fun registerCstParsing(@NonNull key: String, @NonNull value: String) {
+        filterMap.let {
+            it[key] = value
+        }
     }
 
     /**
@@ -35,11 +55,16 @@ class PinyinHelp {
         var output = ""
         try {
             for (curChar in input) {
-                output += if (curChar.toString().matches("[\\u4E00-\\u9FA5]+".toRegex())) {
-                    val temp = PinyinHelper.toHanyuPinyinStringArray(curChar, format)
-                    temp[0]
-                } else {
-                    curChar.toString()
+                val s = curChar.toString()
+                output += when {
+                    filterMap.containsKey(s) -> {
+                        filterMap[s]
+                    }
+                    s.matches("[\\u4E00-\\u9FA5]+".toRegex()) -> {
+                        val temp = PinyinHelper.toHanyuPinyinStringArray(curChar, format)
+                        temp[0]
+                    }
+                    else -> s
                 }
             }
         } catch (e: BadHanyuPinyinOutputFormatCombination) {
