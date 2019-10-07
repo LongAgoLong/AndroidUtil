@@ -12,57 +12,44 @@ import com.leo.system.callback.OnDBToBeanCallback;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by LEO
  * On 2019/6/13
- * Description:数据库操作辅助类
+ * Description:线程安全的数据库操作辅助类
  */
 public class DBExcuteHelp {
-    private static DBExcuteHelp dbExcuteHelp;
+    private SQLiteOpenHelper sqLiteOpenHelper;
     private SQLiteDatabase sqliteDb;
+    // 计数器-完美解决 打开/关闭 数据库连接
+    private AtomicInteger mOpenCounter = new AtomicInteger();
     private OnDBToBeanCallback onDBToBeanCallback;
 
-    private DBExcuteHelp() {
-    }
-
-    public static DBExcuteHelp getInstance() {
-        if (null == dbExcuteHelp) {
-            synchronized (DBExcuteHelp.class) {
-                if (null == dbExcuteHelp) {
-                    dbExcuteHelp = new DBExcuteHelp();
-                }
-            }
-        }
-        return dbExcuteHelp;
-    }
-
-    public void setOnDBToBeanCallback(OnDBToBeanCallback onDBToBeanCallback) {
+    public DBExcuteHelp(@NonNull SQLiteOpenHelper helper, @NonNull OnDBToBeanCallback onDBToBeanCallback) {
+        this.sqLiteOpenHelper = helper;
         this.onDBToBeanCallback = onDBToBeanCallback;
     }
 
     /**
      * 打开数据库操作
-     *
-     * @param isWrite
      */
-    public void openDB(@NonNull SQLiteOpenHelper helper, boolean isWrite) {
-        if (isWrite) {
-            sqliteDb = helper.getWritableDatabase();
-        } else {
-            sqliteDb = helper.getReadableDatabase();
+    public synchronized void openDB() {
+        if (mOpenCounter.incrementAndGet() == 1) {
+            // Opening new database
+            sqliteDb = sqLiteOpenHelper.getWritableDatabase();
         }
     }
 
     /**
      * 关闭数据库
      */
-    public void closeDB() {
-        if (null != sqliteDb) {
-            if (sqliteDb.isOpen()) {
+    public synchronized void closeDB() {
+        if (mOpenCounter.decrementAndGet() == 0) {
+            // Closing database
+            if (null != sqliteDb && sqliteDb.isOpen()) {
                 sqliteDb.close();
             }
-            sqliteDb = null;
         }
     }
 
