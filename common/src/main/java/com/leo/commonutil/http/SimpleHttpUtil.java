@@ -128,7 +128,7 @@ public class SimpleHttpUtil {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            IOUtil.closeQuietly(reader, is);
+            IOUtil.INSTANCE.closeQuietly(reader, is);
             if (null != conn) {
                 conn.disconnect();
             }
@@ -189,7 +189,7 @@ public class SimpleHttpUtil {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            IOUtil.closeQuietly(bufferedReader, is);
+            IOUtil.INSTANCE.closeQuietly(bufferedReader, is);
             if (null != httpURLConnection) {
                 httpURLConnection.disconnect();
             }

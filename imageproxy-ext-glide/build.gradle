@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 28
@@ -35,4 +37,9 @@ dependencies {
     compileOnly "com.github.bumptech.glide:glide:4.8.0"
     compileOnly 'jp.wasabeef:glide-transformations:4.0.1'
     compileOnly "jp.co.cyberagent.android:gpuimage:2.0.3"
+    implementation "androidx.core:core-ktx:$rootProject.ktx_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
