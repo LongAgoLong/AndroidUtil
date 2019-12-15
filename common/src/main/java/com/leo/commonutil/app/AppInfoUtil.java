@@ -28,7 +28,7 @@ public class AppInfoUtil {
      * @return
      */
     public static String getAppName() {
-        Context context = ContextHelp.getContext();
+        Context context = ContextHelp.INSTANCE.getContext();
         PackageManager pm = context.getPackageManager();
         return context.getApplicationInfo().loadLabel(pm).toString();
     }
@@ -39,7 +39,7 @@ public class AppInfoUtil {
      * @return
      */
     public static String getAppVersionName() {
-        Context context = ContextHelp.getContext();
+        Context context = ContextHelp.INSTANCE.getContext();
         String versionName = "0";
         try {
             PackageManager packageManager = context.getPackageManager();
@@ -79,7 +79,7 @@ public class AppInfoUtil {
      * @return
      */
     public static PackageInfo getPackageInfo() {
-        Context context = ContextHelp.getContext();
+        Context context = ContextHelp.INSTANCE.getContext();
         PackageInfo info = null;
         try {
             info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
@@ -100,7 +100,7 @@ public class AppInfoUtil {
             return false;
         }
         try {
-            ContextHelp.getContext().getPackageManager()
+            ContextHelp.INSTANCE.getContext().getPackageManager()
                     .getApplicationInfo(packageName, PackageManager.GET_UNINSTALLED_PACKAGES);
             return true;
         } catch (PackageManager.NameNotFoundException e) {

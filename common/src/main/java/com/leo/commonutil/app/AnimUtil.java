@@ -178,7 +178,7 @@ public final class AnimUtil {
         if (null == view || time < 0) {
             return;
         }
-        Animation showAnimation = AnimationUtils.loadAnimation(ContextHelp.getContext(), animRes);
+        Animation showAnimation = AnimationUtils.loadAnimation(ContextHelp.INSTANCE.getContext(), animRes);
         showAnimation.setDuration(time);
         showAnimation.setAnimationListener(new AnimationListenerAdapter() {
             @Override
@@ -207,7 +207,7 @@ public final class AnimUtil {
         if (null == view || time < 0) {
             return;
         }
-        Animation showAnimation = AnimationUtils.loadAnimation(ContextHelp.getContext(), animRes);
+        Animation showAnimation = AnimationUtils.loadAnimation(ContextHelp.INSTANCE.getContext(), animRes);
         showAnimation.setDuration(time);
         showAnimation.setAnimationListener(new AnimationListenerAdapter() {
             @Override

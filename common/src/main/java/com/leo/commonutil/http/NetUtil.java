@@ -50,7 +50,7 @@ public final class NetUtil {
      */
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
     public static int getConnectedType() {
-        ConnectivityManager cm = (ConnectivityManager) ContextHelp.getContext()
+        ConnectivityManager cm = (ConnectivityManager) ContextHelp.INSTANCE.getContext()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (null != cm && null != cm.getActiveNetworkInfo()
                 && cm.getActiveNetworkInfo().isConnectedOrConnecting()) {
@@ -94,7 +94,7 @@ public final class NetUtil {
      */
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
     public static boolean isNetworkConnected() {
-        ConnectivityManager mConnectivityManager = (ConnectivityManager) ContextHelp.getContext()
+        ConnectivityManager mConnectivityManager = (ConnectivityManager) ContextHelp.INSTANCE.getContext()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
         if (mNetworkInfo != null) {

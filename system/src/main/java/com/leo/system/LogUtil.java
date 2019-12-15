@@ -22,7 +22,7 @@ public final class LogUtil {
      * @return
      */
     private static String getAppName() {
-        Context context = ContextHelp.getContext();
+        Context context = ContextHelp.INSTANCE.getContext();
         PackageManager pm = context.getPackageManager();
         return context.getApplicationInfo().loadLabel(pm).toString();
     }

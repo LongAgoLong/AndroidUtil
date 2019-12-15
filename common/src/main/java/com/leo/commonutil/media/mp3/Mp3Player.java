@@ -183,7 +183,7 @@ public class Mp3Player {
      */
     public void play() {
         if (this.mediaPlayer != null) {
-            AudioFocusHelp.getInstance().requestAudioFocus();
+            AudioFocusHelp.Companion.getInstance().requestAudioFocus();
             this.mediaPlayer.seekTo(params.position);
             this.mediaPlayer.start();
             mediaDuration = Integer.parseInt(MediaUtils.timeFormat(this.mediaPlayer.getDuration(), TimeMode.MODE_SECOND));
@@ -203,7 +203,7 @@ public class Mp3Player {
      */
     public void pause() {
         if (mediaPlayer != null) {
-            AudioFocusHelp.getInstance().abandonAudioFocus();
+            AudioFocusHelp.Companion.getInstance().abandonAudioFocus();
             mediaPlayer.pause();
             params.position = mediaPlayer.getCurrentPosition();
             params.pauseTimeMill = System.currentTimeMillis();

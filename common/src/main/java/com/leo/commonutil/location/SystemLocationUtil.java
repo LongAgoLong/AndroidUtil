@@ -49,7 +49,7 @@ public class SystemLocationUtil implements LocationListener {
 
     public String getBestProvider() {
         LocationManager locationManager =
-                (LocationManager) ContextHelp.getContext().getSystemService(LOCATION_SERVICE);
+                (LocationManager) ContextHelp.INSTANCE.getContext().getSystemService(LOCATION_SERVICE);
         if (null == locationManager) {
             LogUtil.e(TAG, "LocationManager is null");
             return null;
@@ -73,7 +73,7 @@ public class SystemLocationUtil implements LocationListener {
      * @param mOnLocationCallback 回调接口
      */
     public void start(String provider, long minMillisecond, @Nullable OnLocationCallback mOnLocationCallback) {
-        Context context = ContextHelp.getContext();
+        Context context = ContextHelp.INSTANCE.getContext();
         if (null == context) {
             return;
         }
@@ -104,7 +104,7 @@ public class SystemLocationUtil implements LocationListener {
      */
     public void stop() {
         mOnLocationCallback = null;
-        Context context = ContextHelp.getContext();
+        Context context = ContextHelp.INSTANCE.getContext();
         if (null == context) {
             return;
         }
@@ -184,7 +184,7 @@ public class SystemLocationUtil implements LocationListener {
      */
     private void reverGeo(double latitude, double longitude) {
         ThreadPoolHelp.execute(() -> {
-            Context context = ContextHelp.getContext();
+            Context context = ContextHelp.INSTANCE.getContext();
             if (null == context) {
                 return;
             }

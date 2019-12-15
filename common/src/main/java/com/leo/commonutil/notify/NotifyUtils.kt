@@ -28,7 +28,7 @@ object NotifyUtils {
      */
     @RequiresPermission(android.Manifest.permission.VIBRATE)
     fun vibrate(milliseconds: Long) {
-        val vibrator = ContextHelp.getContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = ContextHelp.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         vibrator?.vibrate(milliseconds)
     }
 
@@ -38,12 +38,12 @@ object NotifyUtils {
      */
     @RequiresPermission(android.Manifest.permission.VIBRATE)
     fun vibrate(pattern: LongArray, isRepeat: Boolean) {
-        val vibrator = ContextHelp.getContext().getSystemService(Service.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = ContextHelp.context.getSystemService(Service.VIBRATOR_SERVICE) as Vibrator
         vibrator?.vibrate(pattern, if (isRepeat) 1 else -1)
     }
 
     fun playBee(@RawRes mediaId: Int, listener: OnCompleteListener?) {
-        val audioService = ContextHelp.getContext()
+        val audioService = ContextHelp.context
                 .getSystemService(Context.AUDIO_SERVICE) as AudioManager ?: return
 //检查当前是否是静音模式
         if (audioService.ringerMode != AudioManager.RINGER_MODE_NORMAL) {
@@ -54,7 +54,7 @@ object NotifyUtils {
         mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
         mediaPlayer.setOnCompletionListener { player -> player.seekTo(0) }
 
-        val file = ContextHelp.getContext().resources.openRawResourceFd(mediaId)
+        val file = ContextHelp.context.resources.openRawResourceFd(mediaId)
         try {
             mediaPlayer.setDataSource(file.fileDescriptor, file.startOffset, file.length)
             file.close()

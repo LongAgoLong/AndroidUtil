@@ -112,7 +112,7 @@ public class AudioMsgPlayer {
     /*播放*/
     public void play() {
         if (mediaPlayer != null) {
-            AudioFocusHelp.getInstance().requestAudioFocus();
+            AudioFocusHelp.Companion.getInstance().requestAudioFocus();
             mediaPlayer.seekTo(params.position);
             mediaPlayer.start();
         }
@@ -143,7 +143,7 @@ public class AudioMsgPlayer {
      * 停止
      */
     public void reset() {
-        AudioFocusHelp.getInstance().abandonAudioFocus();
+        AudioFocusHelp.Companion.getInstance().abandonAudioFocus();
         stop();
         setPlayListener(null);
     }

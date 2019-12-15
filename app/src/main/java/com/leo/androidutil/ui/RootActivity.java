@@ -32,10 +32,10 @@ public class RootActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.locationBtn:
-                IntentUtil.startActivity(this, LocationActivity.class);
+                IntentUtil.INSTANCE.startActivity(this, LocationActivity.class);
                 break;
             case R.id.pinyinBtn:
-                IntentUtil.startActivity(this, PinyinActivity.class);
+                IntentUtil.INSTANCE.startActivity(this, PinyinActivity.class);
                 break;
         }
     }
