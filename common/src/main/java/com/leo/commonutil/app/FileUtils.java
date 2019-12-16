@@ -89,7 +89,8 @@ public final class FileUtils {
     public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
         Cursor cursor = null;
         try {
-            cursor = context.getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA}, selection, selectionArgs, null);
+            cursor = context.getContentResolver().query(uri, new String[]{MediaStore.Images.ImageColumns.DATA},
+                    selection, selectionArgs, null);
             if (null != cursor) {
                 if (cursor.moveToFirst()) {
                     int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
@@ -146,9 +147,12 @@ public final class FileUtils {
         return size;
     }
 
-    /*
-    * 格式化文件大小
-    * */
+    /**
+     * 格式化文件大小
+     *
+     * @param fileS
+     * @return
+     */
     public static String formetFileSize(long fileS) {//转换文件大小
         DecimalFormat df = new DecimalFormat("#.00");
         String fileSizeString = "";
@@ -164,10 +168,12 @@ public final class FileUtils {
         return fileSizeString;
     }
 
-    /*
-    * 获取MIME类型
-    * url = file path or whatever suitable URL you want.
-    * */
+    /**
+     * 获取MIME类型
+     *
+     * @param url file path or whatever suitable URL you want.
+     * @return
+     */
     public static String getMimeType(String url) {
         if (!TextUtils.isEmpty(url)) {
             String extension = MimeTypeMap.getFileExtensionFromUrl(url);
@@ -178,9 +184,10 @@ public final class FileUtils {
         return null;
     }
 
-    /*
-    * 获取文件名(带扩展名)
-    * */
+    /**
+     * @param url file path or whatever suitable URL you want.
+     * @return 获取文件名(带扩展名)
+     */
     public static String getFileName(String url) {
         if (!TextUtils.isEmpty(url)) {
             int fragment = url.lastIndexOf('#');
@@ -208,9 +215,10 @@ public final class FileUtils {
         return null;
     }
 
-    /*
-    * 获取文件名(不带扩展名)
-    * */
+    /**
+     * @param url file path or whatever suitable URL you want.
+     * @return 获取文件名(不带扩展名)
+     */
     public static String getFileNameNoExtension(String url) {
         String fileName = getFileName(url);
         if (!TextUtils.isEmpty(fileName)) {
@@ -222,9 +230,10 @@ public final class FileUtils {
         return null;
     }
 
-    /*
-    * 获取文件扩展名
-    * */
+    /**
+     * @param url file path or whatever suitable URL you want.
+     * @return 获取文件扩展名
+     */
     public static String getFileExtension(String url) {
         String fileName = getFileName(url);
         if (!TextUtils.isEmpty(fileName)) {

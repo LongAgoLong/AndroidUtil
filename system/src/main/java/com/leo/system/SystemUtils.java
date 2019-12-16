@@ -57,9 +57,9 @@ public final class SystemUtils {
      * @return
      */
     public static boolean isSoftKeyboardShow(Activity paramActivity) {
-        int height = Companion.getScreenHeight(paramActivity)
-                - Companion.getStatusBarHeight(paramActivity)
-                - Companion.getAppHeight(paramActivity);
+        int height = WindowUtils.Companion.getScreenHeight(paramActivity)
+                - WindowUtils.Companion.getStatusBarHeight(paramActivity)
+                - WindowUtils.Companion.getAppHeight(paramActivity);
         return height != 0;
     }
 
