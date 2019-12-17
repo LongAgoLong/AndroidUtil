@@ -239,7 +239,7 @@ public final class FileUtils {
         if (!TextUtils.isEmpty(fileName)) {
             // if the filename contains special characters, we don't
             // consider it valid for our matching purposes:
-            if (!fileName.isEmpty() && Pattern.matches("[a-zA-Z_0-9\\.\\-\\(\\)\\%]+", fileName)) {
+            if (Pattern.matches("[a-zA-Z_0-9\\.\\-\\(\\)\\%]+", fileName)) {
                 int dotPos = fileName.lastIndexOf('.');
                 if (0 <= dotPos) {
                     return fileName.substring(dotPos + 1);
