@@ -24,21 +24,21 @@ class AudioFocusHelp private constructor() : OnAudioFocusChangeListener {
 
     fun requestAudioFocus(): Int {
         mAudioManager ?: return AudioManager.AUDIOFOCUS_REQUEST_FAILED
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioManager!!.requestAudioFocus(this,
+        return if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioManager!!.requestAudioFocus(this,
                         AUDIO_STREAM_TYPE, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)) {
             audioFocus = AudioManager.AUDIOFOCUS_GAIN
-            return AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+            AudioManager.AUDIOFOCUS_REQUEST_GRANTED
         } else {
-            return AudioManager.AUDIOFOCUS_REQUEST_FAILED
+            AudioManager.AUDIOFOCUS_REQUEST_FAILED
         }
     }
 
     fun abandonAudioFocus(): Int {
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioManager!!.abandonAudioFocus(this)) {
+        return if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioManager!!.abandonAudioFocus(this)) {
             audioFocus = AudioManager.AUDIOFOCUS_LOSS
-            return AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+            AudioManager.AUDIOFOCUS_REQUEST_GRANTED
         } else {
-            return AudioManager.AUDIOFOCUS_REQUEST_FAILED
+            AudioManager.AUDIOFOCUS_REQUEST_FAILED
         }
     }
 
