@@ -11,13 +11,18 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
 /**
  * 拼音转化工具类
  */
-class PinyinHelp {
+class PinyinHelp private constructor() {
     private val format: HanyuPinyinOutputFormat = HanyuPinyinOutputFormat()
     private val filterMap: HashMap<String, String> = HashMap()
 
     companion object {
-        val instance by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            PinyinHelp()
+        @Volatile
+        private var instance: PinyinHelp? = null
+
+        fun getInstance(): PinyinHelp {
+            return instance ?: synchronized(this) {
+                instance ?: PinyinHelp().also { instance = it }
+            }
         }
     }
 
