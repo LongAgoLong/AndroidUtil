@@ -15,8 +15,8 @@ public class LeoApplication extends Application {
         /**
          * 优先调用ContextHelp.setContext
          */
-        ContextHelp.setContext(this);
+        ContextHelp.INSTANCE.setContext(this);
         LogUtil.setType(LogType.DEBUG);
-        ImageProxyHelp.getInstance().setProxyImpl(new GlideProxy());
+        ImageProxyHelp.Companion.getInstance().setProxyImpl(new GlideProxy());
     }
 }
