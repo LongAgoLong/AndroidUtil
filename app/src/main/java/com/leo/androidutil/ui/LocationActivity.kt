@@ -81,13 +81,13 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
                 append("\n")
                 append(locationUtil.getAddressStr(addressBean))
                 append("\n")
-                locationUtil.locationWGS84.let {
+                locationUtil.locationWGS84?.let {
                     append("国标系 (wgs84)：\n${it.latitude} - ${it.longitude}\n")
                 }
-                locationUtil.locationGCJ02.let {
+                locationUtil.locationGCJ02?.let {
                     append("火星坐标系 (GCJ-02)：\n${it.latitude} - ${it.longitude}\n")
                 }
-                locationUtil.locationBD09LL.let {
+                locationUtil.locationBD09LL?.let {
                     append("百度坐标系 (BD-09)：\n${it.latitude} - ${it.longitude}\n")
                 }
                 append("反GEO：\n${addressBean.latitude} - ${addressBean.longitude}")

@@ -29,10 +29,7 @@ class PinyinActivity : BaseActivity() {
                     if (s.isNotEmpty()) {
                         mBinding.resultTv?.run {
                             text = PinyinHelp.getInstance().parsePinyin(s)
-                            append("\n")
-                            append(PinyinHelp.getInstance().parsePinyinAllFirstLetter(s))
-                            append("\n")
-                            append(PinyinHelp.getInstance().parsePinyinFirstLetter(s))
+                            append("\n${PinyinHelp.getInstance().parsePinyinAllFirstLetter(s)}\n${PinyinHelp.getInstance().parsePinyinFirstLetter(s)}")
                         }
                     }
                 }
