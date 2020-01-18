@@ -13,6 +13,7 @@ class LeoApplication : Application() {
         super.onCreate()
         /**
          * 优先调用ContextHelp.setContext
+         * 其实可以通过contengprovider解决这一步赋值，觉得没必要
          */
         ContextHelp.context = this
         LogUtil.setType(LogType.DEBUG)

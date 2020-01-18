@@ -42,10 +42,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 
-import static com.leo.system.WindowUtils.getAppHeight;
-import static com.leo.system.WindowUtils.getScreenHeight;
-import static com.leo.system.WindowUtils.getStatusBarHeight;
-
 public final class SystemUtils {
     private SystemUtils() {
     }

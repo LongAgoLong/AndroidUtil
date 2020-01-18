@@ -1,11 +1,7 @@
 package com.leo.commonutil.storage
 
-import androidx.core.graphics.TypefaceCompatUtil.closeQuietly
 import com.leo.commonutil.asyn.threadPool.ThreadPoolHelp
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.IOException
-import java.io.InputStream
+import java.io.*
 
 object IOUtil {
 
@@ -20,7 +16,7 @@ object IOUtil {
     fun read(inStream: InputStream): ByteArray {
         val outStream = ByteArrayOutputStream()
         val buffer = ByteArray(1024)
-        var len = 0
+        var len: Int
         while (inStream.read(buffer).also { len = it } != -1) {
             outStream.write(buffer, 0, len)
         }
@@ -61,6 +57,19 @@ object IOUtil {
                 } else {
                     tfi.delete()
                 }
+            }
+        }
+    }
+
+    /**
+     * 安全关闭流
+     */
+    fun closeQuietly(vararg closeables: Closeable) {
+        for (c in closeables) {
+            c ?: continue
+            try {
+                c.close()
+            } catch (e: IOException) {
             }
         }
     }

@@ -6,8 +6,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 import java.io.UnsupportedEncodingException
 import java.util.ArrayList
 import java.util.Enumeration
@@ -41,7 +39,7 @@ object ZipUtil {
                 }
                 zipFile(resFile, zipout, "", zipListener)
             }
-            zipout.close()
+            IOUtil.closeQuietly(zipout)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -64,7 +62,7 @@ object ZipUtil {
                 zipFile(resFile, zipout, "", zipListener)
             }
             zipout.setComment(comment)
-            zipout.close()
+            IOUtil.closeQuietly(zipout)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -88,7 +86,7 @@ object ZipUtil {
             val entries = zf.entries()
             while (entries.hasMoreElements()) {
                 val entry = entries.nextElement() as ZipEntry
-                val `in` = zf.getInputStream(entry)
+                val inputStream = zf.getInputStream(entry)
                 var str = folderPath + File.separator + entry.name
                 str = String(str.toByteArray(charset("8859_1")), charset("GB2312"))
                 val desFile = File(str)
@@ -99,14 +97,14 @@ object ZipUtil {
                     }
                     desFile.createNewFile()
                 }
-                val out = FileOutputStream(desFile)
+                val outputStream = FileOutputStream(desFile)
                 val buffer = ByteArray(BUFF_SIZE)
                 var realLength: Int
-                while ((`in`.read(buffer).also { realLength = it }) > 0) {
-                    out.write(buffer, 0, realLength)
+                while ((inputStream.read(buffer).also { realLength = it }) > 0) {
+                    outputStream.write(buffer, 0, realLength)
                 }
-                `in`.close()
-                out.close()
+                inputStream.close()
+                IOUtil.closeQuietly(inputStream, outputStream)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -139,7 +137,7 @@ object ZipUtil {
             while (entries.hasMoreElements()) {
                 val entry = entries.nextElement() as ZipEntry
                 if (entry.name.contains(nameContains)) {
-                    val `in` = zf.getInputStream(entry)
+                    val inputStream = zf.getInputStream(entry)
                     var str = folderPath + File.separator + entry.name
                     str = String(str.toByteArray(charset("8859_1")), charset("GB2312"))
                     // str.getBytes("GB2312"),"8859_1" 输出
@@ -152,14 +150,15 @@ object ZipUtil {
                         }
                         desFile.createNewFile()
                     }
-                    val out = FileOutputStream(desFile)
+                    val outputStream = FileOutputStream(desFile)
                     val buffer = ByteArray(BUFF_SIZE)
                     var realLength: Int
-                    while (`in`.read(buffer).also { realLength = it } > 0) {
-                        out.write(buffer, 0, realLength)
+                    while (inputStream.read(buffer).also { realLength = it } > 0) {
+                        outputStream.write(buffer, 0, realLength)
                     }
-                    `in`.close()
-                    out.close()
+                    inputStream.close()
+                    outputStream.close()
+                    IOUtil.closeQuietly(inputStream, outputStream)
                     fileList.add(desFile)
                 }
             }
@@ -274,17 +273,17 @@ object ZipUtil {
                 }
             } else {
                 val buffer = ByteArray(BUFF_SIZE)
-                val `in` = BufferedInputStream(FileInputStream(resFile),
+                val inputStream = BufferedInputStream(FileInputStream(resFile),
                         BUFF_SIZE)
                 zipout.putNextEntry(ZipEntry(rootpath))
                 var realLength: Int
-                while (`in`.read(buffer).also { realLength = it } != -1) {
+                while (inputStream.read(buffer).also { realLength = it } != -1) {
                     if (isStopZipFlag) {
                         break
                     }
                     zipout.write(buffer, 0, realLength)
                 }
-                `in`.close()
+                IOUtil.closeQuietly(inputStream)
                 zipout.flush()
                 zipout.closeEntry()
             }

@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.leo.androidutil.R
 import com.leo.androidutil.databinding.ActivityLocationBinding
-import com.leo.commonutil.asyn.WeakHandler
+import com.leo.androidutil.viewmodels.LocationModel
 import com.leo.commonutil.calendar.DateUtil
 import com.leo.commonutil.enume.UnitTime
 import com.leo.commonutil.location.OnLocationCallback
@@ -20,23 +22,19 @@ import com.tbruyelle.rxpermissions2.RxPermissions
  */
 class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListener {
     private lateinit var mBinding: ActivityLocationBinding
-    private val weakHandler = WeakHandler()
+    private lateinit var mModel: LocationModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_location)
+        mModel = ViewModelProviders.of(this).get(LocationModel::class.java)
         initActionBar()
         initView()
+        initData()
     }
 
-    private fun initView() {
-        mBinding.permissionBtn?.setOnClickListener(this)
-        mBinding.stopBtn?.setOnClickListener(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        weakHandler.removeCallbacksAndMessages(null)
+    override fun onPause() {
+        super.onPause()
         SystemLocationUtil.getInstance().stop()
     }
 
@@ -45,6 +43,34 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
         val actionBar = supportActionBar ?: return
         actionBar.setDisplayHomeAsUpEnabled(true)
         actionBar.title = "系统定位"
+    }
+
+    private fun initView() {
+        mBinding.permissionBtn?.setOnClickListener(this)
+        mBinding.stopBtn?.setOnClickListener(this)
+    }
+
+    private fun initData() {
+        mModel.mUpdateTime.observe(this, Observer {
+            val locationUtil = SystemLocationUtil.getInstance()
+            val addressBean = locationUtil.addressBean ?: return@Observer
+            mBinding.resultTv?.run {
+                text = it
+                append("\n")
+                append(locationUtil.getAddressStr(addressBean))
+                append("\n")
+                locationUtil.locationWGS84?.let {
+                    append("国标系 (wgs84)：\n${it.latitude} - ${it.longitude}\n")
+                }
+                locationUtil.locationGCJ02?.let {
+                    append("火星坐标系 (GCJ-02)：\n${it.latitude} - ${it.longitude}\n")
+                }
+                locationUtil.locationBD09LL?.let {
+                    append("百度坐标系 (BD-09)：\n${it.latitude} - ${it.longitude}\n")
+                }
+                append("反GEO：\n${addressBean.latitude} - ${addressBean.longitude}")
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -69,30 +95,13 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
     }
 
     override fun onLocationChanged() {
-
     }
 
     override fun onLocationReverGeoResult() {
-        weakHandler.post {
-            val locationUtil = SystemLocationUtil.getInstance()
-            val addressBean = locationUtil.addressBean ?: return@post
-            mBinding.resultTv?.run {
-                text = DateUtil.format(UnitTime.MILLIONSECOND, System.currentTimeMillis(), DateUtil.DATA_YMDHMS)
-                append("\n")
-                append(locationUtil.getAddressStr(addressBean))
-                append("\n")
-                locationUtil.locationWGS84?.let {
-                    append("国标系 (wgs84)：\n${it.latitude} - ${it.longitude}\n")
-                }
-                locationUtil.locationGCJ02?.let {
-                    append("火星坐标系 (GCJ-02)：\n${it.latitude} - ${it.longitude}\n")
-                }
-                locationUtil.locationBD09LL?.let {
-                    append("百度坐标系 (BD-09)：\n${it.latitude} - ${it.longitude}\n")
-                }
-                append("反GEO：\n${addressBean.latitude} - ${addressBean.longitude}")
-            }
-        }
+        val locationUtil = SystemLocationUtil.getInstance()
+        locationUtil.addressBean ?: return
+        val timeFormat = DateUtil.format(UnitTime.MILLIONSECOND, System.currentTimeMillis(), DateUtil.DATA_YMDHMS)
+        mModel.mUpdateTime.postValue(timeFormat)
     }
 
     override fun onClick(v: View) {

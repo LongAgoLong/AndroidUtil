@@ -105,8 +105,7 @@ object SDcardUtil {
                 bytesum += byteread
                 outStream.write(buffer, 0, byteread)
             }
-            inStream.close()
-            outStream.close()
+            IOUtil.closeQuietly(inStream, outStream)
             if (isPICSendBroadcast) {
                 val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)//发送更新图片信息广播
                 val uri = Uri.fromFile(file)
@@ -189,7 +188,6 @@ object SDcardUtil {
                 while (reader.readLine().also { empString = it } != null) {
                     jsonString.append(empString)
                 }
-                reader.close()
             } catch (e: IOException) {
                 e.printStackTrace()
             } finally {

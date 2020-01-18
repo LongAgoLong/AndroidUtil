@@ -26,11 +26,12 @@ class PinyinActivity : BaseActivity() {
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN) {
                 mBinding.searchStrEt?.run {
                     val s = text.toString().trim()
-                    if (s.isNotEmpty()) {
-                        mBinding.resultTv?.run {
-                            text = PinyinHelp.getInstance().parsePinyin(s)
-                            append("\n${PinyinHelp.getInstance().parsePinyinAllFirstLetter(s)}\n${PinyinHelp.getInstance().parsePinyinFirstLetter(s)}")
-                        }
+                    if (s.isEmpty()) {
+                        return@run
+                    }
+                    mBinding.resultTv?.run {
+                        text = PinyinHelp.getInstance().parsePinyin(s)
+                        append("\n${PinyinHelp.getInstance().parsePinyinAllFirstLetter(s)}\n${PinyinHelp.getInstance().parsePinyinFirstLetter(s)}")
                     }
                 }
                 true
