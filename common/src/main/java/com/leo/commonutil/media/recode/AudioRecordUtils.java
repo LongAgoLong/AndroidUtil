@@ -90,13 +90,13 @@ public class AudioRecordUtils {
             /* ④开始 */
             mMediaRecorder.start();
             updateMicStatus();
-            LogUtil.i(TAG, "startTime:" + startTime);
+            LogUtil.INSTANCE.i(TAG, "startTime:" + startTime);
         } catch (IOException e) {
             e.printStackTrace();
-            LogUtil.e(TAG, "call startAmr(File mRecAudioFile) failed!" + e.getMessage());
+            LogUtil.INSTANCE.e(TAG, "call startAmr(File mRecAudioFile) failed!" + e.getMessage());
         } catch (IllegalStateException e) {
             e.printStackTrace();
-            LogUtil.e(TAG, "call startAmr(File mRecAudioFile) failed!" + e.getMessage());
+            LogUtil.INSTANCE.e(TAG, "call startAmr(File mRecAudioFile) failed!" + e.getMessage());
         }
     }
 

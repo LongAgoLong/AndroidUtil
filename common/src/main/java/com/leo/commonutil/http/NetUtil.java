@@ -152,7 +152,7 @@ public final class NetUtil {
         int maxIndex = dnsAddress.length;
         int indexIP = new Random(maxIndex).nextInt();
         String ip = dnsAddress[indexIP];
-        LogUtil.i(TAG, " begin ping ip; IP = " + ip);
+        LogUtil.INSTANCE.i(TAG, " begin ping ip; IP = " + ip);
         boolean result = tcp2DNSServer(ip);
         if (!result) {
             final int k = indexIP + 1;
