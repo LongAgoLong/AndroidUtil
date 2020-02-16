@@ -1,14 +1,7 @@
 package com.leo.commonutil.storage
 
-import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.UnsupportedEncodingException
-import java.util.ArrayList
-import java.util.Enumeration
+import java.io.*
+import java.util.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
@@ -103,7 +96,6 @@ object ZipUtil {
                 while ((inputStream.read(buffer).also { realLength = it }) > 0) {
                     outputStream.write(buffer, 0, realLength)
                 }
-                inputStream.close()
                 IOUtil.closeQuietly(inputStream, outputStream)
             }
         } catch (e: Exception) {
@@ -156,8 +148,6 @@ object ZipUtil {
                     while (inputStream.read(buffer).also { realLength = it } > 0) {
                         outputStream.write(buffer, 0, realLength)
                     }
-                    inputStream.close()
-                    outputStream.close()
                     IOUtil.closeQuietly(inputStream, outputStream)
                     fileList.add(desFile)
                 }

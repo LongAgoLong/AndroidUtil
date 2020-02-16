@@ -64,7 +64,7 @@ object IOUtil {
     /**
      * 安全关闭流
      */
-    fun closeQuietly(vararg closeables: Closeable) {
+    fun <T : Closeable> closeQuietly(vararg closeables: T) {
         for (c in closeables) {
             c ?: continue
             try {

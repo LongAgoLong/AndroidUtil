@@ -64,7 +64,7 @@ object SDcardUtil {
             }
             val outStream = FileOutputStream(file)
             outStream.write(filecontent)
-            outStream.close()
+            IOUtil.closeQuietly(outStream)
             if (isPICSendBroadcast) {
                 val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)//发送更新图片信息广播
                 val uri = Uri.fromFile(file)
@@ -146,23 +146,15 @@ object SDcardUtil {
                 writer = OutputStreamWriter(out, "UTF-8")
                 writer.write(s1)
                 writer.flush()
-                writer.close()
+                IOUtil.closeQuietly(writer)
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
                 writer?.run {
-                    try {
-                        close()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+                    IOUtil.closeQuietly(this)
                 }
                 out?.run {
-                    try {
-                        close()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+                    IOUtil.closeQuietly(this)
                 }
             }
         }
@@ -192,18 +184,10 @@ object SDcardUtil {
                 e.printStackTrace()
             } finally {
                 reader?.run {
-                    try {
-                        close()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+                    IOUtil.closeQuietly(this)
                 }
                 input?.run {
-                    try {
-                        close()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+                    IOUtil.closeQuietly(this)
                 }
             }
         }

@@ -77,8 +77,8 @@ class ResHelp private constructor() {
             }
             val s = StringBuilder()
             try {
-                val `in` = InputStreamReader(resources.assets.open(fileName))
-                val br = BufferedReader(`in`)
+                val input = InputStreamReader(resources.assets.open(fileName))
+                val br = BufferedReader(input)
                 var line: String
                 while (br.readLine().also { line = it } != null) {
                     s.append(line)
@@ -88,7 +88,6 @@ class ResHelp private constructor() {
                 e.printStackTrace()
                 return null
             }
-
         }
 
         /**
@@ -102,8 +101,8 @@ class ResHelp private constructor() {
         fun geFileFromRaw(resId: Int): String? {
             val s = StringBuilder()
             try {
-                val `in` = InputStreamReader(resources.openRawResource(resId))
-                val br = BufferedReader(`in`)
+                val input = InputStreamReader(resources.openRawResource(resId))
+                val br = BufferedReader(input)
                 var line: String
                 while (br.readLine().also { line = it } != null) {
                     s.append(line)
