@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentManager
 
 object FragmentHelp {
 
-    fun removeAll(fragmentManager: FragmentManager) {
+    fun clear(fragmentManager: FragmentManager) {
         val fragments = fragmentManager.fragments
         //遍历list容器,清除所有的碎片
         if (fragments.isNotEmpty()) {
@@ -21,11 +21,14 @@ object FragmentHelp {
         val fragments = fragmentManager.fragments
         //遍历list容器,隐藏所有的碎片
         for (fragmentTemp in fragments) {
-            if (!fragmentTemp.isHidden) {
-                fragmentManager.beginTransaction().hide(fragmentTemp).commit()
+            if (fragmentTemp.isHidden) {
+                continue
             }
+            fragmentManager.beginTransaction().hide(fragmentTemp).commit()
         }
-        if (!fragment.isAdded && null == fragmentManager.findFragmentByTag(tag) && !fragments.contains(fragment)) {
+        if (!fragment.isAdded 
+                && null == fragmentManager.findFragmentByTag(tag)
+                && !fragments.contains(fragment)) {
             fragmentManager.beginTransaction().add(viewGroupId, fragment, tag).commit()
         } else {
             fragmentManager.beginTransaction().show(fragment).commit()
