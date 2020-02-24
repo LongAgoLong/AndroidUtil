@@ -42,7 +42,7 @@ class PinyinHelp private constructor() {
          * pinyin4j会将‘这’转换为‘zhei’，‘那’转换为‘nei’
          * 因此提供一个HashMap用于注入部分自定义纠正
          */
-        val s = ResHelp.getFileFromAssets(Companion.PINYIN_FILTER)
+        val s = ResHelp.getFileFromAssets(PINYIN_FILTER)
         if (!TextUtils.isEmpty(s)) {
             val list = s!!.split("#")
             list.forEach {

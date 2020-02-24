@@ -9,13 +9,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.leo.androidutil.R
 import com.leo.androidutil.databinding.ActivityLocationBinding
+import com.leo.androidutil.util.RxPermissionsHelp
 import com.leo.androidutil.viewmodels.LocationModel
 import com.leo.commonutil.calendar.DateUtil
 import com.leo.commonutil.enume.UnitTime
 import com.leo.commonutil.location.OnLocationCallback
 import com.leo.commonutil.location.SystemLocationUtil
 import com.leo.system.LogUtil
-import com.tbruyelle.rxpermissions2.RxPermissions
 
 /**
  * 系统定位demo
@@ -80,7 +80,7 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
     }
 
     private fun location() {
-        val rxPermissions = RxPermissions(this)
+        val rxPermissions = RxPermissionsHelp.newInstance(this)
         rxPermissions.request(Manifest.permission.ACCESS_FINE_LOCATION)
                 .subscribe({ aBoolean ->
                     if (aBoolean!!) {
@@ -108,9 +108,5 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
             R.id.permissionBtn -> location()
             R.id.stopBtn -> SystemLocationUtil.getInstance().stop()
         }
-    }
-
-    companion object {
-        private val TAG = LocationActivity::class.java.simpleName
     }
 }

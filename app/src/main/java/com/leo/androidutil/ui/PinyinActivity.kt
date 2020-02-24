@@ -60,12 +60,11 @@ class PinyinActivity : BaseActivity() {
                      * C：其他字符
                      */
                     s = s.replace(Regex("[\\p{P}\\s]+"), "")
-                    LogUtil.d(TAG, "纠正后字符串 : $s")
                     mBinding.resultTv ?: return@run
                     val pinyin = PinyinHelp.getInstance().parsePinyin(s)
                     val allFirstLetter = PinyinHelp.getInstance().parsePinyinAllFirstLetter(s)
                     val firstLetter = PinyinHelp.getInstance().parsePinyinFirstLetter(s)
-                    val result = "拼音：${pinyin}\n首字母：${allFirstLetter}\n第一个文字首字母：${firstLetter}"
+                    val result = "纠正后字符串 : ${s}\n拼音：${pinyin}\n首字母：${allFirstLetter}\n第一个文字首字母：${firstLetter}"
                     mBinding.resultTv.text = result
                 }
                 true
