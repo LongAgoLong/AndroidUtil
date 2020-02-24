@@ -1,12 +1,14 @@
 package com.leo.pinyinlib
 
+import android.text.TextUtils
 import androidx.annotation.NonNull
-import net.sourceforge.pinyin4j.PinyinHelper;
-import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
-import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
-import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
-import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
-import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+import com.leo.system.ResHelp
+import net.sourceforge.pinyin4j.PinyinHelper
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination
 
 /**
  * 拼音转化工具类
@@ -16,6 +18,8 @@ class PinyinHelp private constructor() {
     private val filterMap: HashMap<String, String> = HashMap()
 
     companion object {
+        private const val PINYIN_FILTER = "pinyin_filter.txt"
+        private const val PINYIN_CUSTOM_FILTER = "pinyin_cst_filter.txt"
         @Volatile
         private var instance: PinyinHelp? = null
 
@@ -38,8 +42,37 @@ class PinyinHelp private constructor() {
          * pinyin4j会将‘这’转换为‘zhei’，‘那’转换为‘nei’
          * 因此提供一个HashMap用于注入部分自定义纠正
          */
-        filterMap["这"] = "zhe"
-        filterMap["那"] = "na"
+        val s = ResHelp.getFileFromAssets(Companion.PINYIN_FILTER)
+        if (!TextUtils.isEmpty(s)) {
+            val list = s!!.split("#")
+            list.forEach {
+                if (TextUtils.isEmpty(it)) {
+                    return@forEach
+                }
+                val split = it.split(",")
+                if (split.size == 2) {
+                    filterMap[split[0]] = split[1]
+                }
+            }
+        }
+        /**
+         * 提供一个放置于assets文件夹下的pinyin_cst_filter.txt文件供使用者赋值
+         * 格式参考pinyin_filter.txt
+         */
+        val cst = ResHelp.getFileFromAssets(PINYIN_CUSTOM_FILTER)
+        if (!TextUtils.isEmpty(cst)) {
+            val list = cst!!.split("#")
+            list.forEach {
+                if (TextUtils.isEmpty(it)) {
+                    return@forEach
+                }
+                val split = it.split(",")
+                if (split.size == 2) {
+                    filterMap[split[0]] = split[1]
+                }
+            }
+        }
+
     }
 
     /**

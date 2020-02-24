@@ -74,12 +74,12 @@ object ResHelp {
         return try {
             val input = InputStreamReader(resources.assets.open(fileName))
             val br = BufferedReader(input)
-            var line: String
+            var line: String?
             while (br.readLine().also { line = it } != null) {
                 s.append(line)
             }
             s.toString()
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             e.printStackTrace()
             null
         }
@@ -98,7 +98,7 @@ object ResHelp {
         return try {
             val input = InputStreamReader(resources.openRawResource(resId))
             val br = BufferedReader(input)
-            var line: String
+            var line: String?
             while (br.readLine().also { line = it } != null) {
                 s.append(line)
             }

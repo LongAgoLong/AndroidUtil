@@ -1,2 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.leo.system" />
+    package="com.leo.system">
+
+    <application>
+        <!-- 全局Context提供者 -->
+        <provider
+            android:name=".ContextProvider"
+            android:authorities="${applicationId}.contextprovider"
+            android:exported="false" />
+    </application>
+</manifest>

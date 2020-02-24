@@ -28,7 +28,6 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_location)
         mModel = ViewModelProviders.of(this).get(LocationModel::class.java)
-        initActionBar()
         initView()
         initData()
     }

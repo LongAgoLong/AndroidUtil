@@ -176,7 +176,7 @@ object SDcardUtil {
             try {
                 input = InputStreamReader(FileInputStream(file), "UTF-8")
                 reader = BufferedReader(input)
-                var empString: String? = null
+                var empString: String?
                 while (reader.readLine().also { empString = it } != null) {
                     jsonString.append(empString)
                 }
