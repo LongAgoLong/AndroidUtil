@@ -1,12 +1,8 @@
 package com.leo.androidutil.ui
 
 import android.os.Bundle
-import androidx.databinding.DataBindingUtil
-
 import android.view.View
-import android.widget.Button
-import androidx.databinding.ViewDataBinding
-
+import androidx.databinding.DataBindingUtil
 import com.leo.androidutil.R
 import com.leo.androidutil.databinding.ActivityRootBinding
 import com.leo.system.IntentUtil

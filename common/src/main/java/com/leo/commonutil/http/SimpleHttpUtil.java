@@ -14,6 +14,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -117,7 +119,7 @@ public class SimpleHttpUtil {
                 StringBuilder sb = new StringBuilder();
                 // 获取响应的输入流对象
                 is = conn.getInputStream();
-                reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
                 String strRead = null;
                 while ((strRead = reader.readLine()) != null) {
                     sb.append(strRead);
@@ -177,7 +179,7 @@ public class SimpleHttpUtil {
             respond.setCode(httpURLConnection.getResponseCode());
             if (respond.getCode() == 200) {
                 is = httpURLConnection.getInputStream();
-                bufferedReader = new BufferedReader(new InputStreamReader(is, "utf-8"));
+                bufferedReader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
                 String line = "";
                 StringBuilder stringBuilder = new StringBuilder();
                 //每次读取一行，若非空则添加至 stringBuilder
