@@ -76,15 +76,6 @@ class PinyinHelp private constructor() {
     }
 
     /**
-     * 提供给外部注入纠正解析的方法
-     */
-    fun registerCstParsing(@NonNull key: String, @NonNull value: String) {
-        filterMap.let {
-            it[key] = value
-        }
-    }
-
-    /**
      * 名称转化为拼音
      * 转化失败时默认返回#
      */
