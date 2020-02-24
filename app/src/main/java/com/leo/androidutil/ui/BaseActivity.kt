@@ -5,6 +5,7 @@ import com.leo.commonutil.app.AppStackManager
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 
 open class BaseActivity : RxAppCompatActivity() {
+    val TAG = BaseActivity::class.java.simpleName
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initActionBar()
