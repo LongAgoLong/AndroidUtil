@@ -28,6 +28,7 @@ import android.graphics.Rect
 import android.os.Build
 import android.view.Surface
 import android.view.View
+import android.view.Window
 import android.view.WindowManager
 
 
@@ -79,10 +80,10 @@ object WindowUtils {
      *
      * @param from    from>=0&&from<=1.0f
      * @param to      to>=0&&to<=1.0f
-     * @param context 当前的activity
+     * @param activity 当前的activity
      */
-    fun dimBackground(from: Float, to: Float, context: Activity) {
-        val window = context.window ?: return
+    fun dimBackground(from: Float, to: Float, activity: Activity) {
+        val window = activity.window ?: return
         val valueAnimator = ValueAnimator.ofFloat(from, to)
         valueAnimator.duration = 500
         valueAnimator.addUpdateListener { animation ->
@@ -185,6 +186,21 @@ object WindowUtils {
                 .also {
                     ta.recycle()
                 }
+    }
+
+    /**
+     * 全屏
+     */
+    fun fullScreen(window: Window?) {
+        window?.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN)
+    }
+
+    /**
+     * 保持屏幕常亮
+     */
+    fun keepScreenOn(window: Window?) {
+        window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     /**
