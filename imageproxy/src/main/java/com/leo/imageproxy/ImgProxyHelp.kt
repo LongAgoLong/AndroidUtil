@@ -9,7 +9,7 @@ import java.io.File
 /**
  * 对外调用方法
  */
-class ImgProxyHelp private constructor() : IImgProxy {
+class ImgProxyHelp private constructor() {
     private var proxyImpl: IImgProxy? = null
 
     /**
@@ -19,9 +19,6 @@ class ImgProxyHelp private constructor() : IImgProxy {
      * @param proxyImpl
      */
     fun setProxyImpl(proxyImpl: IImgProxy?) {
-        if (null != proxyImpl && proxyImpl is ImgProxyHelp) {
-            throw java.lang.RuntimeException("cant set a ImgProxyHelp instance")
-        }
         this.proxyImpl ?: synchronized(this) {
             this.proxyImpl ?: proxyImpl.also { this.proxyImpl = it }
         }
@@ -32,28 +29,8 @@ class ImgProxyHelp private constructor() : IImgProxy {
         return proxyImpl as IImgProxy
     }
 
-    override fun loadDiskFile(context: Context, url: String): File {
+    fun loadDiskFile(context: Context, url: String): File {
         return getProxyImpl().loadDiskFile(context, url)
-    }
-
-    /**
-     * 普通默认加载
-     *
-     * @param context
-     * @param url
-     * @param isBitmap
-     * @param imageView
-     */
-    fun loadImage(context: Context, url: String, isBitmap: Boolean, imageView: ImageView) {
-        getProxyImpl().loadImage(context, ImgMode.NORMAL, R.color.place_holder_color, url, isBitmap, imageView)
-    }
-
-    fun loadImage(context: Context, url: String, bitmapView: IImgProxyBitmapView) {
-        getProxyImpl().loadImage(context, ImgMode.NORMAL, R.color.place_holder_color, url, bitmapView)
-    }
-
-    fun loadImage(context: Context, url: String, drawableView: IImgProxyDrawableView) {
-        getProxyImpl().loadImage(context, ImgMode.NORMAL, R.color.place_holder_color, url, drawableView)
     }
 
     /**
@@ -67,18 +44,23 @@ class ImgProxyHelp private constructor() : IImgProxy {
      * @param isBitmap
      * @param imageView
      */
-    override fun loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String, isBitmap: Boolean,
-                           imageView: ImageView) {
+    @JvmOverloads
+    fun loadImage(context: Context, mode: Int = ImgMode.NORMAL, @DrawableRes drawId: Int = R.color.place_holder_color,
+                  url: String, isBitmap: Boolean = false, imageView: ImageView) {
         getProxyImpl().loadImage(context, mode, drawId, url, isBitmap, imageView)
     }
 
-    override fun <T : IImgProxyBitmapView> loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String,
-                                                     bitmapView: T) {
+    @JvmOverloads
+    fun <T : IImgProxyBitmapView> loadImage(context: Context, mode: Int = ImgMode.NORMAL,
+                                            @DrawableRes drawId: Int = R.color.place_holder_color, url: String,
+                                            bitmapView: T) {
         getProxyImpl().loadImage(context, mode, drawId, url, bitmapView)
     }
 
-    override fun <T : IImgProxyDrawableView> loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String,
-                                                       drawableView: T) {
+    @JvmOverloads
+    fun <T : IImgProxyDrawableView> loadImage(context: Context, mode: Int = ImgMode.NORMAL,
+                                              @DrawableRes drawId: Int = R.color.place_holder_color, url: String,
+                                              drawableView: T) {
         getProxyImpl().loadImage(context, mode, drawId, url, drawableView)
     }
 
@@ -91,17 +73,17 @@ class ImgProxyHelp private constructor() : IImgProxy {
      * @param px
      * @param imageView
      */
-    override fun loadCircularBeadImage(context: Context, url: String, isBitmap: Boolean, px: Int,
-                                       imageView: ImageView) {
+    @JvmOverloads
+    fun loadCircularBeadImage(context: Context, url: String, isBitmap: Boolean = false, px: Int,
+                              imageView: ImageView) {
         getProxyImpl().loadCircularBeadImage(context, url, isBitmap, px, imageView)
     }
 
-    override fun <T : IImgProxyBitmapView> loadCircularBeadImage(context: Context, url: String, px: Int, bitmapView: T) {
+    fun <T : IImgProxyBitmapView> loadCircularBeadImage(context: Context, url: String, px: Int, bitmapView: T) {
         getProxyImpl().loadCircularBeadImage(context, url, px, bitmapView)
     }
 
-    override fun <T : IImgProxyDrawableView> loadCircularBeadImage(context: Context, url: String, px: Int,
-                                                                   drawableView: T) {
+    fun <T : IImgProxyDrawableView> loadCircularBeadImage(context: Context, url: String, px: Int, drawableView: T) {
         getProxyImpl().loadCircularBeadImage(context, url, px, drawableView)
     }
 
@@ -112,15 +94,17 @@ class ImgProxyHelp private constructor() : IImgProxy {
      * @param transType {@link ImgTransType}
      * @param value
      */
-    override fun loadTransImage(context: Context, url: String, transType: Int, imageView: ImageView, vararg value: Float) {
+    fun loadTransImage(context: Context, url: String, transType: Int, imageView: ImageView, vararg value: Float) {
         getProxyImpl().loadTransImage(context, url, transType, imageView, *value)
     }
 
-    override fun <T : IImgProxyBitmapView> loadTransImage(context: Context, url: String, transType: Int, bitmapView: T, vararg value: Float) {
+    fun <T : IImgProxyBitmapView> loadTransImage(context: Context, url: String, transType: Int,
+                                                 bitmapView: T, vararg value: Float) {
         getProxyImpl().loadTransImage(context, url, transType, bitmapView, *value)
     }
 
-    override fun <T : IImgProxyDrawableView> loadTransImage(context: Context, url: String, transType: Int, drawableView: T, vararg value: Float) {
+    fun <T : IImgProxyDrawableView> loadTransImage(context: Context, url: String, transType: Int,
+                                                   drawableView: T, vararg value: Float) {
         getProxyImpl().loadTransImage(context, url, transType, drawableView, *value)
     }
 
