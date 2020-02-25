@@ -2,16 +2,13 @@ package com.leo.commonutil.notify
 
 import android.app.Service
 import android.content.Context
-import android.content.res.AssetFileDescriptor
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Vibrator
 import androidx.annotation.RawRes
 import androidx.annotation.RequiresPermission
-
 import com.leo.system.ContextHelp
 import com.leo.system.LogUtil
-
 import java.io.IOException
 
 /**
@@ -20,8 +17,8 @@ import java.io.IOException
  * at 18:15
  * 消息提醒
  */
-object NotifyUtils {
-    private val TAG = NotifyUtils::class.java.simpleName
+object NotifyHelp {
+    private val TAG = NotifyHelp::class.java.simpleName
 
     /**
      * @param milliseconds 震动时长 , 单位毫秒
@@ -29,7 +26,7 @@ object NotifyUtils {
     @RequiresPermission(android.Manifest.permission.VIBRATE)
     fun vibrate(milliseconds: Long) {
         val vibrator = ContextHelp.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        vibrator?.vibrate(milliseconds)
+        vibrator.vibrate(milliseconds)
     }
 
     /**
@@ -37,17 +34,19 @@ object NotifyUtils {
      * @param isRepeat true-> 反复震动，false-> 只震动一次
      */
     @RequiresPermission(android.Manifest.permission.VIBRATE)
-    fun vibrate(pattern: LongArray, isRepeat: Boolean) {
+    @JvmOverloads
+    fun vibrate(pattern: LongArray, isRepeat: Boolean = false) {
         val vibrator = ContextHelp.context.getSystemService(Service.VIBRATOR_SERVICE) as Vibrator
-        vibrator?.vibrate(pattern, if (isRepeat) 1 else -1)
+        vibrator.vibrate(pattern, if (isRepeat) 1 else -1)
     }
 
-    fun playBee(@RawRes mediaId: Int, listener: OnCompleteListener?) {
+    @JvmOverloads
+    fun playBee(@RawRes mediaId: Int, listener: OnCompleteListener? = null) {
         val audioService = ContextHelp.context
                 .getSystemService(Context.AUDIO_SERVICE) as AudioManager ?: return
-//检查当前是否是静音模式
+        // 检查当前是否是静音模式
         if (audioService.ringerMode != AudioManager.RINGER_MODE_NORMAL) {
-            LogUtil.i(TAG, "静音模式")
+            LogUtil.d(TAG, "静音模式")
             return
         }
         var mediaPlayer: MediaPlayer? = MediaPlayer()
@@ -63,10 +62,6 @@ object NotifyUtils {
         } catch (ioe: IOException) {
             mediaPlayer = null
         }
-
-        if (null == mediaPlayer) {
-            return
-        }
         mediaPlayer.start()
         mediaPlayer.setOnCompletionListener { mp ->
             mp.stop()
@@ -75,7 +70,8 @@ object NotifyUtils {
     }
 
     @RequiresPermission(android.Manifest.permission.VIBRATE)
-    fun playBeeAndVibrate(milliseconds: Long, @RawRes mediaId: Int, listener: OnCompleteListener?) {
+    @JvmOverloads
+    fun playBeeAndVibrate(milliseconds: Long, @RawRes mediaId: Int, listener: OnCompleteListener? = null) {
         //震动
         vibrate(milliseconds)
         //提示音

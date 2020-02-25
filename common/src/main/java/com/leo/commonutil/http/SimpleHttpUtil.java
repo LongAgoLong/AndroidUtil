@@ -63,9 +63,7 @@ public class SimpleHttpUtil {
     }
 
     public void removeRequestProPerty(@NonNull String key) {
-        if (requestProPertyMap.containsKey(key)) {
-            requestProPertyMap.remove(key);
-        }
+        requestProPertyMap.remove(key);
     }
 
     public Respond post(@NonNull String urlPath, @Nullable HashMap<String, String> hashMap) {

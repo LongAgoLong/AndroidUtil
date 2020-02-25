@@ -1,6 +1,7 @@
 package com.leo.commonutil.app;
 
 import android.text.InputFilter;
+import android.text.Spanned;
 import android.widget.EditText;
 
 import java.util.regex.Matcher;
@@ -22,14 +23,16 @@ public class EditUtil {
      * @return
      */
     public static InputFilter getNotSpaceFilter() {
-        InputFilter filter = (source, start, end, dest, dstart, dend) -> {
-            if (source.equals(" ") || source.toString().contentEquals("\n")) {
-                return "";
-            } else {
-                return null;
+        return new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                if (source.equals(" ") || source.toString().contentEquals("\n")) {
+                    return "";
+                } else {
+                    return null;
+                }
             }
         };
-        return filter;
     }
 
     /**
@@ -47,18 +50,21 @@ public class EditUtil {
      * @return
      */
     public static InputFilter getNotSpecialCharFilter() {
-        InputFilter filter = (source, start, end, dest, dstart, dend) -> {
-            String speChat = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
-            Pattern pattern = Pattern.compile(speChat);
-            Matcher matcher = pattern.matcher(source.toString());
-            if (matcher.find()) {
-                return "";
-            } else if (source.equals(" ") || source.toString().contentEquals("\n")) {
-                return "";
-            } else {
-                return null;
+        return new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                // String speChat = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+                String speChat = "[\\p{P}\\s]";
+                Pattern pattern = Pattern.compile(speChat);
+                Matcher matcher = pattern.matcher(source.toString());
+                if (matcher.find()) {
+                    return "";
+                } else if (source.equals(" ") || source.toString().contentEquals("\n")) {
+                    return "";
+                } else {
+                    return null;
+                }
             }
         };
-        return filter;
     }
 }

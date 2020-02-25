@@ -10,42 +10,41 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Build
-import androidx.annotation.DrawableRes
-import androidx.annotation.LayoutRes
-import androidx.core.app.NotificationCompat
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RemoteViews
 import android.widget.TextView
-
-import java.util.LinkedList
+import androidx.annotation.DrawableRes
+import androidx.annotation.LayoutRes
+import androidx.core.app.NotificationCompat
+import java.util.*
 
 /**
  * Created by LEO
  * on 2017/12/28.
  */
-class NotificationCompatUtil(context: Context) : ContextWrapper(context) {
+class NotificationHelp(context: Context) : ContextWrapper(context) {
 
     private var manager: NotificationManager? = null
 
     /**
      * 创建通知渠道
      *
-     * @param sound 是否带提示音（通过提高消息等级实现）
+     * @param isSound 是否带提示音（通过提高消息等级实现）
      */
-    fun createNotificationChannel(sound: Boolean) {
+    private fun createChannel(channelId: String, channelName: String, isSound: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel: NotificationChannel
-            if (sound) {
-                channel = NotificationChannel(CHANNEL2_ID, CHANNEL2_NAME, NotificationManager.IMPORTANCE_HIGH)
+            val channel: NotificationChannel = NotificationChannel(channelId, channelName,
+                    if (isSound) NotificationManager.IMPORTANCE_HIGH else NotificationManager.IMPORTANCE_LOW)
+            if (isSound) {
                 channel.importance = NotificationManager.IMPORTANCE_HIGH
                 channel.enableLights(true)
                 channel.enableVibration(true)
-                channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC//设置在锁屏界面上显示这条通知
+                // 设置在锁屏界面上显示这条通知
+                channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
             } else {
-                channel = NotificationChannel(CHANNEL1_ID, CHANNEL1_NAME, NotificationManager.IMPORTANCE_LOW)
                 channel.importance = NotificationManager.IMPORTANCE_LOW
                 channel.enableLights(false)
                 channel.enableVibration(false)
@@ -72,14 +71,17 @@ class NotificationCompatUtil(context: Context) : ContextWrapper(context) {
      * @param content
      * @param iconBitmap
      * @param bigContent
-     * @param sound
+     * @param isSound
      * @return
      */
-    fun createOrdinaryNotification(context: Context, pendingIntent: PendingIntent?, title: String, content: String, @DrawableRes iconBitmap: Int, bigContent: String, sound: Boolean): Notification {
+    @JvmOverloads
+    fun ordinaryNotification(context: Context, pendingIntent: PendingIntent?, title: String, content: String,
+                             @DrawableRes iconBitmap: Int, bigContent: String,
+                             channelId: String, channelName: String, isSound: Boolean = false): Notification {
         val notification: Notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel(sound)
-            val builder = Notification.Builder(context, if (sound) CHANNEL2_ID else CHANNEL1_ID)
+            createChannel(channelId, channelName, isSound)
+            val builder = Notification.Builder(context, channelId)
             builder.setContentText(content)//设置内容
                     .setContentTitle(title) //设置标题
                     .setTicker(content) //设置状态栏的信息
@@ -96,12 +98,12 @@ class NotificationCompatUtil(context: Context) : ContextWrapper(context) {
             }
             notification = builder.build()
         } else {
-            val builder = NotificationCompat.Builder(context, if (sound) CHANNEL2_ID else CHANNEL1_ID)
+            val builder = NotificationCompat.Builder(context, channelId)
             builder.setContentText(content)//设置内容
                     .setContentTitle(title) //设置标题
                     .setTicker(content) //设置状态栏的信息
                     .setSmallIcon(iconBitmap).priority = NotificationCompat.PRIORITY_MAX//设置广播的优先级
-            if (sound) {
+            if (isSound) {
                 builder.setDefaults(Notification.DEFAULT_ALL)//设置通知的行为,例如声音,震动等
             }
             if (!TextUtils.isEmpty(bigContent)) {//bigContent不为空-宽视图文字样式
@@ -121,7 +123,9 @@ class NotificationCompatUtil(context: Context) : ContextWrapper(context) {
     }
 
     @JvmOverloads
-    fun createBigImgNotification(context: Context, cls: Class<*>?, title: String, content: String, @DrawableRes iconBitmap: Int, bigBitmap: Bitmap, sound: Boolean = false): Notification {
+    fun bigImgNotification(context: Context, cls: Class<*>?, title: String, content: String,
+                           @DrawableRes iconBitmap: Int, bigBitmap: Bitmap,
+                           channelId: String, channelName: String, isSound: Boolean = false): Notification {
         var pendingIntent: PendingIntent? = null
         if (cls != null) {
             val jumpIntent = Intent(context, cls)
@@ -131,11 +135,11 @@ class NotificationCompatUtil(context: Context) : ContextWrapper(context) {
 
         val notification: Notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel(sound)
-            val builder = Notification.Builder(context, if (sound) CHANNEL2_ID else CHANNEL1_ID)
+            createChannel(channelId, channelName, isSound)
+            val builder = Notification.Builder(context, channelId)
             builder.setContentText(content)
                     .setContentTitle(title)
-                    .setTicker(content) //设置状态栏的信息
+                    .setTicker(content) // 设置状态栏的信息
                     .setSmallIcon(iconBitmap)
             val bigPictureStyle = Notification.BigPictureStyle()
             bigPictureStyle.bigPicture(bigBitmap)
@@ -145,13 +149,15 @@ class NotificationCompatUtil(context: Context) : ContextWrapper(context) {
             }
             notification = builder.build()
         } else {
-            val builder = NotificationCompat.Builder(context, if (sound) CHANNEL2_ID else CHANNEL1_ID)
+            val builder = NotificationCompat.Builder(context, channelId)
             builder.setContentText(content)
                     .setContentTitle(title)
-                    .setTicker(content) //设置状态栏的信息
-                    .setSmallIcon(iconBitmap).priority = NotificationCompat.PRIORITY_MAX//设置广播的优先级
-            if (sound)
-                builder.setDefaults(Notification.DEFAULT_ALL)//设置通知的行为,例如声音,震动等
+                    .setTicker(content) // 设置状态栏的信息
+                    .setSmallIcon(iconBitmap).priority = NotificationCompat.PRIORITY_MAX// 设置广播的优先级
+            if (isSound) {
+                // 设置通知的行为,例如声音,震动等
+                builder.setDefaults(Notification.DEFAULT_ALL)
+            }
             val bigPictureStyle = NotificationCompat.BigPictureStyle()
             bigPictureStyle.bigPicture(bigBitmap)
             builder.setStyle(bigPictureStyle)
@@ -165,23 +171,25 @@ class NotificationCompatUtil(context: Context) : ContextWrapper(context) {
     }
 
     @JvmOverloads
-    fun createCustomNotification(context: Context, cls: Class<*>?, title: String, content: String, @DrawableRes iconBitmap: Int, @LayoutRes layoutId: Int, sound: Boolean = false): Notification {
+    fun customNotification(context: Context, cls: Class<*>?, title: String, content: String,
+                           @DrawableRes iconBitmap: Int, @LayoutRes layoutId: Int,
+                           channelId: String, channelName: String, isSound: Boolean = false): Notification {
         var pendingIntent: PendingIntent? = null
         if (cls != null) {
             val jumpIntent = Intent(context, cls)
             jumpIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
             pendingIntent = PendingIntent.getActivity(context, 0, jumpIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
         }
-        val remoteViews = RemoteViews(context.packageName, layoutId)//自定义布局
+        // 自定义布局
+        val remoteViews = RemoteViews(context.packageName, layoutId)
 
         val notification: Notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel(sound)
-            val builder = Notification.Builder(applicationContext, if (sound) CHANNEL2_ID else CHANNEL1_ID)
+            createChannel(channelId, channelName, isSound)
+            val builder = Notification.Builder(applicationContext, channelId)
             builder.setContentText(content)
                     .setContentTitle(title)
-                    .setTicker(content) //设置状态栏的信息
+                    .setTicker(content) // 设置状态栏的信息
                     .setSmallIcon(iconBitmap)
             if (null != cls && null != pendingIntent) {
                 builder.setContentIntent(pendingIntent)
@@ -189,20 +197,20 @@ class NotificationCompatUtil(context: Context) : ContextWrapper(context) {
             builder.setCustomContentView(remoteViews)
             notification = builder.build()
         } else {
-            val builder = NotificationCompat.Builder(context, if (sound) CHANNEL2_ID else CHANNEL1_ID)
+            val builder = NotificationCompat.Builder(context, channelId)
             builder.setContentText(content)
                     .setContentTitle(title)
                     .setTicker(content) //设置状态栏的信息
                     .setSmallIcon(iconBitmap).priority = NotificationCompat.PRIORITY_MAX//设置广播的优先级
-            if (sound)
+            if (isSound)
                 builder.setDefaults(Notification.DEFAULT_ALL)//设置通知的行为,例如声音,震动等
             if (null != cls && null != pendingIntent) {
                 builder.setContentIntent(pendingIntent)
             }
             builder.setCustomContentView(remoteViews)
-            //可以设置成折叠模式,但得判断一下sdk,大于16才能使用
-            //if (Build.VERSION.SDK_INT > 16 && canCollapse)
-            //builder.setCustomBigContentView(remoteViews);
+            // 可以设置成折叠模式,但得判断一下sdk,大于16才能使用
+            // if (Build.VERSION.SDK_INT > 16 && canCollapse)
+            // builder.setCustomBigContentView(remoteViews);
             notification = builder.build()
         }
 
@@ -211,17 +219,12 @@ class NotificationCompatUtil(context: Context) : ContextWrapper(context) {
     }
 
     companion object {
-        val CHANNEL1_ID = "notify_1"
-        val CHANNEL1_NAME = "nofity_name_1"
-        val CHANNEL2_ID = "notify_2"
-        val CHANNEL2_NAME = "nofity_name_2"
-
         @Volatile
-        private var instance: NotificationCompatUtil? = null
+        private var instance: NotificationHelp? = null
 
-        fun getInstance(context: Context): NotificationCompatUtil {
+        fun getInstance(context: Context): NotificationHelp {
             return instance ?: synchronized(this) {
-                instance ?: NotificationCompatUtil(context).also { instance = it }
+                instance ?: NotificationHelp(context).also { instance = it }
             }
         }
 
@@ -241,14 +244,14 @@ class NotificationCompatUtil(context: Context) : ContextWrapper(context) {
         private fun getNotificationThemeColor(context: Context): Int {
             val builder = NotificationCompat.Builder(context)
             val notification = builder.build()
-            if (null != notification.contentView) {
+            return if (null != notification.contentView) {
                 val layoutId = notification.contentView.layoutId
                 val viewGroup = LayoutInflater.from(context).inflate(layoutId, null, false) as ViewGroup
-                return if (viewGroup.findViewById<View>(android.R.id.title) != null) {
+                if (viewGroup.findViewById<View>(android.R.id.title) != null) {
                     (viewGroup.findViewById<View>(android.R.id.title) as TextView).currentTextColor
                 } else findColor(viewGroup)
             } else {
-                return Color.BLACK
+                Color.BLACK
             }
         }
 
