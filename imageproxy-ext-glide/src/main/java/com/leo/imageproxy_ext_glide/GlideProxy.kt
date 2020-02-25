@@ -12,22 +12,31 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
-import com.leo.imageproxy.IImageProxy
-import com.leo.imageproxy.IImageProxyBitmapView
-import com.leo.imageproxy.IImageProxyDrawableView
-import com.leo.imageproxy.enume.ImageMode
+import com.leo.imageproxy.IImgProxy
+import com.leo.imageproxy.IImgProxyBitmapView
+import com.leo.imageproxy.IImgProxyDrawableView
+import com.leo.imageproxy.enume.ImgMode
 import jp.wasabeef.glide.transformations.CropCircleTransformation
 import jp.wasabeef.glide.transformations.CropSquareTransformation
 import jp.wasabeef.glide.transformations.MaskTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
+import java.io.File
 
 /**
  * Created by LEO
  * On 2019/6/7
  * Description:图片加载库的glide实现
  */
-class GlideProxy : IImageProxy {
+class GlideProxy : IImgProxy {
+    /**
+     * 加载磁盘中缓存图片文件
+     */
+    override fun getDiskFile(context: Context, url: String): File {
+        return Glide.with(context).load(url).downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
+    }
+
     override fun loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String, isBitmap: Boolean,
                            imageView: ImageView) {
         var bitmapBuilder: RequestBuilder<Bitmap>? = null
@@ -42,7 +51,7 @@ class GlideProxy : IImageProxy {
                     .load(url)
         }
         when (mode) {
-            ImageMode.NORMAL -> if (isBitmap) {
+            ImgMode.NORMAL -> if (isBitmap) {
                 bitmapBuilder!!
                         .apply(RequestOptions.placeholderOf(drawId))
                         .into(imageView)
@@ -51,7 +60,7 @@ class GlideProxy : IImageProxy {
                         .apply(RequestOptions.placeholderOf(drawId))
                         .into(imageView)
             }
-            ImageMode.CIRCULAR -> if (isBitmap) {
+            ImgMode.CIRCULAR -> if (isBitmap) {
                 bitmapBuilder!!
                         .apply(RequestOptions.placeholderOf(drawId))
                         .apply(RequestOptions.bitmapTransform(CropCircleTransformation()))
@@ -62,7 +71,7 @@ class GlideProxy : IImageProxy {
                         .apply(RequestOptions.bitmapTransform(CropCircleTransformation()))
                         .into(imageView)
             }
-            ImageMode.SQUARE -> if (isBitmap) {
+            ImgMode.SQUARE -> if (isBitmap) {
                 bitmapBuilder!!
                         .apply(RequestOptions.placeholderOf(drawId))
                         .apply(RequestOptions.bitmapTransform(CropSquareTransformation()))
@@ -73,7 +82,7 @@ class GlideProxy : IImageProxy {
                         .apply(RequestOptions.bitmapTransform(CropSquareTransformation()))
                         .into(imageView)
             }
-            ImageMode.MASK, ImageMode.NINE_PATCH_MASK -> if (isBitmap) {
+            ImgMode.MASK, ImgMode.NINE_PATCH_MASK -> if (isBitmap) {
                 bitmapBuilder!!
                         .apply(RequestOptions.bitmapTransform(MultiTransformation(CenterCrop(),
                                 MaskTransformation(drawId))))
@@ -90,12 +99,12 @@ class GlideProxy : IImageProxy {
     }
 
     override fun loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String,
-                           bitmapView: IImageProxyBitmapView) {
+                           bitmapView: IImgProxyBitmapView) {
         val bitmapBuilder = Glide.with(context)
                 .asBitmap()
                 .load(url)
         when (mode) {
-            ImageMode.NORMAL -> bitmapBuilder
+            ImgMode.NORMAL -> bitmapBuilder
                     .apply(RequestOptions.placeholderOf(drawId))
                     .into(object : SimpleTarget<Bitmap>(bitmapView.width, bitmapView.height) {
                         override fun onResourceReady(resource: Bitmap,
@@ -103,7 +112,7 @@ class GlideProxy : IImageProxy {
                             bitmapView.setBitmap(resource)
                         }
                     })
-            ImageMode.CIRCULAR -> bitmapBuilder
+            ImgMode.CIRCULAR -> bitmapBuilder
                     .apply(RequestOptions.placeholderOf(drawId))
                     .apply(RequestOptions.bitmapTransform(CropCircleTransformation()))
                     .into(object : SimpleTarget<Bitmap>(bitmapView.width, bitmapView.height) {
@@ -112,7 +121,7 @@ class GlideProxy : IImageProxy {
                             bitmapView.setBitmap(resource)
                         }
                     })
-            ImageMode.SQUARE -> bitmapBuilder
+            ImgMode.SQUARE -> bitmapBuilder
                     .apply(RequestOptions.placeholderOf(drawId))
                     .apply(RequestOptions.bitmapTransform(CropSquareTransformation()))
                     .into(object : SimpleTarget<Bitmap>(bitmapView.width, bitmapView.height) {
@@ -121,7 +130,7 @@ class GlideProxy : IImageProxy {
                             bitmapView.setBitmap(resource)
                         }
                     })
-            ImageMode.MASK, ImageMode.NINE_PATCH_MASK -> bitmapBuilder
+            ImgMode.MASK, ImgMode.NINE_PATCH_MASK -> bitmapBuilder
                     .apply(RequestOptions.bitmapTransform(MultiTransformation(CenterCrop(),
                             MaskTransformation(drawId))))
                     .into(object : SimpleTarget<Bitmap>(bitmapView.width, bitmapView.height) {
@@ -136,19 +145,19 @@ class GlideProxy : IImageProxy {
     }
 
     override fun loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String,
-                           drawableView: IImageProxyDrawableView) {
+                           drawableView: IImgProxyDrawableView) {
         val gifBuilder = Glide.with(context)
                 .asDrawable()
                 .load(url)
         when (mode) {
-            ImageMode.NORMAL -> gifBuilder
+            ImgMode.NORMAL -> gifBuilder
                     .apply(RequestOptions.placeholderOf(drawId))
                     .into(object : SimpleTarget<Drawable>(drawableView.width, drawableView.height) {
                         override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                             drawableView.setDrawable(resource)
                         }
                     })
-            ImageMode.CIRCULAR -> gifBuilder
+            ImgMode.CIRCULAR -> gifBuilder
                     .apply(RequestOptions.placeholderOf(drawId))
                     .apply(RequestOptions.circleCropTransform())
                     .into(object : SimpleTarget<Drawable>(drawableView.width, drawableView.height) {
@@ -156,7 +165,7 @@ class GlideProxy : IImageProxy {
                             drawableView.setDrawable(resource)
                         }
                     })
-            ImageMode.SQUARE -> gifBuilder
+            ImgMode.SQUARE -> gifBuilder
                     .apply(RequestOptions.placeholderOf(drawId))
                     .apply(RequestOptions.bitmapTransform(CropSquareTransformation()))
                     .into(object : SimpleTarget<Drawable>(drawableView.width, drawableView.height) {
@@ -164,7 +173,7 @@ class GlideProxy : IImageProxy {
                             drawableView.setDrawable(resource)
                         }
                     })
-            ImageMode.MASK, ImageMode.NINE_PATCH_MASK -> gifBuilder
+            ImgMode.MASK, ImgMode.NINE_PATCH_MASK -> gifBuilder
                     .apply(RequestOptions.bitmapTransform(MultiTransformation(CenterCrop(),
                             MaskTransformation(drawId))))
                     .into(object : SimpleTarget<Drawable>(drawableView.width, drawableView.height) {
@@ -197,7 +206,7 @@ class GlideProxy : IImageProxy {
     }
 
     override fun loadCircularBeadImage(context: Context, url: String, px: Int,
-                                       bitmapView: IImageProxyBitmapView) {
+                                       bitmapView: IImgProxyBitmapView) {
         Glide.with(context)
                 .asBitmap()
                 .load(url)
@@ -212,7 +221,7 @@ class GlideProxy : IImageProxy {
     }
 
     override fun loadCircularBeadImage(context: Context, url: String, px: Int,
-                                       drawableView: IImageProxyDrawableView) {
+                                       drawableView: IImgProxyDrawableView) {
         Glide.with(context)
                 .asGif()
                 .load(url)
@@ -225,7 +234,20 @@ class GlideProxy : IImageProxy {
                 })
     }
 
-    override fun loadTransImage(context: Context, url: String, transType: Int, vararg value: Float) {
+    /**
+     * 提供变换的加载方式
+     *
+     * @param context
+     * @param url
+     * @param transType link ImgTransType
+     * @param value
+     */
+    override fun loadTransImage(context: Context, url: String, transType: Int, imageView: ImageView, vararg value: Float) {
+    }
 
+    override fun loadTransImage(context: Context, url: String, transType: Int, bitmapView: IImgProxyBitmapView, vararg value: Float) {
+    }
+
+    override fun loadTransImage(context: Context, url: String, transType: Int, drawableView: IImgProxyDrawableView, vararg value: Float) {
     }
 }

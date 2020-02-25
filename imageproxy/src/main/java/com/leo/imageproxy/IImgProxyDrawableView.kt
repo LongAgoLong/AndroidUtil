@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable
 /**
  * 自定义view实现
  */
-interface IImageProxyDrawableView {
+interface IImgProxyDrawableView {
 
     val width: Int
 

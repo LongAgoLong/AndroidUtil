@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 /**
  * 自定义view实现
  */
-interface IImageProxyBitmapView {
+interface IImgProxyBitmapView {
 
     val width: Int
 

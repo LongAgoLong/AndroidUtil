@@ -1,6 +1,6 @@
 package com.leo.imageproxy.enume
 
-object ImageMode {
+object ImgMode {
     // 普通默认
     const val NORMAL = 0
     // 圆形

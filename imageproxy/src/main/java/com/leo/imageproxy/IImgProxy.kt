@@ -2,10 +2,14 @@ package com.leo.imageproxy
 
 import android.content.Context
 import android.widget.ImageView
-
 import androidx.annotation.DrawableRes
+import java.io.File
 
-interface IImageProxy {
+interface IImgProxy {
+    /**
+     * 加载磁盘中缓存图片文件
+     */
+    fun getDiskFile(context: Context, url: String): File
 
     /**
      * 可改变形状的加载方式
@@ -21,10 +25,10 @@ interface IImageProxy {
                   imageView: ImageView)
 
     fun loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String,
-                  bitmapView: IImageProxyBitmapView)
+                  bitmapView: IImgProxyBitmapView)
 
     fun loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String,
-                  drawableView: IImageProxyDrawableView)
+                  drawableView: IImgProxyDrawableView)
 
     /**
      * 圆角加载方式
@@ -37,17 +41,21 @@ interface IImageProxy {
      */
     fun loadCircularBeadImage(context: Context, url: String, isBitmap: Boolean, px: Int, imageView: ImageView)
 
-    fun loadCircularBeadImage(context: Context, url: String, px: Int, bitmapView: IImageProxyBitmapView)
+    fun loadCircularBeadImage(context: Context, url: String, px: Int, bitmapView: IImgProxyBitmapView)
 
-    fun loadCircularBeadImage(context: Context, url: String, px: Int, drawableView: IImageProxyDrawableView)
+    fun loadCircularBeadImage(context: Context, url: String, px: Int, drawableView: IImgProxyDrawableView)
 
     /**
      * 提供变换的加载方式
      *
      * @param context
      * @param url
-     * @param transType link ImageTransType
+     * @param transType link ImgTransType
      * @param value
      */
-    fun loadTransImage(context: Context, url: String, transType: Int, vararg value: Float)
+    fun loadTransImage(context: Context, url: String, transType: Int, imageView: ImageView, vararg value: Float)
+
+    fun loadTransImage(context: Context, url: String, transType: Int, bitmapView: IImgProxyBitmapView, vararg value: Float)
+
+    fun loadTransImage(context: Context, url: String, transType: Int, drawableView: IImgProxyDrawableView, vararg value: Float)
 }

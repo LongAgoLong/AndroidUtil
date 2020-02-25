@@ -1,6 +1,6 @@
 package com.leo.imageproxy.enume
 
-object ImageTransType {
+object ImgTransType {
     // 颜色转换
     const val COLOR_FILTER = 0
     // 灰度转换
