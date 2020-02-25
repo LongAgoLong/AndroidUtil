@@ -91,19 +91,19 @@ object IntentUtil {
     /**
      * startActivityForResult
      *
-     * @param context
+     * @param activity
      * @param cls
      * @param bundle
      * @param requestCode
      */
     @JvmOverloads
-    fun startActivityForResult(context: Context, cls: Class<*>, bundle: Bundle? = null, requestCode: Int) {
+    fun startActivityForResult(activity: Activity, cls: Class<*>, bundle: Bundle? = null, requestCode: Int) {
         val intentRecharge = Intent()
         if (bundle != null) {
             intentRecharge.putExtras(bundle)
         }
-        intentRecharge.setClass(context, cls)
-        (context as Activity).startActivityForResult(intentRecharge, requestCode)
+        intentRecharge.setClass(activity, cls)
+        activity.startActivityForResult(intentRecharge, requestCode)
     }
 
     @JvmOverloads
