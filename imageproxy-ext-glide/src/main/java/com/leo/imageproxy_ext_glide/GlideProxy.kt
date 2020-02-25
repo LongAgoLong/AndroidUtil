@@ -33,7 +33,7 @@ class GlideProxy : IImgProxy {
     /**
      * 加载磁盘中缓存图片文件
      */
-    override fun getDiskFile(context: Context, url: String): File {
+    override fun loadDiskFile(context: Context, url: String): File {
         return Glide.with(context).load(url).downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
     }
 
@@ -98,8 +98,8 @@ class GlideProxy : IImgProxy {
         }
     }
 
-    override fun loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String,
-                           bitmapView: IImgProxyBitmapView) {
+    override fun <T : IImgProxyBitmapView> loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String,
+                                                     bitmapView: T) {
         val bitmapBuilder = Glide.with(context)
                 .asBitmap()
                 .load(url)
@@ -144,8 +144,8 @@ class GlideProxy : IImgProxy {
         }
     }
 
-    override fun loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String,
-                           drawableView: IImgProxyDrawableView) {
+    override fun <T : IImgProxyDrawableView> loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String,
+                                                       drawableView: T) {
         val gifBuilder = Glide.with(context)
                 .asDrawable()
                 .load(url)
@@ -205,8 +205,8 @@ class GlideProxy : IImgProxy {
         }
     }
 
-    override fun loadCircularBeadImage(context: Context, url: String, px: Int,
-                                       bitmapView: IImgProxyBitmapView) {
+    override fun <T : IImgProxyBitmapView> loadCircularBeadImage(context: Context, url: String, px: Int,
+                                                                 bitmapView: T) {
         Glide.with(context)
                 .asBitmap()
                 .load(url)
@@ -220,8 +220,8 @@ class GlideProxy : IImgProxy {
                 })
     }
 
-    override fun loadCircularBeadImage(context: Context, url: String, px: Int,
-                                       drawableView: IImgProxyDrawableView) {
+    override fun <T : IImgProxyDrawableView> loadCircularBeadImage(context: Context, url: String, px: Int,
+                                                                   drawableView: T) {
         Glide.with(context)
                 .asGif()
                 .load(url)
@@ -245,9 +245,9 @@ class GlideProxy : IImgProxy {
     override fun loadTransImage(context: Context, url: String, transType: Int, imageView: ImageView, vararg value: Float) {
     }
 
-    override fun loadTransImage(context: Context, url: String, transType: Int, bitmapView: IImgProxyBitmapView, vararg value: Float) {
+    override fun <T : IImgProxyBitmapView> loadTransImage(context: Context, url: String, transType: Int, bitmapView: T, vararg value: Float) {
     }
 
-    override fun loadTransImage(context: Context, url: String, transType: Int, drawableView: IImgProxyDrawableView, vararg value: Float) {
+    override fun <T : IImgProxyDrawableView> loadTransImage(context: Context, url: String, transType: Int, drawableView: T, vararg value: Float) {
     }
 }

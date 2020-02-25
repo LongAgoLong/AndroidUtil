@@ -9,7 +9,7 @@ interface IImgProxy {
     /**
      * 加载磁盘中缓存图片文件
      */
-    fun getDiskFile(context: Context, url: String): File
+    fun loadDiskFile(context: Context, url: String): File
 
     /**
      * 可改变形状的加载方式
@@ -24,11 +24,11 @@ interface IImgProxy {
     fun loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String, isBitmap: Boolean,
                   imageView: ImageView)
 
-    fun loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String,
-                  bitmapView: IImgProxyBitmapView)
+    fun <T : IImgProxyBitmapView> loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String,
+                                            bitmapView: T)
 
-    fun loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String,
-                  drawableView: IImgProxyDrawableView)
+    fun <T : IImgProxyDrawableView> loadImage(context: Context, mode: Int, @DrawableRes drawId: Int, url: String,
+                                              drawableView: T)
 
     /**
      * 圆角加载方式
@@ -41,9 +41,9 @@ interface IImgProxy {
      */
     fun loadCircularBeadImage(context: Context, url: String, isBitmap: Boolean, px: Int, imageView: ImageView)
 
-    fun loadCircularBeadImage(context: Context, url: String, px: Int, bitmapView: IImgProxyBitmapView)
+    fun <T : IImgProxyBitmapView> loadCircularBeadImage(context: Context, url: String, px: Int, bitmapView: T)
 
-    fun loadCircularBeadImage(context: Context, url: String, px: Int, drawableView: IImgProxyDrawableView)
+    fun <T : IImgProxyDrawableView> loadCircularBeadImage(context: Context, url: String, px: Int, drawableView: T)
 
     /**
      * 提供变换的加载方式
@@ -55,7 +55,7 @@ interface IImgProxy {
      */
     fun loadTransImage(context: Context, url: String, transType: Int, imageView: ImageView, vararg value: Float)
 
-    fun loadTransImage(context: Context, url: String, transType: Int, bitmapView: IImgProxyBitmapView, vararg value: Float)
+    fun <T : IImgProxyBitmapView> loadTransImage(context: Context, url: String, transType: Int, bitmapView: T, vararg value: Float)
 
-    fun loadTransImage(context: Context, url: String, transType: Int, drawableView: IImgProxyDrawableView, vararg value: Float)
+    fun <T : IImgProxyDrawableView> loadTransImage(context: Context, url: String, transType: Int, drawableView: T, vararg value: Float)
 }
