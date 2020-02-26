@@ -37,6 +37,15 @@ class PinyinHelp private constructor() {
         initCstParsing()
     }
 
+    @JvmOverloads
+    fun initConfig(caseType: HanyuPinyinCaseType = HanyuPinyinCaseType.LOWERCASE,
+                   toneType: HanyuPinyinToneType = HanyuPinyinToneType.WITHOUT_TONE,
+                   vCharType: HanyuPinyinVCharType = HanyuPinyinVCharType.WITH_V) {
+        format.caseType = caseType
+        format.toneType = toneType
+        format.vCharType = vCharType
+    }
+
     private fun initCstParsing() {
         /**
          * pinyin4j会将‘这’转换为‘zhei’，‘那’转换为‘nei’
@@ -79,7 +88,7 @@ class PinyinHelp private constructor() {
      * 名称转化为拼音
      * 转化失败时默认返回#
      */
-    fun parsePinyin(@NonNull str: String): String {
+    fun parse(@NonNull str: String): String {
         val input = str.trim().toCharArray()
         var output = ""
         try {
@@ -107,9 +116,9 @@ class PinyinHelp private constructor() {
      * 获取第一个文字拼音的首字母
      * 转化失败时默认返回#
      */
-    fun parsePinyinFirstLetter(@NonNull str: String): String {
+    fun parseFirstLetter(@NonNull str: String): String {
         val s = str.substring(0, 1)
-        val parsePinYin = parsePinyin(s)
+        val parsePinYin = parse(s)
         return if (parsePinYin.length == 1) {
             parsePinYin
         } else {
@@ -120,11 +129,11 @@ class PinyinHelp private constructor() {
     /**
      * 获取每个汉字拼音的首字母，返回字符串
      */
-    fun parsePinyinAllFirstLetter(@NonNull str: String): String {
+    fun parseAllFirstLetter(@NonNull str: String): String {
         val length = str.length
         val strBuilder = StringBuilder()
         for (i in 0 until length) {
-            strBuilder.append(parsePinyinFirstLetter(str.substring(i, i + 1)))
+            strBuilder.append(parseFirstLetter(str.substring(i, i + 1)))
         }
         return strBuilder.toString()
     }

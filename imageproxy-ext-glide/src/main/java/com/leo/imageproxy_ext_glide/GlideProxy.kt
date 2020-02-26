@@ -106,37 +106,37 @@ class GlideProxy : IImgProxy {
         when (mode) {
             ImgMode.NORMAL -> bitmapBuilder
                     .apply(RequestOptions.placeholderOf(drawId))
-                    .into(object : SimpleTarget<Bitmap>(bitmapView.width, bitmapView.height) {
+                    .into(object : SimpleTarget<Bitmap>(bitmapView.imgWidth, bitmapView.imgHeight) {
                         override fun onResourceReady(resource: Bitmap,
                                                      transition: Transition<in Bitmap>?) {
-                            bitmapView.setBitmap(resource)
+                            bitmapView.loadBitmap(resource)
                         }
                     })
             ImgMode.CIRCULAR -> bitmapBuilder
                     .apply(RequestOptions.placeholderOf(drawId))
                     .apply(RequestOptions.bitmapTransform(CropCircleTransformation()))
-                    .into(object : SimpleTarget<Bitmap>(bitmapView.width, bitmapView.height) {
+                    .into(object : SimpleTarget<Bitmap>(bitmapView.imgWidth, bitmapView.imgHeight) {
                         override fun onResourceReady(resource: Bitmap,
                                                      transition: Transition<in Bitmap>?) {
-                            bitmapView.setBitmap(resource)
+                            bitmapView.loadBitmap(resource)
                         }
                     })
             ImgMode.SQUARE -> bitmapBuilder
                     .apply(RequestOptions.placeholderOf(drawId))
                     .apply(RequestOptions.bitmapTransform(CropSquareTransformation()))
-                    .into(object : SimpleTarget<Bitmap>(bitmapView.width, bitmapView.height) {
+                    .into(object : SimpleTarget<Bitmap>(bitmapView.imgWidth, bitmapView.imgHeight) {
                         override fun onResourceReady(resource: Bitmap,
                                                      transition: Transition<in Bitmap>?) {
-                            bitmapView.setBitmap(resource)
+                            bitmapView.loadBitmap(resource)
                         }
                     })
             ImgMode.MASK, ImgMode.NINE_PATCH_MASK -> bitmapBuilder
                     .apply(RequestOptions.bitmapTransform(MultiTransformation(CenterCrop(),
                             MaskTransformation(drawId))))
-                    .into(object : SimpleTarget<Bitmap>(bitmapView.width, bitmapView.height) {
+                    .into(object : SimpleTarget<Bitmap>(bitmapView.imgWidth, bitmapView.imgHeight) {
                         override fun onResourceReady(resource: Bitmap,
                                                      transition: Transition<in Bitmap>?) {
-                            bitmapView.setBitmap(resource)
+                            bitmapView.loadBitmap(resource)
                         }
                     })
             else -> {
@@ -152,33 +152,33 @@ class GlideProxy : IImgProxy {
         when (mode) {
             ImgMode.NORMAL -> gifBuilder
                     .apply(RequestOptions.placeholderOf(drawId))
-                    .into(object : SimpleTarget<Drawable>(drawableView.width, drawableView.height) {
+                    .into(object : SimpleTarget<Drawable>(drawableView.imgWidth, drawableView.imgHeight) {
                         override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                            drawableView.setDrawable(resource)
+                            drawableView.loadDrawable(resource)
                         }
                     })
             ImgMode.CIRCULAR -> gifBuilder
                     .apply(RequestOptions.placeholderOf(drawId))
                     .apply(RequestOptions.circleCropTransform())
-                    .into(object : SimpleTarget<Drawable>(drawableView.width, drawableView.height) {
+                    .into(object : SimpleTarget<Drawable>(drawableView.imgWidth, drawableView.imgHeight) {
                         override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                            drawableView.setDrawable(resource)
+                            drawableView.loadDrawable(resource)
                         }
                     })
             ImgMode.SQUARE -> gifBuilder
                     .apply(RequestOptions.placeholderOf(drawId))
                     .apply(RequestOptions.bitmapTransform(CropSquareTransformation()))
-                    .into(object : SimpleTarget<Drawable>(drawableView.width, drawableView.height) {
+                    .into(object : SimpleTarget<Drawable>(drawableView.imgWidth, drawableView.imgHeight) {
                         override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                            drawableView.setDrawable(resource)
+                            drawableView.loadDrawable(resource)
                         }
                     })
             ImgMode.MASK, ImgMode.NINE_PATCH_MASK -> gifBuilder
                     .apply(RequestOptions.bitmapTransform(MultiTransformation(CenterCrop(),
                             MaskTransformation(drawId))))
-                    .into(object : SimpleTarget<Drawable>(drawableView.width, drawableView.height) {
+                    .into(object : SimpleTarget<Drawable>(drawableView.imgWidth, drawableView.imgHeight) {
                         override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                            drawableView.setDrawable(resource)
+                            drawableView.loadDrawable(resource)
                         }
                     })
             else -> {
@@ -212,10 +212,10 @@ class GlideProxy : IImgProxy {
                 .load(url)
                 .apply(RequestOptions.bitmapTransform(RoundedCornersTransformation(px, 0,
                         RoundedCornersTransformation.CornerType.ALL)))
-                .into(object : SimpleTarget<Bitmap>(bitmapView.width, bitmapView.height) {
+                .into(object : SimpleTarget<Bitmap>(bitmapView.imgWidth, bitmapView.imgHeight) {
                     override fun onResourceReady(resource: Bitmap,
                                                  transition: Transition<in Bitmap>?) {
-                        bitmapView.setBitmap(resource)
+                        bitmapView.loadBitmap(resource)
                     }
                 })
     }
@@ -227,9 +227,9 @@ class GlideProxy : IImgProxy {
                 .load(url)
                 .apply(RequestOptions.bitmapTransform(RoundedCornersTransformation(px, 0,
                         RoundedCornersTransformation.CornerType.ALL)))
-                .into(object : SimpleTarget<GifDrawable>(drawableView.width, drawableView.height) {
+                .into(object : SimpleTarget<GifDrawable>(drawableView.imgWidth, drawableView.imgHeight) {
                     override fun onResourceReady(resource: GifDrawable, transition: Transition<in GifDrawable>?) {
-                        drawableView.setDrawable(resource)
+                        drawableView.loadDrawable(resource)
                     }
                 })
     }

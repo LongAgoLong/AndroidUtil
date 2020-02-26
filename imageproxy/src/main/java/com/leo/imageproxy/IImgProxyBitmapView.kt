@@ -7,8 +7,8 @@ import android.graphics.Bitmap
  */
 interface IImgProxyBitmapView {
 
-    val width: Int
+    val imgWidth: Int
 
-    val height: Int
-    fun setBitmap(bitmap: Bitmap)
+    val imgHeight: Int
+    fun loadBitmap(bitmap: Bitmap)
 }

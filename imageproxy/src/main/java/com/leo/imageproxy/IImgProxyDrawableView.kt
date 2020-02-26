@@ -7,8 +7,8 @@ import android.graphics.drawable.Drawable
  */
 interface IImgProxyDrawableView {
 
-    val width: Int
+    val imgWidth: Int
 
-    val height: Int
-    fun setDrawable(drawable: Drawable)
+    val imgHeight: Int
+    fun loadDrawable(drawable: Drawable)
 }

@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import com.leo.androidutil.databinding.ActivityPinyinBinding
 import com.leo.pinyinlib.PinyinHelp
-import com.leo.system.LogUtil
 
 
 /**
@@ -61,9 +60,9 @@ class PinyinActivity : BaseActivity() {
                      */
                     s = s.replace(Regex("[\\p{P}\\s]+"), "")
                     mBinding.resultTv ?: return@run
-                    val pinyin = PinyinHelp.getInstance().parsePinyin(s)
-                    val allFirstLetter = PinyinHelp.getInstance().parsePinyinAllFirstLetter(s)
-                    val firstLetter = PinyinHelp.getInstance().parsePinyinFirstLetter(s)
+                    val pinyin = PinyinHelp.getInstance().parse(s)
+                    val allFirstLetter = PinyinHelp.getInstance().parseAllFirstLetter(s)
+                    val firstLetter = PinyinHelp.getInstance().parseFirstLetter(s)
                     val result = "纠正后字符串 : ${s}\n拼音：${pinyin}\n首字母：${allFirstLetter}\n第一个文字首字母：${firstLetter}"
                     mBinding.resultTv.text = result
                 }
