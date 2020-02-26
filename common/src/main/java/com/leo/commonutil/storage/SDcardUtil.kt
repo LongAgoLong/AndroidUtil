@@ -6,9 +6,6 @@ import android.os.StatFs
 import com.leo.system.ContextHelp
 import java.io.File
 
-/**
- * @author Ari
- */
 object SDcardUtil {
     /**
      * SD卡是否存在

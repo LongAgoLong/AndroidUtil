@@ -5,10 +5,11 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Base64
 import com.leo.commonutil.asyn.threadPool.ThreadPoolHelp
+import com.leo.system.LogUtil
 import java.io.*
 
 object IOUtil {
-
+    private val TAG = IOUtil::class.java.simpleName
     /**
      * 从流中读取数据
      *
@@ -103,6 +104,10 @@ object IOUtil {
     @JvmOverloads
     fun writeDiskFile(context: Context, filePath: String = SDcardUtil.fileFolder!!.absolutePath, filename: String,
                       fileContent: ByteArray, isNotifyScanFile: Boolean = false): Boolean {
+        if (!SDcardUtil.isDiskExists) {
+            LogUtil.e(TAG, "Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED")
+            return false
+        }
         var outStream: FileOutputStream? = null
         try {
             val file = File(filePath, filename)
@@ -140,6 +145,10 @@ object IOUtil {
     @JvmOverloads
     fun writeDiskFile(context: Context, filePath: String = SDcardUtil.fileFolder!!.absolutePath, filename: String,
                       fileContent: File, isNotifyScanFile: Boolean = false): Boolean {
+        if (!SDcardUtil.isDiskExists) {
+            LogUtil.e(TAG, "Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED")
+            return false
+        }
         var inStream: FileInputStream? = null
         var outStream: FileOutputStream? = null
         try {
@@ -185,6 +194,10 @@ object IOUtil {
     @JvmOverloads
     fun writeDiskText(filePath: String = SDcardUtil.fileFolder!!.absolutePath, fileName: String, content: String,
                       append: Boolean = false) {
+        if (!SDcardUtil.isDiskExists) {
+            LogUtil.e(TAG, "Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED")
+            return
+        }
         ThreadPoolHelp.execute {
             val file = File(filePath, fileName)
             if (!append && file.exists()) {
@@ -218,7 +231,11 @@ object IOUtil {
      * @return
      */
     @JvmOverloads
-    fun getDiskText(filePath: String = SDcardUtil.fileFolder!!.absolutePath, fileName: String): String {
+    fun getDiskText(filePath: String = SDcardUtil.fileFolder!!.absolutePath, fileName: String): String? {
+        if (!SDcardUtil.isDiskExists) {
+            LogUtil.e(TAG, "Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED")
+            return null
+        }
         val jsonString = StringBuilder()
         val file = File(filePath, fileName)
         if (file.exists()) {
@@ -255,6 +272,10 @@ object IOUtil {
      */
     @JvmOverloads
     fun getDiskTextAsyn(filePath: String = SDcardUtil.fileFolder!!.absolutePath, fileName: String): String? {
+        if (!SDcardUtil.isDiskExists) {
+            LogUtil.e(TAG, "Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED")
+            return null
+        }
         val future = ThreadPoolHelp.submit { getDiskText(filePath, fileName) }
         try {
             return future.get()
