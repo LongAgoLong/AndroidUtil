@@ -3,10 +3,12 @@ package com.leo.commonutil.storage
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.os.StatFs
 import android.util.Base64
 import com.leo.commonutil.asyn.threadPool.ThreadPoolHelp
+import com.leo.system.ContextHelp
 import java.io.*
 
 /**
@@ -16,81 +18,104 @@ object SDcardUtil {
     /**
      * SD卡是否存在
      */
-    val isSDCardExists: Boolean
+    val isDiskExists: Boolean
         get() = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
 
     /**
      * SD卡根路径
+     * /storage/emulated/0
      */
-    val root: File
-        get() = Environment.getExternalStorageDirectory()
+    val diskFolder: File?
+        get() {
+            return if (isDiskExists) {
+                Environment.getExternalStorageDirectory()
+            } else {
+                null
+            }
+        }
+
+    /**
+     * 应用分区存储专有目录-会随着应用卸载而删除
+     * /storage/emulated/0/Android/data/{packageName}/files
+     * android Q 之后会强制使用分区存储
+     */
+    val fileFolder: File?
+        get() = ContextHelp.context.getExternalFilesDir("")
 
 
     /**
      * SD卡剩余存储空间
      */
-    val freeSpace: Long
+    val freeSpaceSize: Long
         get() {
-            val root = root
+            val root = diskFolder
+            root ?: return 0
             val stat = StatFs(root.path)
-            return stat.availableBlocks.toLong()
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) stat.availableBlocksLong
+            else stat.availableBlocks.toLong()
         }
 
     /**
      * 保存到SD卡
      *
-     * @param filename           文件名称(带扩展名)
      * @param filePath           存储目录路径
-     * @param filecontent        存储内容
+     * @param filename           文件名称(带扩展名)
+     * @param fileContent        存储内容
      * @param isPICSendBroadcast 是否需要发送文件更新广播
      */
-    fun saveToSDCard(context: Context, filename: String, filePath: String, filecontent: String, isPICSendBroadcast: Boolean): Boolean {
-        return saveToSDCard(context, filename, filePath, filecontent.toByteArray(), isPICSendBroadcast)
+    @JvmOverloads
+    fun write(context: Context, filePath: String = fileFolder!!.absolutePath, filename: String,
+              fileContent: String, isPICSendBroadcast: Boolean = false): Boolean {
+        return write(context, filePath, filename, fileContent.toByteArray(), isPICSendBroadcast)
     }
 
     /**
      * 保存到SD卡
      *
-     * @param filename           文件名称(带扩展名)
      * @param filePath           存储目录路径
-     * @param filecontent        存储内容
+     * @param filename           文件名称(带扩展名)
+     * @param fileContent        存储内容
      * @param isPICSendBroadcast 是否需要发送文件更新广播
      */
-    fun saveToSDCard(context: Context, filename: String, filePath: String, filecontent: ByteArray, isPICSendBroadcast: Boolean): Boolean {
+    @JvmOverloads
+    fun write(context: Context, filePath: String = fileFolder!!.absolutePath, filename: String,
+              fileContent: ByteArray, isPICSendBroadcast: Boolean = false): Boolean {
         try {
             val file = File(filePath, filename)
             if (file.exists()) {
                 file.delete()
             }
             val outStream = FileOutputStream(file)
-            outStream.write(filecontent)
+            outStream.write(fileContent)
             IOUtil.closeQuietly(outStream)
             if (isPICSendBroadcast) {
-                val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)//发送更新图片信息广播
+                // 发送更新图片信息广播
+                val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
                 val uri = Uri.fromFile(file)
                 intent.data = uri
                 context.sendBroadcast(intent)
             }
             return true
-        } catch (e: FileNotFoundException) {
+        } catch (e: Exception) {
             e.printStackTrace()
-            return false
-        } catch (e: IOException) {
-            e.printStackTrace()
-            return false
         }
+        return false
 
     }
 
     /**
      * 保存到SD卡
      *
-     * @param filename           文件名称(带扩展名)
      * @param filePath           存储目录路径
-     * @param filecontent        存储内容
+     * @param filename           文件名称(带扩展名)
+     * @param fileContent        存储内容
      * @param isPICSendBroadcast 是否需要发送文件更新广播
      */
-    fun saveToSDCard(context: Context, filename: String, filePath: String, filecontent: File, isPICSendBroadcast: Boolean): Boolean {
+    @JvmOverloads
+    fun write(context: Context, filePath: String = fileFolder!!.absolutePath, filename: String,
+              fileContent: File, isPICSendBroadcast: Boolean = false): Boolean {
+        var inStream: FileInputStream? = null
+        var outStream: FileOutputStream? = null
         try {
             var bytesum = 0
             var byteread: Int
@@ -98,8 +123,8 @@ object SDcardUtil {
             if (file.exists()) {
                 file.delete()
             }
-            val inStream = FileInputStream(filecontent) //读入原文件
-            val outStream = FileOutputStream(file)
+            inStream = FileInputStream(fileContent) //读入原文件
+            outStream = FileOutputStream(file)
             val buffer = ByteArray(1024)
             while (inStream.read(buffer).also { byteread = it } != -1) {
                 bytesum += byteread
@@ -107,7 +132,8 @@ object SDcardUtil {
             }
             IOUtil.closeQuietly(inStream, outStream)
             if (isPICSendBroadcast) {
-                val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)//发送更新图片信息广播
+                // 发送更新图片信息广播
+                val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
                 val uri = Uri.fromFile(file)
                 intent.data = uri
                 context.sendBroadcast(intent)
@@ -117,6 +143,9 @@ object SDcardUtil {
             e.printStackTrace()
         } catch (e: IOException) {
             e.printStackTrace()
+        } finally {
+            inStream?.let { IOUtil.closeQuietly(it) }
+            outStream?.let { IOUtil.closeQuietly(it) }
         }
         return false
     }
@@ -129,8 +158,9 @@ object SDcardUtil {
      * @param content  内容
      * @param append   是否累加
      */
-    @Synchronized
-    fun saveText(filePath: String, fileName: String, content: String, append: Boolean) {
+    @JvmOverloads
+    fun writeText(filePath: String = fileFolder!!.absolutePath, fileName: String, content: String,
+                  append: Boolean = false) {
         ThreadPoolHelp.execute {
             val file = File(filePath, fileName)
             if (!append && file.exists()) {
@@ -138,7 +168,7 @@ object SDcardUtil {
             }
             val encode = Base64.encode(content.toByteArray(), Base64.NO_WRAP)
             val s1 = String(encode)
-            //Write the file to disk
+            // Write the file to disk
             var writer: OutputStreamWriter? = null
             var out: OutputStream? = null
             try {
@@ -150,12 +180,8 @@ object SDcardUtil {
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
-                writer?.run {
-                    IOUtil.closeQuietly(this)
-                }
-                out?.run {
-                    IOUtil.closeQuietly(this)
-                }
+                writer?.let { IOUtil.closeQuietly(it) }
+                out?.let { IOUtil.closeQuietly(it) }
             }
         }
     }
@@ -167,7 +193,8 @@ object SDcardUtil {
      * @param fileName
      * @return
      */
-    fun getText(filePath: String, fileName: String): String {
+    @JvmOverloads
+    fun getText(filePath: String = fileFolder!!.absolutePath, fileName: String): String {
         val jsonString = StringBuilder()
         val file = File(filePath, fileName)
         if (file.exists()) {
@@ -183,17 +210,13 @@ object SDcardUtil {
             } catch (e: IOException) {
                 e.printStackTrace()
             } finally {
-                reader?.run {
-                    IOUtil.closeQuietly(this)
-                }
-                input?.run {
-                    IOUtil.closeQuietly(this)
-                }
+                reader?.let { IOUtil.closeQuietly(it) }
+                input?.let { IOUtil.closeQuietly(it) }
             }
         }
         val s = jsonString.toString()
         val decode = Base64.decode(s, Base64.NO_WRAP)
-        return if (null == decode || decode.size == 0) {
+        return if (null == decode || decode.isEmpty()) {
             ""
         } else {
             String(decode)
@@ -206,7 +229,8 @@ object SDcardUtil {
      * @param filePath
      * @param fileName
      */
-    fun getTextAsyn(filePath: String, fileName: String): String? {
+    @JvmOverloads
+    fun getTextAsyn(filePath: String = fileFolder!!.absolutePath, fileName: String): String? {
         val future = ThreadPoolHelp.submit { getText(filePath, fileName) }
         try {
             return future.get()
