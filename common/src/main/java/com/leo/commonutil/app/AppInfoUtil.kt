@@ -111,12 +111,12 @@ object AppInfoUtil {
         if (TextUtils.isEmpty(packageName)) {
             return false
         }
-        try {
+        return try {
             ContextHelp.context.packageManager
                     .getApplicationInfo(packageName, PackageManager.GET_UNINSTALLED_PACKAGES)
-            return true
+            true
         } catch (e: PackageManager.NameNotFoundException) {
-            return false
+            false
         }
     }
 
@@ -130,12 +130,12 @@ object AppInfoUtil {
     fun goToMarket(context: Context, packageName: String): Boolean {
         val uri = Uri.parse("market://details?id=$packageName")
         val goToMarket = Intent(Intent.ACTION_VIEW, uri)
-        try {
+        return try {
             context.startActivity(goToMarket)
-            return true
+            true
         } catch (e: ActivityNotFoundException) {
             e.printStackTrace()
-            return false
+            false
         }
     }
 
@@ -186,7 +186,7 @@ object AppInfoUtil {
                 emailContent
             else
                 "请填写邮件正文") // 正文
-            context.startActivity(Intent.createChooser(intent, "请选择邮件类应用"))
+            context.startActivity(Intent.createChooser(intent, "请选择书写邮件应用"))
             return true
         } catch (e: ActivityNotFoundException) {
             e.printStackTrace()
@@ -201,13 +201,13 @@ object AppInfoUtil {
      * @param qqAccount 对方QQ号
      */
     fun goToQQChat(context: Context, qqAccount: String): Boolean {
-        try {
+        return try {
             context.startActivity(Intent(Intent.ACTION_VIEW,
                     Uri.parse("mqqwpa://im/chat?chat_type=wpa&uin=$qqAccount&version=1")))
-            return true
+            true
         } catch (e: ActivityNotFoundException) {
             e.printStackTrace()
-            return false
+            false
         }
     }
 }
