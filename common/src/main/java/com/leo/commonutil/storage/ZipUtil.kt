@@ -1,5 +1,6 @@
 package com.leo.commonutil.storage
 
+import android.text.TextUtils
 import java.io.*
 import java.util.*
 import java.util.zip.ZipEntry
@@ -13,31 +14,8 @@ import java.util.zip.ZipOutputStream
  */
 object ZipUtil {
     private const val BUFF_SIZE = 1024 * 1024 // 1M Byte
+    @Volatile
     private var isStopZipFlag: Boolean = false
-
-    /**
-     * 批量压缩文件（夹）
-     *
-     * @param resFileList 要压缩的文件（夹）列表
-     * @param zipFile 生成的压缩文件
-     * @param zipListener     zipListener
-     */
-    fun zipFiles(resFileList: Collection<File>, zipFile: File, zipListener: ZipListener) {
-        val zipout: ZipOutputStream?
-        try {
-            zipout = ZipOutputStream(BufferedOutputStream(FileOutputStream(zipFile), BUFF_SIZE))
-            for (resFile in resFileList) {
-                if (isStopZipFlag) {
-                    break
-                }
-                zipFile(resFile, zipout, "", zipListener)
-            }
-            IOUtil.closeQuietly(zipout)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-    }
 
     /**
      * 批量压缩文件（夹）
@@ -47,17 +25,29 @@ object ZipUtil {
      * @param comment 压缩文件的注释
      * @param zipListener    zipListener
      */
-    fun zipFiles(resFileList: Collection<File>, zipFile: File, comment: String, zipListener: ZipListener) {
-        val zipout: ZipOutputStream?
+    @JvmOverloads
+    fun zipFiles(resFileList: Collection<File>, zipFile: File, comment: String? = null, zipListener: ZipListener) {
+        isStopZipFlag = false
+        var zipout: ZipOutputStream? = null
         try {
             zipout = ZipOutputStream(BufferedOutputStream(FileOutputStream(zipFile), BUFF_SIZE))
             for (resFile in resFileList) {
+                if (isStopZipFlag) {
+                    if (zipFile.exists()) {
+                        zipFile.delete()
+                    }
+                    break
+                }
                 zipFile(resFile, zipout, "", zipListener)
             }
-            zipout.setComment(comment)
+            if (!TextUtils.isEmpty(comment)) {
+                zipout.setComment(comment)
+            }
             IOUtil.closeQuietly(zipout)
         } catch (e: Exception) {
             e.printStackTrace()
+        } finally {
+            zipout?.let { IOUtil.closeQuietly(zipout) }
         }
 
     }
@@ -167,7 +157,6 @@ object ZipUtil {
      * @return 压缩文件内文件名称
      */
     fun getEntriesNames(zipFile: File): ArrayList<String>? {
-
         val entryNames = ArrayList<String>()
         var entries: Enumeration<*>? = null
         try {
