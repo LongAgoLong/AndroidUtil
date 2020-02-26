@@ -1,59 +1,52 @@
 package com.leo.commonutil.notify
 
-import android.content.Context
-import androidx.annotation.StringRes
+import android.annotation.SuppressLint
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.widget.Toast
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
+import com.leo.system.ContextHelp
 
 /**
  * Toast工具类
  */
 object ToastUtil {
-
     private var toast: Toast? = null
 
-    fun initToast(initToast: Toast) {
-        toast = initToast
+    fun initToast(@LayoutRes layoutId: Int) {
+        cancel()
+        toast = Toast(ContextHelp.context)
+        toast!!.view = LayoutInflater.from(ContextHelp.context).inflate(layoutId, null)
     }
 
-    fun show(context: Context, text: String) {
+    @SuppressLint("ShowToast")
+    @JvmOverloads
+    fun show(gravity: Int = Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,
+             xOffset: Int = 0, yOffset: Int = 0, text: String,
+             duration: Int = Toast.LENGTH_LONG) {
         if (toast == null) {
-            toast = Toast.makeText(context.applicationContext, text, Toast.LENGTH_LONG)
+            toast = Toast.makeText(ContextHelp.context, text, duration)
+            toast!!.setGravity(gravity, xOffset, yOffset)
         } else {
-            toast!!.duration = Toast.LENGTH_LONG
+            toast!!.duration = duration
+            toast!!.setGravity(gravity, xOffset, yOffset)
             toast!!.setText(text)
         }
         toast!!.show()
     }
 
-    fun show(context: Context, @StringRes resId: Int) {
+    @SuppressLint("ShowToast")
+    @JvmOverloads
+    fun show(gravity: Int = Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM,
+             xOffset: Int = 0, yOffset: Int = 0, @StringRes resId: Int,
+             duration: Int = Toast.LENGTH_LONG) {
         if (toast == null) {
-            toast = Toast.makeText(context.applicationContext, resId, Toast.LENGTH_LONG)
-        } else {
-            toast!!.duration = Toast.LENGTH_LONG
-            toast!!.setText(resId)
-        }
-        toast!!.show()
-    }
-
-    /*
-     * duration - Toast.LENGTH_LONG or Toast.LENGTH_SHORT
-     * */
-    fun show(context: Context, text: String, duration: Int) {
-        if (toast == null) {
-            toast = Toast.makeText(context.applicationContext, text, duration)
+            toast = Toast.makeText(ContextHelp.context, resId, duration)
+            toast!!.setGravity(gravity, xOffset, yOffset)
         } else {
             toast!!.duration = duration
-            toast!!.setText(text)
-        }
-        toast!!.show()
-    }
-
-    fun show(context: Context, @StringRes resId: Int, duration: Int) {
-        if (toast == null) {
-            toast = Toast.makeText(context.applicationContext, resId, duration)
-        } else {
-            toast!!.duration = duration
+            toast!!.setGravity(gravity, xOffset, yOffset)
             toast!!.setText(resId)
         }
         toast!!.show()
@@ -63,12 +56,5 @@ object ToastUtil {
         if (null != toast) {
             toast!!.cancel()
         }
-    }
-
-    fun showBottom(context: Context, text: String) {
-        val toast = Toast.makeText(context, text, Toast.LENGTH_LONG)
-        toast.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM, 0, 0)
-        toast.setText(text)
-        toast.show()
     }
 }
