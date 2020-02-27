@@ -12,8 +12,8 @@ import java.util.Collections;
  * On 2019/6/8
  * Description:拖拽工具类
  */
-public final class RVItemSwapHelp {
-    private RVItemSwapHelp() {
+public final class RvItemSwapHelper {
+    private RvItemSwapHelper() {
     }
 
     /**

@@ -69,6 +69,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.xlifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$rootProject.xlifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.xlifecycleVersion"
+    implementation project(path: ':recyclerview-help')
 }
 repositories {
     mavenCentral()

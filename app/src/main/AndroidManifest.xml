@@ -25,6 +25,7 @@
         </activity>
         <activity android:name=".ui.LocationActivity" />
         <activity android:name=".ui.PinyinActivity" />
+        <activity android:name=".ui.RvDeleteItemActivity" />
     </application>
 
 </manifest>

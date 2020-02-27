@@ -1,4 +1,4 @@
-package com.leo.recyclerview_help.slide.delete;
+package com.leo.recyclerview_help.slide.slideslip;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -35,17 +35,17 @@ import java.util.List;
  * Created by WANG on 2018/4/27.
  */
 
-public class WItemTouchHelperPlus extends RecyclerView.ItemDecoration
+public class RvItemSideslipHelper extends RecyclerView.ItemDecoration
         implements RecyclerView.OnChildAttachStateChangeListener {
     /**
      * 侧滑显示的布局 跟随 在滑动布局的下面的标记  看场景选择
      */
-    public final static String SLIDE_ITEM_TYPE_ITEMVIEW = "itemView";
+    public final static String SLIDE_TYPE_ITEMVIEW = "itemView";
 
     /**
      * 侧滑显示的布局 隐藏 在滑动布局的下面的标记  看场景选择
      */
-    public final static String SLIDE_ITEM_TYPE_SLIDECONTAINER = "slideContainer";
+    public final static String SLIDE_TYPE_CONTAINER = "slideContainer";
 
     /**
      * Up direction, used for swipe & drag control.
@@ -225,18 +225,18 @@ public class WItemTouchHelperPlus extends RecyclerView.ItemDecoration
 
     /**
      * 判断当前侧滑布局的标记
-     * {@link #SLIDE_ITEM_TYPE_ITEMVIEW}
+     * {@link #SLIDE_TYPE_ITEMVIEW}
      */
     private boolean slideItemTypeIsItemView() {
-        return SLIDE_ITEM_TYPE_ITEMVIEW.equals(mCallback.getItemSlideType());
+        return SLIDE_TYPE_ITEMVIEW.equals(mCallback.getItemSlideType());
     }
 
     /**
      * 判断当前侧滑布局的标记
-     * {@link #SLIDE_ITEM_TYPE_SLIDECONTAINER}
+     * {@link #SLIDE_TYPE_CONTAINER}
      */
     private boolean slideItemTypeIsContainerView() {
-        return SLIDE_ITEM_TYPE_SLIDECONTAINER.equals(mCallback.getItemSlideType());
+        return SLIDE_TYPE_CONTAINER.equals(mCallback.getItemSlideType());
     }
 
     /**
@@ -414,7 +414,8 @@ public class WItemTouchHelperPlus extends RecyclerView.ItemDecoration
         private boolean isInBoundsClickable(int x, int y, View child) {
             int[] location = new int[2];
             child.getLocationOnScreen(location);
-            Rect rect = new Rect(location[0], location[1], location[0] + child.getWidth(), location[1] + child.getHeight());
+            Rect rect = new Rect(location[0], location[1], location[0] + child.getWidth(),
+                    location[1] + child.getHeight());
             if (rect.contains(x, y) && ViewCompat.hasOnClickListeners(child)
                     && child.getVisibility() == View.VISIBLE) {
                 return true;
@@ -516,7 +517,7 @@ public class WItemTouchHelperPlus extends RecyclerView.ItemDecoration
      *
      * @param callback The Callback which controls the behavior of this touch helper.
      */
-    public WItemTouchHelperPlus(Callback callback) {
+    public RvItemSideslipHelper(Callback callback) {
         mCallback = callback;
     }
 
@@ -603,25 +604,9 @@ public class WItemTouchHelperPlus extends RecyclerView.ItemDecoration
      */
     public View getItemFrontView(RecyclerView.ViewHolder viewHolder) {
         if (viewHolder == null) return null;
-        if (viewHolder.itemView instanceof ViewGroup) {
-            ViewGroup viewGroup = (ViewGroup) viewHolder.itemView;
-            for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                View childAt = viewGroup.getChildAt(i);
-                String tag = (String) childAt.getTag();
-                /*
-                这个标记必须再xml布局里面.
-                <RelativeLayout
-                  android:id="@+id/slide_itemView"
-                  android:clipChildren="false"
-                  android:tag="slide_flag"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent">
-                 */
-                if ("slide_flag".equals(tag)) {
-                    return childAt;
-                }
-            }
-            return viewHolder.itemView;
+        if (viewHolder instanceof IRvItemSideslipHoldExt) {
+            IRvItemSideslipHoldExt sideslipHoldExt = (IRvItemSideslipHoldExt) viewHolder;
+            return sideslipHoldExt.getSlideView();
         } else {
             return viewHolder.itemView;
         }
@@ -700,8 +685,8 @@ public class WItemTouchHelperPlus extends RecyclerView.ItemDecoration
     }
 
     private float getSwipeWidth() {
-        if (mSelected instanceof Extension) {
-            return ((Extension) mSelected).getActionWidth();
+        if (mSelected instanceof IRvItemSideslipHoldExt) {
+            return ((IRvItemSideslipHoldExt) mSelected).getActionWidth();
         }
         return mRecyclerView.getWidth();
     }
@@ -1393,9 +1378,9 @@ public class WItemTouchHelperPlus extends RecyclerView.ItemDecoration
                 }
             }
             int width = mRecyclerView.getWidth();
-            if (viewHolder instanceof Extension && mCallback.getItemSlideType().equals(SLIDE_ITEM_TYPE_ITEMVIEW)) {
-                Extension extension = (Extension) viewHolder;
-                width += (int) extension.getActionWidth();
+            if (viewHolder instanceof IRvItemSideslipHoldExt && mCallback.getItemSlideType().equals(SLIDE_TYPE_ITEMVIEW)) {
+                IRvItemSideslipHoldExt IRvItemSideslipHoldExt = (IRvItemSideslipHoldExt) viewHolder;
+                width += (int) IRvItemSideslipHoldExt.getActionWidth();
             }
             final float threshold = width * mCallback
                     .getSwipeThreshold(viewHolder);
@@ -1471,12 +1456,12 @@ public class WItemTouchHelperPlus extends RecyclerView.ItemDecoration
 
     /**
      * An interface which can be implemented by LayoutManager for better integration with
-     * {@link WItemTouchHelperPlus}.
+     * {@link RvItemSideslipHelper}.
      */
     public interface ViewDropHandler {
 
         /**
-         * Called by the {@link WItemTouchHelperPlus} after a View is dropped over another View.
+         * Called by the {@link RvItemSideslipHelper} after a View is dropped over another View.
          * <p>
          * A LayoutManager should implement this interface to get ready for the upcoming move
          * operation.
@@ -1568,9 +1553,9 @@ public class WItemTouchHelperPlus extends RecyclerView.ItemDecoration
 
         static {
             if (Build.VERSION.SDK_INT >= 21) {
-                sUICallback = new ItemTouchUIUtilImpl.Lollipop();
+                sUICallback = new RvItemSideslipUiImpl.Lollipop();
             } else {
-                sUICallback = new ItemTouchUIUtilImpl.Honeycomb();
+                sUICallback = new RvItemSideslipUiImpl.Honeycomb();
             }
         }
 
@@ -1692,7 +1677,7 @@ public class WItemTouchHelperPlus extends RecyclerView.ItemDecoration
          * This flag is composed of 3 sets of 8 bits, where first 8 bits are for IDLE state, next
          * 8 bits are for SWIPE state and third 8 bits are for DRAG state.
          * Each 8 bit sections can be constructed by simply OR'ing direction flags defined in
-         * {@link WItemTouchHelperPlus}.
+         * {@link RvItemSideslipHelper}.
          * <p>
          * For example, if you want it to allow swiping LEFT and RIGHT but only allow starting to
          * swipe by swiping RIGHT, you can return:
@@ -2032,9 +2017,9 @@ public class WItemTouchHelperPlus extends RecyclerView.ItemDecoration
          *
          * @param viewHolder  The new ViewHolder that is being swiped or dragged. Might be null if
          *                    it is cleared.
-         * @param actionState One of {@link WItemTouchHelperPlus#ACTION_STATE_IDLE},
-         *                    {@link WItemTouchHelperPlus#ACTION_STATE_SWIPE} or
-         *                    {@link WItemTouchHelperPlus#ACTION_STATE_DRAG}.
+         * @param actionState One of {@link RvItemSideslipHelper#ACTION_STATE_IDLE},
+         *                    {@link RvItemSideslipHelper#ACTION_STATE_SWIPE} or
+         *                    {@link RvItemSideslipHelper#ACTION_STATE_DRAG}.
          * @see #clearView(RecyclerView, RecyclerView.ViewHolder)
          */
         public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
@@ -2084,7 +2069,8 @@ public class WItemTouchHelperPlus extends RecyclerView.ItemDecoration
          *                     {@link RecyclerView.ItemDecoration}s.
          */
         public void onMoved(final RecyclerView recyclerView,
-                            final RecyclerView.ViewHolder viewHolder, int fromPos, final RecyclerView.ViewHolder target, int toPos, int x,
+                            final RecyclerView.ViewHolder viewHolder, int fromPos,
+                            final RecyclerView.ViewHolder target, int toPos, int x,
                             int y) {
             final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
             if (layoutManager instanceof ViewDropHandler) {

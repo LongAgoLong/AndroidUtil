@@ -14,11 +14,11 @@ import com.leo.recyclerview_help.slide.swap.listener.OnItemTouchCallback;
  * 半自动拖动交换位置
  * 主动调用mItemTouchHelper.startDrag使能某些 item 可拖动
  */
-public class SemiAutoItemDragCallback extends ItemTouchHelper.Callback {
+public class RvItemDragCallback extends ItemTouchHelper.Callback {
     private int dragFlags = 0;    //拖动
     private OnItemTouchCallback onItemTouchCallback;
 
-    public SemiAutoItemDragCallback(int dragFlags) {
+    public RvItemDragCallback(int dragFlags) {
         this.dragFlags = dragFlags;
     }
 

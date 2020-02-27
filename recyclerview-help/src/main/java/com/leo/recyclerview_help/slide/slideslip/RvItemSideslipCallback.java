@@ -1,6 +1,7 @@
-package com.leo.recyclerview_help.slide.delete;
+package com.leo.recyclerview_help.slide.slideslip;
 
 import android.graphics.Canvas;
+import android.util.Log;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,10 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
  * Created by WANG on 18/3/14.
  */
 
-public class PlusItemSlideCallback extends WItemTouchHelperPlus.Callback {
+public class RvItemSideslipCallback extends RvItemSideslipHelper.Callback {
     String type;
 
-    public PlusItemSlideCallback(String type) {
+    public RvItemSideslipCallback(String type) {
         this.type = type;
     }
 
@@ -39,7 +40,8 @@ public class PlusItemSlideCallback extends WItemTouchHelperPlus.Callback {
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                          RecyclerView.ViewHolder target) {
         return false;
     }
 
@@ -49,9 +51,10 @@ public class PlusItemSlideCallback extends WItemTouchHelperPlus.Callback {
     }
 
     @Override
-    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        if (viewHolder instanceof SlideItemViewHold) {
-            SlideItemViewHold holder = (SlideItemViewHold) viewHolder;
+    public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX,
+                            float dY, int actionState, boolean isCurrentlyActive) {
+        if (viewHolder instanceof RvItemSideslipViewHold) {
+            RvItemSideslipViewHold holder = (RvItemSideslipViewHold) viewHolder;
             if (holder.canSlide()) {
                 float actionWidth = holder.getActionWidth();
                 if (dX < -actionWidth) {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.leo.recyclerview_help.slide.delete;
+package com.leo.recyclerview_help.slide.slideslip;
 
 import android.graphics.Canvas;
 import android.view.View;
@@ -30,7 +30,7 @@ import com.leo.recyclerview_help.R;
  * Package private class to keep implementations. Putting them inside ItemTouchUIUtil makes them
  * public API, which is not desired in this case.
  */
-class ItemTouchUIUtilImpl {
+class RvItemSideslipUiImpl {
     static class Lollipop extends Honeycomb {
         @Override
         public void onDraw(Canvas c, RecyclerView recyclerView, View view,

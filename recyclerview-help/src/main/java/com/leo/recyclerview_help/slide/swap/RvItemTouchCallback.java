@@ -1,6 +1,7 @@
 package com.leo.recyclerview_help.slide.swap;
 
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -9,14 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
  * on 2018/3/26
  * at 17:00
  */
-public class SimpleItemTouchCallback extends ItemTouchHelper.Callback {
+public class RvItemTouchCallback extends ItemTouchHelper.Callback {
     private int dragFlags = 0;    //拖动
     private int swipeFlags = 0;   //侧滑
     private boolean isLongPressDragEnabled = false;   //支持长按拖拽
     private boolean isItemViewSwipeEnabled = false;   //支持滑动删除功能
 
-    public SimpleItemTouchCallback(int dragFlags, int swipeFlags,
-                                   boolean isLongPressDragEnabled, boolean isItemViewSwipeEnabled) {
+    public RvItemTouchCallback(int dragFlags, int swipeFlags,
+                               boolean isLongPressDragEnabled, boolean isItemViewSwipeEnabled) {
         this.dragFlags = dragFlags;
         this.swipeFlags = swipeFlags;
         this.isLongPressDragEnabled = isLongPressDragEnabled;
@@ -82,7 +83,7 @@ public class SimpleItemTouchCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+    public boolean onMove(@NonNull RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
         return true;
     }

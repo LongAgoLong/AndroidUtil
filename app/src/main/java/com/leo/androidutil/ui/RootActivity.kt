@@ -19,12 +19,14 @@ class RootActivity : BaseActivity(), View.OnClickListener {
     private fun initView() {
         mBinding.locationBtn?.setOnClickListener(this)
         mBinding.pinyinBtn?.setOnClickListener(this)
+        mBinding.rvDeleteBtn?.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
         when (v.id) {
             R.id.locationBtn -> IntentUtil.startActivity(this, LocationActivity::class.java)
             R.id.pinyinBtn -> IntentUtil.startActivity(this, PinyinActivity::class.java)
+            R.id.rvDeleteBtn -> IntentUtil.startActivity(this, RvDeleteItemActivity::class.java)
         }
     }
 }
