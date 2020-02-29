@@ -3,15 +3,9 @@
  */
 package com.leo.system
 
-import android.annotation.TargetApi
 import android.content.Context
-import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.AudioManager.OnAudioFocusChangeListener
-import android.os.Build
-import androidx.annotation.NonNull
-import android.media.AudioAttributes
-import android.media.MediaPlayer
 
 
 /**
@@ -62,35 +56,6 @@ class AudioFocusHelp private constructor() : OnAudioFocusChangeListener {
         }
     }
 
-    /**
-     * @return
-     * AudioManager.AUDIOFOCUS_REQUEST_FAILED -> 获取焦点失败：mPlaybackDelayed = false
-     * AudioManager.AUDIOFOCUS_REQUEST_GRANTED -> 获取焦点成功：mPlaybackDelayed = false
-     * AudioManager.AUDIOFOCUS_REQUEST_DELAYED -> 获取延迟焦点成功：mPlaybackDelayed = true
-     *
-     * {@link #https://developer.android.google.cn/reference/android/media/AudioFocusRequest}
-     */
-    @TargetApi(Build.VERSION_CODES.O)
-    fun requestAudioFocusO(@NonNull mediaPlayer: MediaPlayer,
-                           listener: OnAudioFocusChangeListener,
-                           usage: Int = AudioAttributes.USAGE_MEDIA,
-                           contentType: Int = AudioAttributes.CONTENT_TYPE_MUSIC,
-                           durationHint: Int = AudioManager.AUDIOFOCUS_GAIN_TRANSIENT): Int {
-        mAudioManager ?: return AudioManager.AUDIOFOCUS_REQUEST_FAILED
-        val mPlaybackAttributes = AudioAttributes.Builder()
-                .setUsage(usage)
-                .setContentType(contentType)
-                .build()
-        val mFocusRequest = AudioFocusRequest.Builder(durationHint)
-                .setAudioAttributes(mPlaybackAttributes)
-                .setAcceptsDelayedFocusGain(true)
-                .setWillPauseWhenDucked(false)
-                .setOnAudioFocusChangeListener(listener)
-                .build()
-        mediaPlayer.setAudioAttributes(mPlaybackAttributes)
-        return mAudioManager!!.requestAudioFocus(mFocusRequest)
-    }
-
     fun abandonAudioFocus(): Int {
         return if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioManager!!.abandonAudioFocus(this)) {
             audioFocus = AudioManager.AUDIOFOCUS_LOSS
@@ -123,7 +88,6 @@ class AudioFocusHelp private constructor() : OnAudioFocusChangeListener {
 
     companion object {
         private val TAG: String = AudioFocusHelp::class.java.simpleName
-        val mFocusLock = Any()
         var AUDIO_STREAM_TYPE = AudioManager.STREAM_MUSIC
         private var mInstance: AudioFocusHelp? = null
 
