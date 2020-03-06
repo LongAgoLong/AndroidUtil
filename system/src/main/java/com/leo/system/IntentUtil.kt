@@ -23,8 +23,8 @@ object IntentUtil {
      */
     @JvmOverloads
     fun startActivity(context: Context, cls: Class<*>, finishSelf: Boolean = false, bundle: Bundle? = null,
-                      clearTop: Boolean = false, singleTop: Boolean = false) {
-        val intent = generateIntent(context, cls, bundle, clearTop, singleTop)
+                      clearTop: Boolean = false, singleTop: Boolean = false, newTask: Boolean = false) {
+        val intent = generateIntent(context, cls, bundle, clearTop, singleTop, newTask)
         context.startActivity(intent)
         if (finishSelf) {
             if (context is Activity) {
@@ -40,8 +40,8 @@ object IntentUtil {
 
     @JvmOverloads
     fun startActivity(activity: Activity, cls: Class<*>, finishSelf: Boolean = false, bundle: Bundle? = null,
-                      clearTop: Boolean = false, singleTop: Boolean = false) {
-        val intent = generateIntent(activity, cls, bundle, clearTop, singleTop)
+                      clearTop: Boolean = false, singleTop: Boolean = false, newTask: Boolean = false) {
+        val intent = generateIntent(activity, cls, bundle, clearTop, singleTop, newTask)
         activity.startActivity(intent)
         if (finishSelf) {
             activity.finish()
@@ -50,9 +50,9 @@ object IntentUtil {
 
     @JvmOverloads
     fun startActivity(fragment: Fragment, cls: Class<*>, finishSelf: Boolean = false, bundle: Bundle? = null,
-                      clearTop: Boolean = false, singleTop: Boolean = false) {
+                      clearTop: Boolean = false, singleTop: Boolean = false, newTask: Boolean = false) {
         fragment.activity ?: return
-        val intent = generateIntent(fragment.activity!!, cls, bundle, clearTop, singleTop)
+        val intent = generateIntent(fragment.activity!!, cls, bundle, clearTop, singleTop, newTask)
         fragment.startActivity(intent)
         if (finishSelf) {
             fragment.activity!!.finish()
@@ -60,7 +60,7 @@ object IntentUtil {
     }
 
     private fun generateIntent(context: Context, cls: Class<*>, bundle: Bundle?,
-                               clearTop: Boolean, singleTop: Boolean): Intent {
+                               clearTop: Boolean, singleTop: Boolean, newTask: Boolean): Intent {
         val intent = Intent()
         intent.setClass(context, cls)
         if (clearTop) {
@@ -68,6 +68,9 @@ object IntentUtil {
         }
         if (singleTop) {
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        if (newTask) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         if (bundle != null) {
             intent.putExtras(bundle)
