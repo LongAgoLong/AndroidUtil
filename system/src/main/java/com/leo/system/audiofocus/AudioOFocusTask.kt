@@ -7,6 +7,19 @@ import android.media.AudioManager
 import android.os.Build
 import com.leo.system.ContextHelp
 
+/**
+ * 兼容androidO以上的延时焦点请求封装，只支持以下streamType
+ * 如需接受延迟焦点获取，使用此类；
+ * 否则AudioFocusHelp已经可满足需求
+ *
+ * AudioManager.STREAM_VOICE_CALL
+ * AudioManager.STREAM_RING
+ * AudioManager.STREAM_MUSIC
+ * AudioManager.STREAM_ALARM
+ * AudioManager.STREAM_NOTIFICATION
+ * AudioManager.STREAM_DTMF
+ * AudioManager.STREAM_ACCESSIBILITY
+ */
 class AudioOFocusTask
 @JvmOverloads
 constructor(val listener: AudioManager.OnAudioFocusChangeListener,
