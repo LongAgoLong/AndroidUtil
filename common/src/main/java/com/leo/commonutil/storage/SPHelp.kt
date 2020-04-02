@@ -2,6 +2,7 @@ package com.leo.commonutil.storage
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.leo.system.ContextHelp
 
 /**
  * Created by LEO
@@ -13,7 +14,8 @@ class SPHelp private constructor() {
         return context.getSharedPreferences(KEY, Context.MODE_PRIVATE)
     }
 
-    fun put(context: Context, key: String, o: Any) {
+    @JvmOverloads
+    fun put(context: Context = ContextHelp.context, key: String, o: Any) {
         val sp = getSp(context)
         when (o) {
             is String -> sp.edit().putString(key, o).apply()
@@ -25,7 +27,8 @@ class SPHelp private constructor() {
         }
     }
 
-    fun putSync(context: Context, key: String, o: Any): Boolean {
+    @JvmOverloads
+    fun putSync(context: Context = ContextHelp.context, key: String, o: Any): Boolean {
         val sp = getSp(context)
         return when (o) {
             is String -> sp.edit().putString(key, o).commit()
@@ -38,31 +41,31 @@ class SPHelp private constructor() {
     }
 
     @JvmOverloads
-    fun getString(context: Context, key: String, defaultValue: String = ""): String? {
+    fun getString(context: Context = ContextHelp.context, key: String, defaultValue: String = ""): String? {
         val sp = getSp(context)
         return sp.getString(key, defaultValue)
     }
 
     @JvmOverloads
-    fun getBoolean(context: Context, key: String, defaultValue: Boolean = false): Boolean {
+    fun getBoolean(context: Context = ContextHelp.context, key: String, defaultValue: Boolean = false): Boolean {
         val sp = getSp(context)
         return sp.getBoolean(key, defaultValue)
     }
 
     @JvmOverloads
-    fun getFloat(context: Context, key: String, defaultValue: Float = 0f): Float {
+    fun getFloat(context: Context = ContextHelp.context, key: String, defaultValue: Float = 0f): Float {
         val sp = getSp(context)
         return sp.getFloat(key, defaultValue)
     }
 
     @JvmOverloads
-    fun getInt(context: Context, key: String, defaultValue: Int = 0): Int {
+    fun getInt(context: Context = ContextHelp.context, key: String, defaultValue: Int = 0): Int {
         val sp = getSp(context)
         return sp.getInt(key, defaultValue)
     }
 
     @JvmOverloads
-    fun getLong(context: Context, key: String, defaultValue: Long = 0L): Long {
+    fun getLong(context: Context = ContextHelp.context, key: String, defaultValue: Long = 0L): Long {
         val sp = getSp(context)
         return sp.getLong(key, defaultValue)
     }

@@ -32,6 +32,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation "androidx.test.ext:junit:$rootProject.xjunit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.xespresso_core_version"
-    implementation files('libs/pinyin4j-2.5.0.jar')
+    api files('libs/pinyin4j-2.5.0.jar')
     compileOnly project(path: ':system')
 }

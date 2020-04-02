@@ -130,6 +130,21 @@ object WindowUtils {
     }
 
     /**
+     * 隐藏虚拟按键，并且全屏
+     */
+    fun hideBottomUIMenu(activity: Activity) {
+        val decorView = activity.window.decorView
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB
+                && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) { // lower api
+            decorView.setSystemUiVisibility(View.GONE);
+        } else if (Build.VERSION.SDK_INT >= 19) {
+            // for new api versions.
+            val uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
+    }
+
+    /**
      * 得到设备屏幕的高度
      */
     fun getScreenHeight(context: Context): Int {

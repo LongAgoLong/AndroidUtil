@@ -60,10 +60,10 @@ constructor(val listener: AudioManager.OnAudioFocusChangeListener,
     }
 
     fun abandon(): Int {
-        mFocusRequest ?: return AudioManager.AUDIOFOCUS_REQUEST_FAILED
         val mAudioManager = ContextHelp.context
                 .getSystemService(Context.AUDIO_SERVICE) as AudioManager
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mFocusRequest ?: return AudioManager.AUDIOFOCUS_REQUEST_FAILED
             mAudioManager.abandonAudioFocusRequest(mFocusRequest!!)
         } else {
             mAudioManager.abandonAudioFocus(listener)

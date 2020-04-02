@@ -9,6 +9,9 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType
 import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination
+import java.util.*
+import kotlin.collections.HashMap
+import kotlin.collections.set
 
 /**
  * 拼音转化工具类
@@ -138,4 +141,73 @@ class PinyinHelp private constructor() {
         return strBuilder.toString()
     }
 
+    /**
+     * 获取姓名的全拼
+     *
+     * @param contactName 姓名
+     * @return 返回格式有两种，一种是[li][zhong]xin:[li][chong]xin，有:分割代表有多音字返回多种可能结果
+     * 另一种tonywang[xin]，没有:分割
+     * []包裹代表是一个汉字转化来的拼音
+     */
+    fun getNameSimpleQuanpin(name: String): String? {
+        // 只保留数字、字母、汉字
+        val contactName = name.replace(Regex("[^0-9a-zA-Z\\u4E00-\\u9FA5]+"), "")
+        val allQuanPin = ArrayList<ArrayList<String>>()
+        val chars = contactName.toCharArray()
+        for (ch in chars) {
+            val oneCharaPinYin = ArrayList<String>()
+            try {
+                if (ch.toString().matches(Regex("[\\u4E00-\\u9FA5]+"))) {
+                    val results = PinyinHelper.toHanyuPinyinStringArray(ch, format)
+                    for (result in results) {
+                        val s = "[$result]"
+                        oneCharaPinYin.add(s)
+                    }
+                } else {
+                    oneCharaPinYin.add(ch.toString())
+                }
+            } catch (e1: BadHanyuPinyinOutputFormatCombination) {
+                e1.printStackTrace()
+            }
+            if (oneCharaPinYin.size != 0) {
+                allQuanPin.add(oneCharaPinYin)
+            }
+        }
+        val sb = StringBuffer(0)
+        val ret = getAllCombine(allQuanPin)
+        if (!ret.isNullOrEmpty()) {
+            for (s in ret) {
+                sb.append(s).append(":")
+            }
+        } else {
+            sb.append(':')
+        }
+        return sb.substring(0, sb.lastIndexOf(":")).toLowerCase(Locale.getDefault())
+    }
+
+    private fun getAllCombine(ll: ArrayList<ArrayList<String>>): List<String>? {
+        val ret: MutableList<String> = ArrayList()
+        val bk: MutableList<String> = ArrayList()
+        var count = 1
+        var length: Int
+        val temp = StringBuffer(0)
+        for (list in ll) {
+            length = list.size
+            for (j in 0 until count) {
+                for (i in 0 until length) {
+                    if (0 != ret.size) {
+                        temp.append(ret[j])
+                    }
+                    temp.append(list[i])
+                    bk.add(temp.toString())
+                    temp.setLength(0)
+                }
+            }
+            count *= length
+            ret.clear()
+            ret.addAll(bk)
+            bk.clear()
+        }
+        return ret
+    }
 }
