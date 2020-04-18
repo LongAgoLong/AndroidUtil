@@ -1,13 +1,18 @@
 package com.leo.commonutil.media.recode;
 
-public interface OnAudioStatuListener {
+public interface OnMediaRecordListener {
+    /**
+     * 录音开始
+     */
+    void onStart();
+
     /**
      * 录音中...
      *
      * @param db   当前声音分贝
      * @param time 录音时长
      */
-    void onUpdate(double db, long time);
+    void onProgress(double db, long time);
 
     /**
      * 停止录音

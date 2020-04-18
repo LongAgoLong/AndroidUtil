@@ -3,6 +3,7 @@ package com.leo.commonutil.media.mp3;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.media.MediaPlayer;
+
 import androidx.annotation.NonNull;
 
 import com.leo.commonutil.asyn.WeakHandler;
@@ -116,8 +117,8 @@ public class Mp3Player {
 
     private static class Params {
         public int position = 0;
-
-        public long pauseTimeMill = 0L;//记录暂停播放时的系统时间
+        // 记录暂停播放时的系统时间
+        public long pauseTimeMill = 0L;
     }
 
     public void addPlayListener(OnMP3PlayListener onMP3PlayListener) {
@@ -186,7 +187,8 @@ public class Mp3Player {
             AudioFocusHelp.Companion.getInstance().requestAudioFocus();
             this.mediaPlayer.seekTo(params.position);
             this.mediaPlayer.start();
-            mediaDuration = Integer.parseInt(MediaUtils.timeFormat(this.mediaPlayer.getDuration(), TimeMode.MODE_SECOND));
+            mediaDuration = Integer.parseInt(MediaUtils.timeFormat(this.mediaPlayer.getDuration(),
+                    TimeMode.MODE_SECOND));
             mediaDurationFormat = MediaUtils.timeFormat(this.mediaPlayer.getDuration(), TimeMode.MODE_FORMAT);
             if (null != onMP3PlayListenerList && !onMP3PlayListenerList.isEmpty()) {
                 for (OnMP3PlayListener mp3PlayListener : onMP3PlayListenerList) {

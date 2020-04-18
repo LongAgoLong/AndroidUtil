@@ -2,6 +2,7 @@ package com.leo.commonutil.media.recode;
 
 import android.media.MediaRecorder;
 import android.os.Environment;
+
 import androidx.annotation.NonNull;
 
 import com.leo.commonutil.calendar.DateUtil;
@@ -17,7 +18,7 @@ import java.io.IOException;
  * on 2017/5/11.
  * 录音封装类
  */
-public class AudioRecordUtils {
+public class MediaRecordHelp {
     //文件路径
     private String filePath;
     //文件夹路径
@@ -27,22 +28,24 @@ public class AudioRecordUtils {
     private static final String TAG = "Audio";
     private static int MAX_LENGTH = 1000 * 60 * 10;// 最大录音时长1000*60*10;
 
-    private OnAudioStatuListener audioStatusUpdateListener;
+    private OnMediaRecordListener onMediaRecordListener;
     private long fileTime;
+    private static final int BASE = 1;
+    private static final int SPACE = 500;// 间隔取样时间
 
     /**
      * 文件存储默认sdcard/record
      */
-    public AudioRecordUtils() {
+    public MediaRecordHelp() {
         //默认保存路径为/sdcard/record/下
         this(Environment.getExternalStorageDirectory() + "/record/");
     }
 
-    public AudioRecordUtils(@NonNull String filePath) {
+    public MediaRecordHelp(@NonNull String filePath) {
         this(filePath, 600);
     }
 
-    public AudioRecordUtils(@NonNull String filePath, int timeSecond) {
+    public MediaRecordHelp(@NonNull String filePath, int timeSecond) {
         MAX_LENGTH = timeSecond * 1000;
         File path = new File(filePath);
         if (!path.exists()) {
@@ -89,6 +92,9 @@ public class AudioRecordUtils {
             mMediaRecorder.prepare();
             /* ④开始 */
             mMediaRecorder.start();
+            if (null != onMediaRecordListener) {
+                onMediaRecordListener.onStart();
+            }
             updateMicStatus();
             LogUtil.INSTANCE.i(TAG, "startTime:" + startTime);
         } catch (IOException e) {
@@ -107,7 +113,7 @@ public class AudioRecordUtils {
         if (null != mUpdateMicStatusTimer) {
             mHandler.removeCallbacks(mUpdateMicStatusTimer);
         }
-        if (mMediaRecorder == null){
+        if (mMediaRecorder == null) {
             return 0L;
         }
         endTime = System.currentTimeMillis();
@@ -119,8 +125,8 @@ public class AudioRecordUtils {
             mMediaRecorder.reset();
             mMediaRecorder.release();
             mMediaRecorder = null;
-            if (null != audioStatusUpdateListener) {
-                audioStatusUpdateListener.onStop(filePath, fileTime);
+            if (null != onMediaRecordListener) {
+                onMediaRecordListener.onStop(filePath, fileTime);
             }
             filePath = "";
         } catch (RuntimeException e) {
@@ -147,8 +153,8 @@ public class AudioRecordUtils {
             mMediaRecorder.reset();
             mMediaRecorder.release();
             mMediaRecorder = null;
-            if (null != audioStatusUpdateListener){
-                audioStatusUpdateListener.onCancel();
+            if (null != onMediaRecordListener) {
+                onMediaRecordListener.onCancel();
             }
         } catch (RuntimeException e) {
             if (null != mMediaRecorder) {
@@ -158,7 +164,7 @@ public class AudioRecordUtils {
             }
         }
         File file = new File(filePath);
-        if (file.exists()){
+        if (file.exists()) {
             file.delete();
         }
         filePath = "";
@@ -174,11 +180,8 @@ public class AudioRecordUtils {
         }
     };
 
-    private static final int BASE = 1;
-    private static final int SPACE = 500;// 间隔取样时间
-
-    public void setOnAudioStatuListener(OnAudioStatuListener audioStatusUpdateListener) {
-        this.audioStatusUpdateListener = audioStatusUpdateListener;
+    public void setOnMediaRecordListener(OnMediaRecordListener onMediaRecordListener) {
+        this.onMediaRecordListener = onMediaRecordListener;
     }
 
     /**
@@ -191,8 +194,8 @@ public class AudioRecordUtils {
             fileTime = System.currentTimeMillis() - startTime;
             if (ratio > 1) {
                 db = 20 * Math.log10(ratio);
-                if (null != audioStatusUpdateListener)
-                    audioStatusUpdateListener.onUpdate(db, fileTime);
+                if (null != onMediaRecordListener)
+                    onMediaRecordListener.onProgress(db, fileTime);
             }
             if (fileTime >= MAX_LENGTH) {
                 stopRecord();
