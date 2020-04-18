@@ -63,7 +63,8 @@ class PinyinActivity : BaseActivity() {
                     val pinyin = PinyinHelp.getInstance().parse(s)
                     val allFirstLetter = PinyinHelp.getInstance().parseAllFirstLetter(s)
                     val firstLetter = PinyinHelp.getInstance().parseFirstLetter(s)
-                    val result = "纠正后字符串 : ${s}\n拼音：${pinyin}\n首字母：${allFirstLetter}\n第一个文字首字母：${firstLetter}"
+                    val nameSimpleQuanpin = PinyinHelp.getInstance().getNameSimpleQuanpin(s)
+                    val result = "纠正后字符串 : ${s}\n拼音：${pinyin}\n首字母：${allFirstLetter}\n第一个文字首字母：${firstLetter}\n人名音节：${nameSimpleQuanpin}"
                     mBinding.resultTv.text = result
                 }
                 true
