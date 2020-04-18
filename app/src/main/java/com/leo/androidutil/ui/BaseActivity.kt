@@ -1,6 +1,7 @@
 package com.leo.androidutil.ui
 
 import android.os.Bundle
+import android.view.MenuItem
 import com.leo.commonutil.app.AppStackManager
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 
@@ -22,5 +23,13 @@ open class BaseActivity : RxAppCompatActivity() {
      */
     protected open fun initActionBar() {
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -2,7 +2,6 @@ package com.leo.androidutil.ui
 
 import android.os.Bundle
 import android.view.KeyEvent
-import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import com.leo.androidutil.databinding.ActivityPinyinBinding
 import com.leo.pinyinlib.PinyinHelp
@@ -27,13 +26,6 @@ class PinyinActivity : BaseActivity() {
         val actionBar = supportActionBar ?: return
         actionBar.setDisplayHomeAsUpEnabled(true)
         actionBar.title = "拼音转换"
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> finish()
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun initView() {

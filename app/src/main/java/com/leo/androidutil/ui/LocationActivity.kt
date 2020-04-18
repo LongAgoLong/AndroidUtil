@@ -72,13 +72,6 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
         })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> finish()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun location() {
         val rxPermissions = RxPermissionsHelp.newInstance(this)
         rxPermissions.request(Manifest.permission.ACCESS_FINE_LOCATION)
