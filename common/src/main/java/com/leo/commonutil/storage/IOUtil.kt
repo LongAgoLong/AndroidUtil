@@ -281,12 +281,13 @@ object IOUtil {
      * @param fileName
      */
     @JvmOverloads
-    fun getDiskTextAsyn(filePath: String = SDcardUtil.fileFolder!!.absolutePath, fileName: String): String? {
+    fun getDiskTextAsyn(filePath: String = SDcardUtil.fileFolder!!.absolutePath, fileName: String,
+                        decode: Boolean = true): String? {
         if (!SDcardUtil.isDiskExists) {
             LogUtil.e(TAG, "Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED")
             return null
         }
-        val future = ThreadPoolHelp.submit { getDiskText(filePath, fileName) }
+        val future = ThreadPoolHelp.submit { getDiskText(filePath, fileName, base64Decode = decode) }
         try {
             return future.get()
         } catch (e: Exception) {
