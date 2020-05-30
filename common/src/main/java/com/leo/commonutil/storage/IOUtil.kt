@@ -10,6 +10,7 @@ import java.io.*
 
 object IOUtil {
     private val TAG = IOUtil::class.java.simpleName
+
     /**
      * 从流中读取数据
      *
@@ -193,7 +194,7 @@ object IOUtil {
      */
     @JvmOverloads
     fun writeDiskText(filePath: String = SDcardUtil.fileFolder!!.absolutePath, fileName: String, content: String,
-                      append: Boolean = false) {
+                      base64Encode: Boolean = true, append: Boolean = false) {
         if (!SDcardUtil.isDiskExists) {
             LogUtil.e(TAG, "Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED")
             return
@@ -203,8 +204,12 @@ object IOUtil {
             if (!append && file.exists()) {
                 file.delete()
             }
-            val encode = Base64.encode(content.toByteArray(), Base64.NO_WRAP)
-            val s1 = String(encode)
+            val s1 = if (base64Encode) {
+                val encode = Base64.encode(content.toByteArray(), Base64.NO_WRAP)
+                String(encode)
+            } else {
+                content
+            }
             // Write the file to disk
             var writer: OutputStreamWriter? = null
             var out: OutputStream? = null
@@ -231,7 +236,8 @@ object IOUtil {
      * @return
      */
     @JvmOverloads
-    fun getDiskText(filePath: String = SDcardUtil.fileFolder!!.absolutePath, fileName: String): String? {
+    fun getDiskText(filePath: String = SDcardUtil.fileFolder!!.absolutePath, fileName: String,
+                    base64Decode: Boolean = true): String? {
         if (!SDcardUtil.isDiskExists) {
             LogUtil.e(TAG, "Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED")
             return null
@@ -256,11 +262,15 @@ object IOUtil {
             }
         }
         val s = jsonString.toString()
-        val decode = Base64.decode(s, Base64.NO_WRAP)
-        return if (null == decode || decode.isEmpty()) {
-            ""
+        return if (base64Decode) {
+            val decode = Base64.decode(s, Base64.NO_WRAP)
+            if (null == decode || decode.isEmpty()) {
+                null
+            } else {
+                String(decode)
+            }
         } else {
-            String(decode)
+            s
         }
     }
 
