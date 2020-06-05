@@ -3,7 +3,6 @@ package com.leo.commonutil.storage
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.Base64
 import com.leo.commonutil.asyn.threadPool.ThreadPoolHelp
 import com.leo.system.LogUtil
 import java.io.*
@@ -204,19 +203,13 @@ object IOUtil {
             if (!append && file.exists()) {
                 file.delete()
             }
-            val s1 = if (base64Encode) {
-                val encode = Base64.encode(content.toByteArray(), Base64.NO_WRAP)
-                String(encode)
-            } else {
-                content
-            }
             // Write the file to disk
             var writer: OutputStreamWriter? = null
             var out: OutputStream? = null
             try {
                 out = FileOutputStream(file, append)
                 writer = OutputStreamWriter(out, "UTF-8")
-                writer.write(s1)
+                writer.write(content)
                 writer.flush()
                 closeQuietly(writer)
             } catch (e: Exception) {
@@ -236,8 +229,7 @@ object IOUtil {
      * @return
      */
     @JvmOverloads
-    fun getDiskText(filePath: String = SDcardUtil.fileFolder!!.absolutePath, fileName: String,
-                    base64Decode: Boolean = true): String? {
+    fun getDiskText(filePath: String = SDcardUtil.fileFolder!!.absolutePath, fileName: String): String? {
         if (!SDcardUtil.isDiskExists) {
             LogUtil.e(TAG, "Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED")
             return null
@@ -261,17 +253,7 @@ object IOUtil {
                 input?.let { closeQuietly(it) }
             }
         }
-        val s = jsonString.toString()
-        return if (base64Decode) {
-            val decode = Base64.decode(s, Base64.NO_WRAP)
-            if (null == decode || decode.isEmpty()) {
-                null
-            } else {
-                String(decode)
-            }
-        } else {
-            s
-        }
+        return jsonString.toString()
     }
 
     /**
@@ -287,7 +269,7 @@ object IOUtil {
             LogUtil.e(TAG, "Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED")
             return null
         }
-        val future = ThreadPoolHelp.submit { getDiskText(filePath, fileName, base64Decode = decode) }
+        val future = ThreadPoolHelp.submit { getDiskText(filePath, fileName) }
         try {
             return future.get()
         } catch (e: Exception) {
