@@ -14,7 +14,7 @@ public class EditUtil {
      * @param editText EditText输入框
      */
     public static void setNotInputSpace(EditText editText) {
-        editText.setFilters(new InputFilter[]{getNotSpaceFilter()});
+        editText.setFilters(new InputFilter[]{getSpaceFilter()});
     }
 
     /**
@@ -22,7 +22,7 @@ public class EditUtil {
      *
      * @return
      */
-    public static InputFilter getNotSpaceFilter() {
+    public static InputFilter getSpaceFilter() {
         return new InputFilter() {
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
@@ -41,7 +41,7 @@ public class EditUtil {
      * @param editText EditText输入框
      */
     public static void setNotInputSpecialChar(EditText editText) {
-        editText.setFilters(new InputFilter[]{getNotSpecialCharFilter()});
+        editText.setFilters(new InputFilter[]{getSpecialCharFilter()});
     }
 
     /**
@@ -49,7 +49,7 @@ public class EditUtil {
      *
      * @return
      */
-    public static InputFilter getNotSpecialCharFilter() {
+    public static InputFilter getSpecialCharFilter() {
         return new InputFilter() {
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {

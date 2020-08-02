@@ -1,4 +1,4 @@
-package com.leo.system
+package com.leo.system.context
 
 import android.content.Context
 import java.lang.ref.WeakReference
@@ -13,9 +13,7 @@ object ContextHelp {
             }
             return weakReference!!.get() ?: throw RuntimeException("must setContext() in application first")
         }
-        /**
-         * 必须在Application中调用
-         */
+
         set(context) {
             weakReference = WeakReference(context.applicationContext)
         }

@@ -5,7 +5,7 @@ import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.os.Build
-import com.leo.system.ContextHelp
+import com.leo.system.context.ContextHelp
 
 /**
  * 兼容androidO以上的延时焦点请求封装，只支持以下streamType
@@ -22,11 +22,11 @@ import com.leo.system.ContextHelp
  */
 class AudioOFocusTask
 @JvmOverloads
-constructor(val listener: AudioManager.OnAudioFocusChangeListener,
-            val streamType: Int = AudioManager.STREAM_MUSIC,
-            val durationHint: Int = AudioManager.AUDIOFOCUS_GAIN_TRANSIENT,
-            val acceptDelaydFocus: Boolean = false,
-            val pauseWhenDucked: Boolean = false) {
+constructor(private val listener: AudioManager.OnAudioFocusChangeListener,
+            private val streamType: Int = AudioManager.STREAM_MUSIC,
+            private val durationHint: Int = AudioManager.AUDIOFOCUS_GAIN_TRANSIENT,
+            private val acceptDelayFocus: Boolean = false,
+            private val pauseWhenDucked: Boolean = false) {
     private var mFocusRequest: AudioFocusRequest? = null
 
     /**
@@ -49,7 +49,7 @@ constructor(val listener: AudioManager.OnAudioFocusChangeListener,
                     .build()
             mFocusRequest = AudioFocusRequest.Builder(durationHint)
                     .setAudioAttributes(mPlaybackAttributes)
-                    .setAcceptsDelayedFocusGain(acceptDelaydFocus)
+                    .setAcceptsDelayedFocusGain(acceptDelayFocus)
                     .setWillPauseWhenDucked(pauseWhenDucked)
                     .setOnAudioFocusChangeListener(listener)
                     .build()

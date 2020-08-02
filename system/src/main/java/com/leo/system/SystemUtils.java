@@ -25,7 +25,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +34,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.leo.system.callback.OnETClearFocusCallback;
+import com.leo.system.context.ContextHelp;
 
 import java.io.BufferedReader;
 import java.io.File;

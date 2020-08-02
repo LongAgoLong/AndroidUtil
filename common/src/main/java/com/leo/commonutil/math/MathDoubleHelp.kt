@@ -8,7 +8,7 @@ import java.math.BigDecimal
  * Description:Double计算辅助类
  */
 object MathDoubleHelp {
-    private val DEF_DIV_SCALE = 2
+    private const val DEF_DIV_SCALE = 2
 
     /**
      * 提供精确加法计算的add方法

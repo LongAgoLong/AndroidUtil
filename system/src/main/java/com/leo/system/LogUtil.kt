@@ -1,6 +1,7 @@
 package com.leo.system
 
 import android.util.Log
+import com.leo.system.context.ContextHelp
 import com.leo.system.enume.LogType
 
 /**

@@ -192,8 +192,8 @@ object IOUtil {
      * @param append   是否累加
      */
     @JvmOverloads
-    fun writeDiskText(filePath: String = SDcardUtil.fileFolder!!.absolutePath, fileName: String, content: String,
-                      base64Encode: Boolean = true, append: Boolean = false) {
+    fun writeDiskText(filePath: String = SDcardUtil.fileFolder!!.absolutePath, fileName: String,
+                      content: String, append: Boolean = false) {
         if (!SDcardUtil.isDiskExists) {
             LogUtil.e(TAG, "Environment.getExternalStorageState() != Environment.MEDIA_MOUNTED")
             return
