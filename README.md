@@ -3,7 +3,7 @@
 会持续整理更新  
 [![](https://jitpack.io/v/LongAgoLong/AndroidUtil.svg)](https://jitpack.io/#LongAgoLong/AndroidUtil)  
 **gradle依赖**
-```java
+```gradle
 allprojects {
 	repositories {
 		...
@@ -12,11 +12,11 @@ allprojects {
 }
 ```
 **全部依赖**
-```java
+```gradle
 implementation 'com.github.LongAgoLong:AndroidUtil:$JitPack-Version$'
 ```
 **单独依赖**
-```java
+```gradle
 implementation 'com.github.LongAgoLong.AndroidUtil:system:$JitPack-Version$'
 implementation 'com.github.LongAgoLong.AndroidUtil:common:$JitPack-Version$'
 implementation 'com.github.LongAgoLong.AndroidUtil:safety:$JitPack-Version$'
@@ -26,7 +26,7 @@ implementation 'com.github.LongAgoLong.AndroidUtil:recyclerview-help:$JitPack-Ve
 implementation 'com.github.LongAgoLong.AndroidUtil:pinyinlib:$JitPack-Version$'
 ```
 **maven依赖**
-```java
+```gradle
 <repositories>
 	<repository>
 		<id>jitpack.io</id>
@@ -34,7 +34,7 @@ implementation 'com.github.LongAgoLong.AndroidUtil:pinyinlib:$JitPack-Version$'
 	</repository>
 </repositories>
 ```
-```java
+```gradle
 <dependency>
 	<groupId>com.github.LongAgoLong</groupId>
 	<artifactId>AndroidUtil</artifactId>
