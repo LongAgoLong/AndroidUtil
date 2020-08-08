@@ -1,9 +1,7 @@
 package com.leo.safety
 
 import android.util.Base64
-
 import com.leo.safety.enume.AESType
-
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -90,15 +88,14 @@ object AESUtil {
                 cipher.init(Cipher.DECRYPT_MODE, skeySpec)
             }
             val encrypted1 = Base64.decode(sSrc, Base64.DEFAULT)
-            try {
+            return try {
                 val original = cipher.doFinal(encrypted1)
-                return String(original)
+                String(original)
             } catch (e: Exception) {
-                return null
+                null
             }
         } catch (ex: Exception) {
             return null
         }
-
     }
 }

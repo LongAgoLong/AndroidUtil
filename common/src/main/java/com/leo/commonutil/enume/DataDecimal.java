@@ -2,8 +2,10 @@ package com.leo.commonutil.enume;
 
 import androidx.annotation.StringDef;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @StringDef({
         DataDecimal.ONE_DECIMAL,
@@ -13,6 +15,7 @@ import java.lang.annotation.RetentionPolicy;
         DataDecimal.FIVE_DECIMAL,
         DataDecimal.SIX_DECIMAL
 })
+@Target({ElementType.PARAMETER, ElementType.CONSTRUCTOR})
 @Retention(RetentionPolicy.SOURCE)
 public @interface DataDecimal {
     String ONE_DECIMAL = "#.0";

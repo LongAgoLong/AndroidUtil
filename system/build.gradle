@@ -1,14 +1,17 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 28
-
+    compileSdkVersion 30
+    buildFeatures {
+        dataBinding = true
+    }
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 28
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -32,6 +35,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     compileOnly "androidx.appcompat:appcompat:$rootProject.xappcompat_version"
+    implementation("androidx.annotation:annotation-experimental:1.1.0-alpha01")
     testImplementation 'junit:junit:4.12'
     androidTestImplementation "androidx.test.ext:junit:$rootProject.xjunit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.xespresso_core_version"

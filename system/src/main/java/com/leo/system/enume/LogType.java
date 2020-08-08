@@ -2,8 +2,10 @@ package com.leo.system.enume;
 
 import androidx.annotation.IntDef;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @IntDef({LogType.VERBOSE,
         LogType.DEBUG,
@@ -11,6 +13,7 @@ import java.lang.annotation.RetentionPolicy;
         LogType.WARN,
         LogType.ERROR,
         LogType.ASSERT})
+@Target({ElementType.PARAMETER, ElementType.CONSTRUCTOR})
 @Retention(RetentionPolicy.SOURCE)
 public @interface LogType {
     /**
