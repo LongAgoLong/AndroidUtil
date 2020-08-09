@@ -5,8 +5,10 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 30
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding = true
+// for view binding :
+// viewBinding = true
     }
     defaultConfig {
         applicationId "com.leo.androidutil"
