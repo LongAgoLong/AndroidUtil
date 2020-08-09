@@ -46,7 +46,7 @@ object AESUtil {
                 cipher.init(Cipher.ENCRYPT_MODE, skeySpec)
             }
             val encrypted = cipher.doFinal(sSrc.toByteArray())
-            return Base64.encodeToString(encrypted, Base64.DEFAULT)//此处使用BASE64做转码功能，同时能起到2次加密的作用。
+            return Base64.encodeToString(encrypted, Base64.NO_WRAP)//此处使用BASE64做转码功能，同时能起到2次加密的作用。
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -87,7 +87,7 @@ object AESUtil {
             } else {
                 cipher.init(Cipher.DECRYPT_MODE, skeySpec)
             }
-            val encrypted1 = Base64.decode(sSrc, Base64.DEFAULT)
+            val encrypted1 = Base64.decode(sSrc, Base64.NO_WRAP)
             return try {
                 val original = cipher.doFinal(encrypted1)
                 String(original)
