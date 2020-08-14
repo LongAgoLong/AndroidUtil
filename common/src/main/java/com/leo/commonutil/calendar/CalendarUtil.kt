@@ -65,7 +65,6 @@ object CalendarUtil {
      * @param hasAlarm  是否需要闹钟提醒
      * @return
      */
-    @CalendarAddResult
     fun addCalendarEvent(context: Context, title: String, content: String,
                          @UnitTime UnitTime: Int,
                          startTime: Long, endTime: Long, hasAlarm: Boolean): Int {

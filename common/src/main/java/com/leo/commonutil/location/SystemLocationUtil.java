@@ -8,7 +8,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresPermission;
 
 import android.text.TextUtils;
 
@@ -18,6 +20,7 @@ import com.leo.system.LogUtil;
 import com.leo.system.SystemUtils;
 
 import java.io.IOException;
+import java.security.Permission;
 import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -70,14 +73,15 @@ public class SystemLocationUtil implements LocationListener {
      *
      * @param provider            LocationManager.GPS_PROVIDER/LocationManager.NETWORK_PROVIDER
      * @param minMillisecond      定位时间间隔
-     * @param mOnLocationCallback 回调接口
+     * @param onLocationCallback 回调接口
      */
-    public void start(String provider, long minMillisecond, @Nullable OnLocationCallback mOnLocationCallback) {
+    @RequiresPermission(allOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    public void start(String provider, long minMillisecond, @Nullable OnLocationCallback onLocationCallback) {
         Context context = ContextHelp.INSTANCE.getContext();
         if (null == context) {
             return;
         }
-        this.mOnLocationCallback = mOnLocationCallback;
+        mOnLocationCallback = onLocationCallback;
         // NETWORK_PROVIDER,使用网络定位
         // 定位时间间隔,单位ms；不应小于1000
         LocationManager locationManager =
@@ -102,6 +106,7 @@ public class SystemLocationUtil implements LocationListener {
     /**
      * 停止定位
      */
+    @RequiresPermission(allOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     public void stop() {
         mOnLocationCallback = null;
         Context context = ContextHelp.INSTANCE.getContext();

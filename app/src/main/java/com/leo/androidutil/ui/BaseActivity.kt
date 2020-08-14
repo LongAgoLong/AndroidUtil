@@ -25,8 +25,8 @@ open class BaseActivity : RxAppCompatActivity() {
 
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == android.R.id.home) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
             onBackPressed()
             return true
         }

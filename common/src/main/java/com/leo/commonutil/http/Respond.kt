@@ -3,7 +3,7 @@ package com.leo.commonutil.http
 import android.os.Parcel
 import android.os.Parcelable
 
-data class Respond(public var code: Int, var body: String) : Parcelable {
+data class Respond(var code: Int, var body: String?) : Parcelable {
 
     constructor() : this(0, "") {
 

@@ -17,7 +17,8 @@ public class ThreadPoolHelp {
         return mThreadPool;
     }
 
-    private ThreadPoolHelp() {
+    public ThreadPoolHelp() {
+        throw new RuntimeException("Cannot be initialized");
     }
 
     /**

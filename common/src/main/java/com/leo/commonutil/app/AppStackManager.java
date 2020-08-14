@@ -23,7 +23,7 @@ public class AppStackManager {
     private ArrayList<Activity> mActivities;
     private static AppStackManager mInstance;
 
-    private AppStackManager() {
+    protected AppStackManager() {
     }
 
     public static AppStackManager getInstance() {

@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  * uri获取文件路径
  */
 public final class FileUtils {
-    private FileUtils() {
+    protected FileUtils() {
     }
 
     public static String getPath(final Context context, final Uri uri) {

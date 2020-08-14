@@ -1,6 +1,7 @@
 package com.leo.system;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.KeyguardManager;
@@ -17,12 +18,6 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.os.Process;
 import android.provider.Settings;
-import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresPermission;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -32,6 +27,13 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresPermission;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 
 import com.leo.system.callback.OnETClearFocusCallback;
 import com.leo.system.context.ContextHelp;
@@ -46,7 +48,8 @@ import java.util.List;
 import java.util.UUID;
 
 public final class SystemUtils {
-    private SystemUtils() {
+    public SystemUtils() {
+        throw new RuntimeException("Cannot be initialized");
     }
 
     /**
@@ -134,7 +137,7 @@ public final class SystemUtils {
     }
 
     public static void setCanceledOnTouchOutsideET(final Context context, View view,
-                                                   @Nullable final OnETClearFocusCallback onETClearFocusCallback) {
+                                                   @Nullable OnETClearFocusCallback onETClearFocusCallback) {
         //Set up touch listener for non-text box views to hide keyboard.
         if (!(view instanceof EditText)) {
             view.setOnTouchListener((v, event) -> {
@@ -361,6 +364,7 @@ public final class SystemUtils {
      *
      * @return
      */
+    @SuppressLint("PrivateApi")
     public static String getSystemBaseband() {
         try {
             Class cl = Class.forName("android.os.SystemProperties");
@@ -459,7 +463,8 @@ public final class SystemUtils {
         List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
         if (!tasks.isEmpty()) {
             ComponentName topActivity = tasks.get(0).topActivity;
-            if (!topActivity.getPackageName().equals(context.getPackageName())) {
+            if (null != topActivity
+                    && !topActivity.getPackageName().equals(context.getPackageName())) {
                 return true;
             }
         }
@@ -471,6 +476,7 @@ public final class SystemUtils {
      *
      * @param context
      */
+    @SuppressLint({"InvalidWakeLockTag", "WakelockTimeout"})
     @RequiresPermission(Manifest.permission.DISABLE_KEYGUARD)
     public static void wakeUpAndUnlock(Context context) {
         try {
@@ -498,6 +504,7 @@ public final class SystemUtils {
     protected static final String PREFS_DEVICE_ID = "gank_device_id";
     protected static String uuid;
 
+    @SuppressLint({"InvalidWakeLockTag", "HardwareIds"})
     @RequiresPermission(Manifest.permission.READ_PHONE_STATE)
     public static String getUDID(Context context) {
         if (uuid == null) {

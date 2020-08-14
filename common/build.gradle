@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -38,7 +38,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation "androidx.test.ext:junit:$rootProject.xjunit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.xespresso_core_version"
-    compileOnly project(path: ':system')
+    implementation project(path: ':system')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {

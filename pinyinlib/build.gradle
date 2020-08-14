@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -34,5 +34,5 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$rootProject.xjunit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.xespresso_core_version"
     api files('libs/pinyin4j-2.5.0.jar')
-    compileOnly project(path: ':system')
+    implementation project(path: ':system')
 }

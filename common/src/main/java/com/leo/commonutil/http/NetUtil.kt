@@ -42,9 +42,9 @@ object NetUtil {
         get() {
             val cm = context
                     .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            if (cm.activeNetworkInfo != null && cm.activeNetworkInfo.isConnectedOrConnecting) {
+            if (cm.activeNetworkInfo != null && cm.activeNetworkInfo!!.isConnectedOrConnecting) {
                 val ni = cm.activeNetworkInfo
-                return when (ni.type) {
+                return when (ni?.type) {
                     ConnectivityManager.TYPE_WIFI -> NetType.WIFI
                     ConnectivityManager.TYPE_MOBILE -> when (ni.subtype) {
                         TelephonyManager.NETWORK_TYPE_GPRS,
