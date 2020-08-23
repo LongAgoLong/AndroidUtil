@@ -27,9 +27,12 @@ package com.leo.commonutil.asyn;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.locks.Lock;
@@ -47,7 +50,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * <p/>
  *
  * @see Handler
- *
+ * <p>
  * Created by Dmytro Voronkevych on 17/06/2014.
  * 安全的Handler
  */
@@ -63,7 +66,7 @@ public class WeakHandler {
     /**
      * Default constructor associates this handler with the {@link Looper} for the
      * current thread.
-     *
+     * <p>
      * If this thread does not have a looper, this handler won't be able to receive messages
      * so an exception is thrown.
      */
@@ -76,7 +79,7 @@ public class WeakHandler {
      * Constructor associates this handler with the {@link Looper} for the
      * current thread and takes a callback interface in which you can handle
      * messages.
-     *
+     * <p>
      * If this thread does not have a looper, this handler won't be able to receive messages
      * so an exception is thrown.
      *
@@ -101,7 +104,7 @@ public class WeakHandler {
      * Use the provided {@link Looper} instead of the default one and take a callback
      * interface in which to handle messages.
      *
-     * @param looper The looper, must not be null.
+     * @param looper   The looper, must not be null.
      * @param callback The callback interface in which to handle messages, or null.
      */
     public WeakHandler(@NonNull Looper looper, @NonNull Handler.Callback callback) {
@@ -115,10 +118,9 @@ public class WeakHandler {
      * attached.
      *
      * @param r The Runnable that will be executed.
-     *
      * @return Returns true if the Runnable was successfully placed in to the
-     *         message queue.  Returns false on failure, usually because the
-     *         looper processing the message queue is exiting.
+     * message queue.  Returns false on failure, usually because the
+     * looper processing the message queue is exiting.
      */
     public final boolean post(@NonNull Runnable r) {
         return mExec.post(wrapRunnable(r));
@@ -130,16 +132,15 @@ public class WeakHandler {
      * <b>The time-base is {@link android.os.SystemClock#uptimeMillis}.</b>
      * The runnable will be run on the thread to which this handler is attached.
      *
-     * @param r The Runnable that will be executed.
+     * @param r            The Runnable that will be executed.
      * @param uptimeMillis The absolute time at which the callback should run,
-     *         using the {@link android.os.SystemClock#uptimeMillis} time-base.
-     *
+     *                     using the {@link android.os.SystemClock#uptimeMillis} time-base.
      * @return Returns true if the Runnable was successfully placed in to the
-     *         message queue.  Returns false on failure, usually because the
-     *         looper processing the message queue is exiting.  Note that a
-     *         result of true does not mean the Runnable will be processed -- if
-     *         the looper is quit before the delivery time of the message
-     *         occurs then the message will be dropped.
+     * message queue.  Returns false on failure, usually because the
+     * looper processing the message queue is exiting.  Note that a
+     * result of true does not mean the Runnable will be processed -- if
+     * the looper is quit before the delivery time of the message
+     * occurs then the message will be dropped.
      */
     public final boolean postAtTime(@NonNull Runnable r, long uptimeMillis) {
         return mExec.postAtTime(wrapRunnable(r), uptimeMillis);
@@ -151,17 +152,15 @@ public class WeakHandler {
      * <b>The time-base is {@link android.os.SystemClock#uptimeMillis}.</b>
      * The runnable will be run on the thread to which this handler is attached.
      *
-     * @param r The Runnable that will be executed.
+     * @param r            The Runnable that will be executed.
      * @param uptimeMillis The absolute time at which the callback should run,
-     *         using the {@link android.os.SystemClock#uptimeMillis} time-base.
-     *
+     *                     using the {@link android.os.SystemClock#uptimeMillis} time-base.
      * @return Returns true if the Runnable was successfully placed in to the
-     *         message queue.  Returns false on failure, usually because the
-     *         looper processing the message queue is exiting.  Note that a
-     *         result of true does not mean the Runnable will be processed -- if
-     *         the looper is quit before the delivery time of the message
-     *         occurs then the message will be dropped.
-     *
+     * message queue.  Returns false on failure, usually because the
+     * looper processing the message queue is exiting.  Note that a
+     * result of true does not mean the Runnable will be processed -- if
+     * the looper is quit before the delivery time of the message
+     * occurs then the message will be dropped.
      * @see android.os.SystemClock#uptimeMillis
      */
     public final boolean postAtTime(Runnable r, Object token, long uptimeMillis) {
@@ -174,16 +173,15 @@ public class WeakHandler {
      * The runnable will be run on the thread to which this handler
      * is attached.
      *
-     * @param r The Runnable that will be executed.
+     * @param r           The Runnable that will be executed.
      * @param delayMillis The delay (in milliseconds) until the Runnable
-     *        will be executed.
-     *
+     *                    will be executed.
      * @return Returns true if the Runnable was successfully placed in to the
-     *         message queue.  Returns false on failure, usually because the
-     *         looper processing the message queue is exiting.  Note that a
-     *         result of true does not mean the Runnable will be processed --
-     *         if the looper is quit before the delivery time of the message
-     *         occurs then the message will be dropped.
+     * message queue.  Returns false on failure, usually because the
+     * looper processing the message queue is exiting.  Note that a
+     * result of true does not mean the Runnable will be processed --
+     * if the looper is quit before the delivery time of the message
+     * occurs then the message will be dropped.
      */
     public final boolean postDelayed(Runnable r, long delayMillis) {
         return mExec.postDelayed(wrapRunnable(r), delayMillis);
@@ -199,10 +197,9 @@ public class WeakHandler {
      * other unexpected side-effects.</b>
      *
      * @param r The Runnable that will be executed.
-     *
      * @return Returns true if the message was successfully placed in to the
-     *         message queue.  Returns false on failure, usually because the
-     *         looper processing the message queue is exiting.
+     * message queue.  Returns false on failure, usually because the
+     * looper processing the message queue is exiting.
      */
     public final boolean postAtFrontOfQueue(Runnable r) {
         return mExec.postAtFrontOfQueue(wrapRunnable(r));
@@ -236,8 +233,8 @@ public class WeakHandler {
      * in the thread attached to this handler.
      *
      * @return Returns true if the message was successfully placed in to the
-     *         message queue.  Returns false on failure, usually because the
-     *         looper processing the message queue is exiting.
+     * message queue.  Returns false on failure, usually because the
+     * looper processing the message queue is exiting.
      */
     public final boolean sendMessage(Message msg) {
         return mExec.sendMessage(msg);
@@ -247,8 +244,8 @@ public class WeakHandler {
      * Sends a Message containing only the what value.
      *
      * @return Returns true if the message was successfully placed in to the
-     *         message queue.  Returns false on failure, usually because the
-     *         looper processing the message queue is exiting.
+     * message queue.  Returns false on failure, usually because the
+     * looper processing the message queue is exiting.
      */
     public final boolean sendEmptyMessage(int what) {
         return mExec.sendEmptyMessage(what);
@@ -257,11 +254,11 @@ public class WeakHandler {
     /**
      * Sends a Message containing only the what value, to be delivered
      * after the specified amount of time elapses.
-     * @see #sendMessageDelayed(Message, long)
      *
      * @return Returns true if the message was successfully placed in to the
-     *         message queue.  Returns false on failure, usually because the
-     *         looper processing the message queue is exiting.
+     * message queue.  Returns false on failure, usually because the
+     * looper processing the message queue is exiting.
+     * @see #sendMessageDelayed(Message, long)
      */
     public final boolean sendEmptyMessageDelayed(int what, long delayMillis) {
         return mExec.sendEmptyMessageDelayed(what, delayMillis);
@@ -270,11 +267,11 @@ public class WeakHandler {
     /**
      * Sends a Message containing only the what value, to be delivered
      * at a specific time.
-     * @see #sendMessageAtTime(Message, long)
      *
      * @return Returns true if the message was successfully placed in to the
-     *         message queue.  Returns false on failure, usually because the
-     *         looper processing the message queue is exiting.
+     * message queue.  Returns false on failure, usually because the
+     * looper processing the message queue is exiting.
+     * @see #sendMessageAtTime(Message, long)
      */
     public final boolean sendEmptyMessageAtTime(int what, long uptimeMillis) {
         return mExec.sendEmptyMessageAtTime(what, uptimeMillis);
@@ -286,11 +283,11 @@ public class WeakHandler {
      * callback, in the thread attached to this handler.
      *
      * @return Returns true if the message was successfully placed in to the
-     *         message queue.  Returns false on failure, usually because the
-     *         looper processing the message queue is exiting.  Note that a
-     *         result of true does not mean the message will be processed -- if
-     *         the looper is quit before the delivery time of the message
-     *         occurs then the message will be dropped.
+     * message queue.  Returns false on failure, usually because the
+     * looper processing the message queue is exiting.  Note that a
+     * result of true does not mean the message will be processed -- if
+     * the looper is quit before the delivery time of the message
+     * occurs then the message will be dropped.
      */
     public final boolean sendMessageDelayed(Message msg, long delayMillis) {
         return mExec.sendMessageDelayed(msg, delayMillis);
@@ -304,15 +301,14 @@ public class WeakHandler {
      * to this handler.
      *
      * @param uptimeMillis The absolute time at which the message should be
-     *         delivered, using the
-     *         {@link android.os.SystemClock#uptimeMillis} time-base.
-     *
+     *                     delivered, using the
+     *                     {@link android.os.SystemClock#uptimeMillis} time-base.
      * @return Returns true if the message was successfully placed in to the
-     *         message queue.  Returns false on failure, usually because the
-     *         looper processing the message queue is exiting.  Note that a
-     *         result of true does not mean the message will be processed -- if
-     *         the looper is quit before the delivery time of the message
-     *         occurs then the message will be dropped.
+     * message queue.  Returns false on failure, usually because the
+     * looper processing the message queue is exiting.  Note that a
+     * result of true does not mean the message will be processed -- if
+     * the looper is quit before the delivery time of the message
+     * occurs then the message will be dropped.
      */
     public boolean sendMessageAtTime(Message msg, long uptimeMillis) {
         return mExec.sendMessageAtTime(msg, uptimeMillis);
@@ -327,8 +323,8 @@ public class WeakHandler {
      * other unexpected side-effects.</b>
      *
      * @return Returns true if the message was successfully placed in to the
-     *         message queue.  Returns false on failure, usually because the
-     *         looper processing the message queue is exiting.
+     * message queue.  Returns false on failure, usually because the
+     * looper processing the message queue is exiting.
      */
     public final boolean sendMessageAtFrontOfQueue(Message msg) {
         return mExec.sendMessageAtFrontOfQueue(msg);
@@ -459,7 +455,7 @@ public class WeakHandler {
         @NonNull
         Lock lock;
 
-        public ChainedRef(@NonNull Lock lock, @NonNull Runnable r) {
+        public ChainedRef(@NonNull Lock lock, @NotNull Runnable r) {
             this.runnable = r;
             this.lock = lock;
             this.wrapper = new WeakRunnable(new WeakReference<>(r), new WeakReference<>(this));

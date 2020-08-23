@@ -3,6 +3,8 @@ package com.leo.commonutil.crash;
 import android.os.Handler;
 import android.os.Looper;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by wanjian on 2017/2/14.
  */
@@ -11,6 +13,7 @@ public final class Cockroach {
     private CrashHandler mCrashHandler;
     private Thread.UncaughtExceptionHandler mUncaughtExceptionHandler;
     private boolean mInstalled = false;//标记位，避免重复安装卸载
+    private Handler mUIHandler = new Handler(Looper.getMainLooper());
 
     public interface CrashHandler {
         void handlerException(Thread thread, Throwable throwable);
@@ -45,19 +48,16 @@ public final class Cockroach {
         }
         mInstalled = true;
         mCrashHandler = crashHandler;
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Looper.loop();
-                    } catch (Throwable e) {
-                        if (e instanceof QuitCockroachException) {
-                            return;
-                        }
-                        if (mCrashHandler != null) {
-                            mCrashHandler.handlerException(Looper.getMainLooper().getThread(), e);
-                        }
+        mUIHandler.post(() -> {
+            while (true) {
+                try {
+                    Looper.loop();
+                } catch (Throwable e) {
+                    if (e instanceof QuitCockroachException) {
+                        return;
+                    }
+                    if (mCrashHandler != null) {
+                        mCrashHandler.handlerException(Looper.getMainLooper().getThread(), e);
                     }
                 }
             }
@@ -66,7 +66,7 @@ public final class Cockroach {
         // 所有线程异常拦截，由于主线程的异常都被catch了，所以下面的代码拦截的都是子线程的异常
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
-            public void uncaughtException(Thread t, Throwable e) {
+            public void uncaughtException(@NotNull Thread t, @NotNull Throwable e) {
                 if (mCrashHandler != null) {
                     mCrashHandler.handlerException(t, e);
                 }
@@ -85,12 +85,8 @@ public final class Cockroach {
         if (null != mUncaughtExceptionHandler) {
             Thread.setDefaultUncaughtExceptionHandler(mUncaughtExceptionHandler);
         }
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                throw new QuitCockroachException("Quit Cockroach.....");//主线程抛出异常，迫使 while (true) {}结束
-            }
+        mUIHandler.post(() -> {
+            throw new QuitCockroachException("Quit Cockroach.....");//主线程抛出异常，迫使 while (true) {}结束
         });
-
     }
 }

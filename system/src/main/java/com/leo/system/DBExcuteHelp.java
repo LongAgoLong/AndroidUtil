@@ -58,19 +58,21 @@ public class DBExcuteHelp {
      * 连续插入大量数据时必须启用，可显著提高插入效率
      */
     public void beginTransaction() {
-        if (null != sqliteDb) {
-            sqliteDb.beginTransaction();
+        if (null == sqliteDb) {
+            throw new RuntimeException("must transfer openDB() first");
         }
+        sqliteDb.beginTransaction();
     }
 
     /**
      * 关闭事务
      */
     public void endTransaction() {
-        if (null != sqliteDb) {
-            sqliteDb.setTransactionSuccessful();
-            sqliteDb.endTransaction();
+        if (null == sqliteDb) {
+            throw new RuntimeException("must transfer openDB() first");
         }
+        sqliteDb.setTransactionSuccessful();
+        sqliteDb.endTransaction();
     }
 
     /**
@@ -80,6 +82,9 @@ public class DBExcuteHelp {
      * @param values    数据
      */
     public void insert(@NonNull String tableName, @NonNull ContentValues values) {
+        if (null == sqliteDb) {
+            throw new RuntimeException("must transfer openDB() first");
+        }
         sqliteDb.insert(tableName, null, values);
     }
 
@@ -91,6 +96,9 @@ public class DBExcuteHelp {
      * @param selectionArgs 筛选值
      */
     public void delete(@NonNull String tableName, @Nullable String selection, @Nullable String... selectionArgs) {
+        if (null == sqliteDb) {
+            throw new RuntimeException("must transfer openDB() first");
+        }
         sqliteDb.delete(tableName, selection, selectionArgs);
     }
 
@@ -103,6 +111,9 @@ public class DBExcuteHelp {
      * @param whereArgs 筛选值
      */
     public void update(@NonNull String tableName, @NonNull ContentValues values, @NonNull String where, @NonNull String... whereArgs) {
+        if (null == sqliteDb) {
+            throw new RuntimeException("must transfer openDB() first");
+        }
         sqliteDb.update(tableName, values, where, whereArgs);
     }
 
@@ -115,6 +126,9 @@ public class DBExcuteHelp {
      * @return
      */
     public Cursor query(@NonNull String tableName, @Nullable String selection, @Nullable String... selectionArgs) {
+        if (null == sqliteDb) {
+            throw new RuntimeException("must transfer openDB() first");
+        }
         return sqliteDb.query(tableName, null, selection, selectionArgs, null, null, null);
     }
 

@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2016 Baidu, Inc. All Rights Reserved.
- */
 package com.leo.system
 
 import android.content.Context
@@ -48,6 +45,9 @@ class AudioFocusHelp private constructor() : OnAudioFocusChangeListener {
                           streamType: Int = AUDIO_STREAM_TYPE,
                           durationHint: Int = AudioManager.AUDIOFOCUS_GAIN_TRANSIENT): Int {
         mAudioManager ?: return AudioManager.AUDIOFOCUS_REQUEST_FAILED
+        if (audioFocus == AudioManager.AUDIOFOCUS_GAIN) {
+            return AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+        }
         return if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioManager!!.requestAudioFocus(listener,
                         streamType, durationHint)) {
             audioFocus = AudioManager.AUDIOFOCUS_GAIN

@@ -1,13 +1,14 @@
 package com.leo.system
 
 import androidx.annotation.IdRes
+import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 
 
 object FragmentHelp {
 
-    fun clear(fragmentManager: FragmentManager) {
+    fun clear(@NonNull fragmentManager: FragmentManager) {
         val fragments = fragmentManager.fragments
         //遍历list容器,清除所有的碎片
         if (fragments.isNotEmpty()) {
@@ -17,7 +18,8 @@ object FragmentHelp {
         }
     }
 
-    fun switch(fragmentManager: FragmentManager, fragment: Fragment, tag: String, @IdRes viewGroupId: Int) {
+    fun switch(@NonNull fragmentManager: FragmentManager, @NonNull fragment: Fragment,
+               @NonNull tag: String, @IdRes viewGroupId: Int) {
         val fragments = fragmentManager.fragments
         //遍历list容器,隐藏所有的碎片
         for (fragmentTemp in fragments) {
@@ -26,7 +28,7 @@ object FragmentHelp {
             }
             fragmentManager.beginTransaction().hide(fragmentTemp).commit()
         }
-        if (!fragment.isAdded 
+        if (!fragment.isAdded
                 && null == fragmentManager.findFragmentByTag(tag)
                 && !fragments.contains(fragment)) {
             fragmentManager.beginTransaction().add(viewGroupId, fragment, tag).commit()

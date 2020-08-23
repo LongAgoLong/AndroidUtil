@@ -13,13 +13,11 @@ object MetaHelp {
      * @param metaKey
      * @return
      */
-    fun getMetaValue(metaKey: String?): String? {
+    fun getMetaValue(metaKey: String): String? {
         var metaValue: String? = null
-        metaKey ?: return null
-        val context = ContextHelp.context
         try {
-            val appInfo = context.packageManager.getApplicationInfo(
-                    context.packageName, PackageManager.GET_META_DATA)
+            val appInfo = ContextHelp.context.packageManager.getApplicationInfo(
+                    ContextHelp.context.packageName, PackageManager.GET_META_DATA)
             metaValue = appInfo.metaData.getString(metaKey)
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
