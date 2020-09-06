@@ -166,9 +166,11 @@ public final class SystemUtils {
      */
     public static void setScrollEditText(EditText mEditEt, MotionEvent event) {
         if (canVerticalScroll(mEditEt)) {
-            mEditEt.getParent().requestDisallowInterceptTouchEvent(true);//告诉父view，我的事件自己处理
+            // 告诉父view，我的事件自己处理
+            mEditEt.getParent().requestDisallowInterceptTouchEvent(true);
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                mEditEt.getParent().requestDisallowInterceptTouchEvent(false);//告诉父view，你可以处理了
+                // 告诉父view，你可以处理了
+                mEditEt.getParent().requestDisallowInterceptTouchEvent(false);
             }
         }
     }

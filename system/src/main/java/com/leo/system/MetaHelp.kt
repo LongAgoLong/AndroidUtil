@@ -19,7 +19,7 @@ object MetaHelp {
             val appInfo = ContextHelp.context.packageManager.getApplicationInfo(
                     ContextHelp.context.packageName, PackageManager.GET_META_DATA)
             metaValue = appInfo.metaData.getString(metaKey)
-        } catch (e: PackageManager.NameNotFoundException) {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
         return metaValue
