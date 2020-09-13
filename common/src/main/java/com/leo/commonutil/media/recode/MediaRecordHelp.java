@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import com.leo.commonutil.calendar.DateUtil;
 import com.leo.commonutil.asyn.WeakHandler;
 import com.leo.commonutil.enume.UnitTime;
-import com.leo.system.LogUtil;
+import com.leo.system.log.LogUtil;
 
 import java.io.File;
 import java.io.IOException;

@@ -5,7 +5,7 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.leo.androidutil.R
 import com.leo.androidutil.databinding.ActivityRootBinding
-import com.leo.system.IntentUtil
+import com.leo.system.util.IntentUtil
 
 class RootActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mBinding: ActivityRootBinding

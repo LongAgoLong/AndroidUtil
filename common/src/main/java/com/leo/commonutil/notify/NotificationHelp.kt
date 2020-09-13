@@ -36,7 +36,7 @@ class NotificationHelp(context: Context) : ContextWrapper(context) {
      */
     private fun createChannel(channelId: String, channelName: String, isSound: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel: NotificationChannel = NotificationChannel(channelId, channelName,
+            val channel = NotificationChannel(channelId, channelName,
                     if (isSound) NotificationManager.IMPORTANCE_HIGH else NotificationManager.IMPORTANCE_LOW)
             if (isSound) {
                 channel.importance = NotificationManager.IMPORTANCE_HIGH
@@ -82,9 +82,9 @@ class NotificationHelp(context: Context) : ContextWrapper(context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel(channelId, channelName, isSound)
             val builder = Notification.Builder(context, channelId)
-            builder.setContentText(content)//设置内容
-                    .setContentTitle(title) //设置标题
-                    .setTicker(content) //设置状态栏的信息
+            builder.setContentText(content)// 设置内容
+                    .setContentTitle(title) // 设置标题
+                    .setTicker(content) // 设置状态栏的信息
                     .setSmallIcon(iconBitmap)
             if (!TextUtils.isEmpty(bigContent)) {//bigContent不为空-宽视图文字样式
                 val bigTextStyle = Notification.BigTextStyle()

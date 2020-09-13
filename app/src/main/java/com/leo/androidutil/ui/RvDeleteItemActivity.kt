@@ -11,7 +11,7 @@ import com.leo.androidutil.databinding.ActivityRvDeleteItemBinding
 import com.leo.recyclerview_help.decoration.LineItemDecoration
 import com.leo.recyclerview_help.slide.slideslip.RvItemSideslipCallback
 import com.leo.recyclerview_help.slide.slideslip.RvItemSideslipHelper
-import com.leo.system.WindowUtils
+import com.leo.system.util.WindowUtils
 
 
 class RvDeleteItemActivity : BaseActivity() {

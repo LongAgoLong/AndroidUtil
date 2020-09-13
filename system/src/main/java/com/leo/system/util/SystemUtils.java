@@ -1,4 +1,4 @@
-package com.leo.system;
+package com.leo.system.util;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -136,6 +136,7 @@ public final class SystemUtils {
         setCanceledOnTouchOutsideET(context, view, null);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     public static void setCanceledOnTouchOutsideET(final Context context, View view,
                                                    @Nullable OnETClearFocusCallback onETClearFocusCallback) {
         //Set up touch listener for non-text box views to hide keyboard.

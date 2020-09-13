@@ -9,7 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.leo.androidutil.R
 import com.leo.recyclerview_help.slide.slideslip.RvItemSideslipViewHold
-import com.leo.system.WindowUtils
+import com.leo.system.util.WindowUtils
 
 class RvItemDeleteAdapter
 constructor(private val context: Context,

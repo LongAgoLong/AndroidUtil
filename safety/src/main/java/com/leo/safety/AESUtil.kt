@@ -1,6 +1,7 @@
 package com.leo.safety
 
 import android.util.Base64
+import android.util.Log
 import com.leo.safety.enume.AESType
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
@@ -24,12 +25,15 @@ object AESUtil {
      */
     fun encrypt(sSrc: String, sKey: String?, sIv: String?, @AESType aesType: String): String? {
         if (sKey == null) {
-            print("Key为空null")
+            Log.e("AESUtil", "Key为空null")
             return null
         }
-        // 判断Key是否为16位
+        /**
+         * 判断Key是否为16位
+         * java openSdk只能支持16位
+         */
         if (sKey.length != 16) {
-            print("Key长度不是16位")
+            Log.e("AESUtil", "Key长度不是16位")
             return null
         }
         val raw = sKey.toByteArray()
@@ -67,12 +71,12 @@ object AESUtil {
         try {
             // 判断Key是否正确
             if (sKey == null) {
-                print("Key为空null")
+                Log.e("AESUtil", "Key为空null")
                 return null
             }
             // 判断Key是否为16位
             if (sKey.length != 16) {
-                print("Key长度不是16位")
+                Log.e("AESUtil", "Key长度不是16位")
                 return null
             }
             val raw = sKey.toByteArray(charset("UTF-8"))

@@ -1,4 +1,4 @@
-package com.leo.system
+package com.leo.system.util
 
 import androidx.annotation.IdRes
 import androidx.annotation.NonNull

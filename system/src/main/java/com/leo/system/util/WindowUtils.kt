@@ -1,4 +1,4 @@
-package com.leo.system
+package com.leo.system.util
 
 /**
  * Copyright 2014 Zhenguo Jin (jinzhenguo1990@gmail.com)

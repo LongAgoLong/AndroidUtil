@@ -2,7 +2,6 @@ package com.leo.androidutil.ui
 
 import android.Manifest
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -15,7 +14,7 @@ import com.leo.commonutil.calendar.DateUtil
 import com.leo.commonutil.enume.UnitTime
 import com.leo.commonutil.location.OnLocationCallback
 import com.leo.commonutil.location.SystemLocationUtil
-import com.leo.system.LogUtil
+import com.leo.system.log.LogUtil
 
 /**
  * 系统定位demo

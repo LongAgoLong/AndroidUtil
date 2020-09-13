@@ -8,7 +8,7 @@ import android.os.Vibrator
 import androidx.annotation.RawRes
 import androidx.annotation.RequiresPermission
 import com.leo.system.context.ContextHelp
-import com.leo.system.LogUtil
+import com.leo.system.log.LogUtil
 import java.io.IOException
 
 /**

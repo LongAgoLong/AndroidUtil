@@ -1,8 +1,7 @@
-package com.leo.system
+package com.leo.system.log
 
 import android.util.Log
 import com.leo.system.context.ContextHelp
-import com.leo.system.enume.LogType
 
 /**
  * 日志公共类

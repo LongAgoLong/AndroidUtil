@@ -2,7 +2,7 @@ package com.leo.pinyinlib
 
 import android.text.TextUtils
 import androidx.annotation.NonNull
-import com.leo.system.ResHelp
+import com.leo.system.util.ResHelp
 import net.sourceforge.pinyin4j.PinyinHelper
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat

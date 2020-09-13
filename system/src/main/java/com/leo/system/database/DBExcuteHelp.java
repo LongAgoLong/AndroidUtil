@@ -1,4 +1,4 @@
-package com.leo.system;
+package com.leo.system.database;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.leo.system.callback.OnDBToBeanCallback;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -16,11 +16,10 @@ import android.text.TextUtils;
 
 import com.leo.commonutil.asyn.threadPool.ThreadPoolHelp;
 import com.leo.system.context.ContextHelp;
-import com.leo.system.LogUtil;
-import com.leo.system.SystemUtils;
+import com.leo.system.log.LogUtil;
+import com.leo.system.util.SystemUtils;
 
 import java.io.IOException;
-import java.security.Permission;
 import java.util.List;
 
 import static android.content.Context.LOCATION_SERVICE;

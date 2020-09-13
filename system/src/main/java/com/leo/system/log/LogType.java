@@ -1,4 +1,4 @@
-package com.leo.system.enume;
+package com.leo.system.log;
 
 import androidx.annotation.IntDef;
 

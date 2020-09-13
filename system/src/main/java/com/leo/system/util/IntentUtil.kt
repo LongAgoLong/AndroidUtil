@@ -1,4 +1,4 @@
-package com.leo.system
+package com.leo.system.util
 
 import android.app.Activity
 import android.content.ComponentName
