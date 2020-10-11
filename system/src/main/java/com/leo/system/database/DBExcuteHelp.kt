@@ -12,12 +12,11 @@ import java.util.concurrent.atomic.AtomicInteger
  * On 2019/6/13
  * Description:线程安全的数据库操作辅助类
  */
-class DBExcuteHelp(private val sqLiteOpenHelper: SQLiteOpenHelper, onDBToBeanCallback: OnDBToBeanCallback) {
+class DBExcuteHelp(private val sqLiteOpenHelper: SQLiteOpenHelper, private val onDBToBeanCallback: OnDBToBeanCallback) {
     private var sqliteDb: SQLiteDatabase? = null
 
     // 计数器-完美解决 打开/关闭 数据库连接
     private val mOpenCounter = AtomicInteger()
-    private val onDBToBeanCallback: OnDBToBeanCallback?
 
     /**
      * 打开数据库操作
@@ -126,9 +125,8 @@ class DBExcuteHelp(private val sqLiteOpenHelper: SQLiteOpenHelper, onDBToBeanCal
         val list: MutableList<T> = ArrayList()
         val cursor = query(tableName, selection, *selectionArgs)
         while (cursor.moveToNext()) {
-            if (null != onDBToBeanCallback) {
-                val t = onDBToBeanCallback.onTrans(cursor, cls)
-                list.add(t)
+            onDBToBeanCallback.run {
+                list.add(onTrans(cursor, cls))
             }
         }
         cursor.close()
@@ -166,9 +164,5 @@ class DBExcuteHelp(private val sqLiteOpenHelper: SQLiteOpenHelper, onDBToBeanCal
         } else {
             insert(tableName, values)
         }
-    }
-
-    init {
-        this.onDBToBeanCallback = onDBToBeanCallback
     }
 }
