@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.leo.androidutil.R
 import com.leo.androidutil.databinding.ActivityLocationBinding
 import com.leo.androidutil.viewmodels.LocationModel
-import com.leo.commonutil.calendar.DatePresetFormat
 import com.leo.commonutil.calendar.DatePresetFormat.DATA_YMDHMS
 import com.leo.commonutil.calendar.DateUtil
 import com.leo.commonutil.enume.UnitTime
@@ -31,7 +31,8 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_location)
-        mModel = ViewModelProviders.of(this).get(LocationModel::class.java)
+//        mModel = ViewModelProviders.of(this).get(LocationModel::class.java)
+        mModel = ViewModelProvider(this).get(LocationModel::class.java)
         initView()
         initData()
     }
@@ -56,9 +57,10 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
 
     private fun initData() {
         mModel.mUpdateTime.observe(this, Observer {
+            LogUtil.d(TAG, "数据变化回调:${it}")
             val locationUtil = SystemLocationUtil.getInstance()
             val addressBean = locationUtil.addressBean ?: return@Observer
-            mBinding.resultTv?.run {
+            mBinding.resultTv.run {
                 text = it
                 append("\n")
                 append(locationUtil.getAddressStr(addressBean))
@@ -82,6 +84,7 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
         Manifest.permission.ACCESS_COARSE_LOCATION],
             requestCode = 1001)
     fun location() {
+        LogUtil.e(TAG, "授权成功")
         val bestProvider = SystemLocationUtil.getInstance().bestProvider
         SystemLocationUtil.getInstance().start(bestProvider,
                 10000, this)
