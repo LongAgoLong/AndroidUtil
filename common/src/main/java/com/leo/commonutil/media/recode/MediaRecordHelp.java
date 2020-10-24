@@ -5,8 +5,9 @@ import android.os.Environment;
 
 import androidx.annotation.NonNull;
 
-import com.leo.commonutil.calendar.DateUtil;
 import com.leo.commonutil.asyn.WeakHandler;
+import com.leo.commonutil.calendar.DatePresetFormat;
+import com.leo.commonutil.calendar.DateUtil;
 import com.leo.commonutil.enume.UnitTime;
 import com.leo.system.log.LogUtil;
 
@@ -75,7 +76,7 @@ public class MediaRecordHelp {
 //            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 
-            String time = DateUtil.format(UnitTime.MILLIONSECOND, System.currentTimeMillis(), DateUtil.DATA_YMDHM2);
+            String time = DateUtil.format(UnitTime.MILLIONSECOND, System.currentTimeMillis(), DatePresetFormat.DATA_YMDHM2);
             filePath = FolderPath + time + ".amr";
             mMediaRecorder.setOutputFile(filePath);
             /*

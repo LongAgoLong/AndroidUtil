@@ -1,6 +1,7 @@
 package com.leo.androidutil.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
@@ -8,12 +9,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.leo.androidutil.R
 import com.leo.androidutil.databinding.ActivityLocationBinding
-import com.leo.androidutil.util.RxPermissionsHelp
 import com.leo.androidutil.viewmodels.LocationModel
+import com.leo.commonutil.calendar.DatePresetFormat
+import com.leo.commonutil.calendar.DatePresetFormat.DATA_YMDHMS
 import com.leo.commonutil.calendar.DateUtil
 import com.leo.commonutil.enume.UnitTime
 import com.leo.commonutil.location.OnLocationCallback
 import com.leo.commonutil.location.SystemLocationUtil
+import com.leo.lib_permission.annotations.PermissionApply
+import com.leo.lib_permission.annotations.PermissionRefused
+import com.leo.lib_permission.annotations.PermissionRefusedForever
 import com.leo.system.log.LogUtil
 
 /**
@@ -31,6 +36,7 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
         initData()
     }
 
+    @SuppressLint("MissingPermission")
     override fun onPause() {
         super.onPause()
         SystemLocationUtil.getInstance().stop()
@@ -44,8 +50,8 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
     }
 
     private fun initView() {
-        mBinding.permissionBtn?.setOnClickListener(this)
-        mBinding.stopBtn?.setOnClickListener(this)
+        mBinding.permissionBtn.setOnClickListener(this)
+        mBinding.stopBtn.setOnClickListener(this)
     }
 
     private fun initData() {
@@ -71,18 +77,24 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
         })
     }
 
-    private fun location() {
-        val rxPermissions = RxPermissionsHelp.newInstance(this)
-        rxPermissions.request(Manifest.permission.ACCESS_FINE_LOCATION)
-                .subscribe({ aBoolean ->
-                    if (aBoolean!!) {
-                        val bestProvider = SystemLocationUtil.getInstance().bestProvider
-                        SystemLocationUtil.getInstance().start(bestProvider,
-                                10000, this)
-                    } else {
-                        LogUtil.e(TAG, "lack of permission")
-                    }
-                }, { throwable -> LogUtil.e(TAG, throwable.toString()) })
+    @SuppressLint("MissingPermission")
+    @PermissionApply(permissions = [Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION],
+            requestCode = 1001)
+    fun location() {
+        val bestProvider = SystemLocationUtil.getInstance().bestProvider
+        SystemLocationUtil.getInstance().start(bestProvider,
+                10000, this)
+    }
+
+    @PermissionRefused(requestCode = 1001)
+    fun onPermissionRefused(s: Array<String?>) {
+        LogUtil.e(TAG, "lack of permission")
+    }
+
+    @PermissionRefusedForever(requestCode = 1001)
+    fun onPermissionRefusedForever(s: Array<String?>) {
+        LogUtil.e(TAG, "lack of permission")
     }
 
     override fun onLocationChanged() {
@@ -91,10 +103,11 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
     override fun onLocationReverGeoResult() {
         val locationUtil = SystemLocationUtil.getInstance()
         locationUtil.addressBean ?: return
-        val timeFormat = DateUtil.format(UnitTime.MILLIONSECOND, System.currentTimeMillis(), DateUtil.DATA_YMDHMS)
+        val timeFormat = DateUtil.format(UnitTime.MILLIONSECOND, System.currentTimeMillis(), DATA_YMDHMS)
         mModel.mUpdateTime.postValue(timeFormat)
     }
 
+    @SuppressLint("MissingPermission")
     override fun onClick(v: View) {
         when (v.id) {
             R.id.permissionBtn -> location()

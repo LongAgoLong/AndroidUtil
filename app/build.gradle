@@ -12,7 +12,7 @@ android {
     }
     defaultConfig {
         applicationId "com.leo.androidutil"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -48,12 +48,6 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$rootProject.xjunit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.xespresso_core_version"
 //    implementation 'com.github.LongAgoLong:AndroidUtil:1.1'
-    /*RxJava*/
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.17'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.2'
-    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.2'
-    implementation "com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar"
 
     implementation "com.github.bumptech.glide:glide:4.8.0"
     annotationProcessor "com.github.bumptech.glide:compiler:4.8.0"
@@ -73,6 +67,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$rootProject.xlifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.xlifecycleVersion"
     implementation project(path: ':recyclerview-help')
+    implementation "com.github.LongAgoLong:PermissionAnnotations:1.0.2"
 }
 repositories {
     mavenCentral()

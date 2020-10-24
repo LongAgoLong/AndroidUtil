@@ -2,10 +2,10 @@ package com.leo.androidutil.ui
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.leo.commonutil.app.AppStackManager
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 
-open class BaseActivity : RxAppCompatActivity() {
+open class BaseActivity : AppCompatActivity() {
     val TAG = BaseActivity::class.java.simpleName
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
