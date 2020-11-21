@@ -29,8 +29,9 @@ import androidx.annotation.ColorRes
 import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
-import com.leo.system.callback.OnETClearFocusCallback
-import com.leo.system.context.ContextHelp.context
+import com.leo.system.callback.IETClearFocus
+import com.leo.system.context.ContextHelper
+import com.leo.system.context.ContextHelper.context
 import com.leo.system.util.WindowUtils.getAppHeight
 import com.leo.system.util.WindowUtils.getScreenHeight
 import com.leo.system.util.WindowUtils.getStatusBarHeight
@@ -121,12 +122,12 @@ object SystemUtils {
 
     @SuppressLint("ClickableViewAccessibility")
     fun setCanceledOnTouchOutsideET(context: Context, view: View,
-                                    onETClearFocusCallback: OnETClearFocusCallback?) {
+                                    iETClearFocus: IETClearFocus?) {
         //Set up touch listener for non-text box views to hide keyboard.
         if (view !is EditText) {
             view.setOnTouchListener { v: View?, event: MotionEvent? ->
                 hideSoftKeyboard(context as Activity)
-                onETClearFocusCallback?.editTextClearFocusListener()
+                iETClearFocus?.onClearFocus()
                 false
             }
         }
@@ -135,7 +136,7 @@ object SystemUtils {
         if (view is ViewGroup) {
             for (i in 0 until view.childCount) {
                 val innerView = view.getChildAt(i)
-                setCanceledOnTouchOutsideET(context, innerView, onETClearFocusCallback)
+                setCanceledOnTouchOutsideET(context, innerView, iETClearFocus)
             }
         }
     }
@@ -229,19 +230,14 @@ object SystemUtils {
      * @param activity
      * @param color
      */
-    fun setStatuBarColorRes(activity: Activity?, @ColorRes color: Int) {
+    fun setStatusBarColorRes(activity: Activity?, @ColorRes color: Int) {
         if (null == activity) {
             return
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window = activity.window
-            if (null != window) {
-                window.statusBarColor = activity.resources.getColor(color)
-            }
-        }
+        setStatusBarColor(activity, activity.resources.getColor(color))
     }
 
-    fun setStatuBarColor(activity: Activity?, @ColorInt color: Int) {
+    fun setStatusBarColor(activity: Activity?, @ColorInt color: Int) {
         if (null == activity) {
             return
         }
@@ -288,15 +284,17 @@ object SystemUtils {
      * @param permissions 权限数组
      * @return 返回检查结果
      */
-    @JvmStatic
-    fun checkPermissions(context: Context?, vararg permissions: String?): Boolean {
-        if (null == permissions || permissions.size == 0) {
+    @JvmOverloads
+    fun checkPermissions(context: Context = ContextHelper.context, vararg permissions: String?): Boolean {
+        if (permissions.isEmpty()) {
             return true
         }
         var isGranted = true
-        for (permission in permissions) {
-            isGranted = ActivityCompat.checkSelfPermission(context!!, permission!!) == PackageManager.PERMISSION_GRANTED
-            if (!isGranted) break
+        permissions.forEach {
+            isGranted = ActivityCompat.checkSelfPermission(context, it!!) == PackageManager.PERMISSION_GRANTED
+            if (!isGranted) {
+                return@forEach
+            }
         }
         return isGranted
     }
@@ -305,7 +303,7 @@ object SystemUtils {
 
     //这里设置的时间间隔是2s-判断是否频繁点击
     val isFastClick: Boolean
-        get() =//这里设置的时间间隔是2s-判断是否频繁点击
+        get() = // 这里设置的时间间隔是2s-判断是否频繁点击
             isFastClick(1000)
 
     /**
@@ -315,7 +313,7 @@ object SystemUtils {
     fun isFastClick(intervalTime: Int): Boolean { //判断是否频繁点击
         val time = System.currentTimeMillis()
         val timeD = time - lastClickTime
-        if (0 < timeD && timeD < intervalTime) {
+        if (timeD in 1 until intervalTime) { // [,)
             return true
         }
         lastClickTime = time
@@ -328,20 +326,27 @@ object SystemUtils {
      * @param context
      * @return
      */
-    fun isMainProcess(context: Context): Boolean {
+    @JvmOverloads
+    fun isMainProcess(context: Context = ContextHelper.context): Boolean {
         val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        if (null != am) {
-            val processInfos = am.runningAppProcesses
-            val mainProcessName = context.packageName
-            val myPid = Process.myPid()
-            for (info in processInfos) {
-                if (info.pid == myPid && mainProcessName == info.processName) {
-                    return true
-                }
+        val processInfos = am.runningAppProcesses
+        val mainProcessName = context.packageName
+        val myPid = Process.myPid()
+        processInfos.forEach {
+            if (it.pid == myPid && mainProcessName == it.processName) {
+                return true
             }
         }
         return false
     }
+
+    /**
+     * 是否主线程
+     *
+     * @return
+     */
+    val isMainThread: Boolean
+        get() = Looper.getMainLooper().thread === Thread.currentThread()
 
     /**
      * 获取系统基带
@@ -354,10 +359,11 @@ object SystemUtils {
             try {
                 val cl = Class.forName("android.os.SystemProperties")
                 val invoker = cl.newInstance()
-                val m = cl.getMethod("get", *arrayOf<Class<*>>(String::class.java, String::class.java))
-                val result = m.invoke(invoker, *arrayOf<Any>("gsm.version.baseband", ""))
+                val m = cl.getMethod("get", String::class.java, String::class.java)
+                val result = m.invoke(invoker, "gsm.version.baseband", "")
                 return result as String
             } catch (e: Exception) {
+                e.printStackTrace()
             }
             return ""
         }
@@ -406,14 +412,6 @@ object SystemUtils {
     }
 
     /**
-     * 是否主线程
-     *
-     * @return
-     */
-    val isMainThread: Boolean
-        get() = Looper.getMainLooper().thread === Thread.currentThread()
-
-    /**
      * 获取服务是否开启
      */
     fun isServiceRunning(context: Context, className: String): Boolean {
@@ -442,7 +440,7 @@ object SystemUtils {
     fun isAppBackground(context: Context): Boolean {
         val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val tasks = am.getRunningTasks(1)
-        if (!tasks.isEmpty()) {
+        if (tasks.isNotEmpty()) {
             val topActivity = tasks[0].topActivity
             if (null != topActivity
                     && topActivity.packageName != context.packageName) {
@@ -487,7 +485,7 @@ object SystemUtils {
 
     @SuppressLint("InvalidWakeLockTag", "HardwareIds")
     @RequiresPermission(Manifest.permission.READ_PHONE_STATE)
-    fun getUDID(context: Context): String? {
+    fun getUUID(context: Context): String? {
         if (uuid == null) {
             synchronized(PREFS_FILE) {
                 if (uuid == null) {

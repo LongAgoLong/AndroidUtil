@@ -1,16 +1,16 @@
 package com.leo.commonutil.media.mp3;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.media.MediaPlayer;
+import android.os.Looper;
 
+import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 
 import com.leo.commonutil.asyn.WeakHandler;
 import com.leo.commonutil.media.msg.AudioMsgPlayer;
 import com.leo.commonutil.media.util.MediaUtils;
 import com.leo.commonutil.media.util.TimeMode;
-import com.leo.system.audiofocus.AudioFocusHelp;
+import com.leo.system.audiofocus.AudioFocusHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,25 +20,12 @@ import java.util.List;
  * on 2018/12/24
  */
 public class Mp3Player {
-    public static final int PLAY = 1;
-    public static final int PAUSE = 2;
-    public static final int STOP = 3;
-
-    private static WeakHandler handler = new WeakHandler();
-    private int playState;
-
     private static Mp3Player player;
+    private static final WeakHandler mHandler = new WeakHandler(Looper.getMainLooper());
+    private final Mp3PlayerParams params = new Mp3PlayerParams();
+    private final List<IMP3PlayListener> imp3PlayListeners = new ArrayList<>();
+
     private MediaPlayer mediaPlayer;
-    private Params params;
-
-    private List<OnMP3PlayListener> onMP3PlayListenerList;
-    private int mediaDuration;
-    private int bufferPercent;
-    private String mediaDurationFormat;
-
-    private final int notification_id = 19172501;
-    private Notification notification;
-    private NotificationManager notificationManager;
 
     private Mp3Player() {
         initMp3Player();
@@ -56,26 +43,15 @@ public class Mp3Player {
     }
 
     private void initMp3Player() {
-        if (null == mediaPlayer) {
-            mediaPlayer = new MediaPlayer();
-            initPlayerListener();
-        }
-        if (null == params) {
-            params = new Params();
-        }
-        if (null == onMP3PlayListenerList) {
-            onMP3PlayListenerList = new ArrayList<>();
-        }
-    }
-
-    private void initPlayerListener() {
+        mediaPlayer = null;
+        mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnCompletionListener(mp -> reset());
         mediaPlayer.setOnErrorListener((mp, what, extra) -> {
             reset();
             return true;
         });
-        mediaPlayer.setOnPreparedListener(mp -> play());
-        mediaPlayer.setOnBufferingUpdateListener((mp, percent) -> bufferPercent = percent);
+        mediaPlayer.setOnPreparedListener(mp -> toggle(Mp3PlayState.PLAY));
+        mediaPlayer.setOnBufferingUpdateListener((mp, percent) -> params.setBufferPercent(percent));
     }
 
     /**
@@ -89,12 +65,9 @@ public class Mp3Player {
         }
     }
 
-    public List<OnMP3PlayListener> getOnMP3PlayListenerList() {
-        return onMP3PlayListenerList;
-    }
-
+    @Mp3PlayState
     public int getPlayState() {
-        return playState;
+        return params.getPlayState();
     }
 
     /**
@@ -115,37 +88,27 @@ public class Mp3Player {
         return mediaPlayer;
     }
 
-    private static class Params {
-        public int position = 0;
-        // 记录暂停播放时的系统时间
-        public long pauseTimeMill = 0L;
-    }
-
-    public void addPlayListener(OnMP3PlayListener onMP3PlayListener) {
-        if (null == onMP3PlayListener) {
+    public void addPlayListener(IMP3PlayListener iMP3PlayListener) {
+        if (null == iMP3PlayListener) {
             return;
         }
-        if (null != onMP3PlayListenerList) {
-            onMP3PlayListenerList.add(onMP3PlayListener);
-        }
+        imp3PlayListeners.add(iMP3PlayListener);
     }
 
-    public void removePlayListener(OnMP3PlayListener onMP3PlayListener) {
-        if (null == onMP3PlayListener) {
+    public void removePlayListener(IMP3PlayListener iMP3PlayListener) {
+        if (null == iMP3PlayListener) {
             return;
         }
-        if (null != onMP3PlayListenerList) {
-            onMP3PlayListenerList.remove(onMP3PlayListener);
-        }
+        imp3PlayListeners.remove(iMP3PlayListener);
     }
 
     public void removeAllPlayListener() {
-        if (null != onMP3PlayListenerList
-                && !onMP3PlayListenerList.isEmpty()) {
-            for (OnMP3PlayListener mp3PlayListener : onMP3PlayListenerList) {
-                mp3PlayListener.onMP3Stop();
+        if (null != imp3PlayListeners
+                && !imp3PlayListeners.isEmpty()) {
+            for (IMP3PlayListener mp3PlayListener : imp3PlayListeners) {
+                mp3PlayListener.onStop();
             }
-            onMP3PlayListenerList.clear();
+            imp3PlayListeners.clear();
         }
     }
 
@@ -154,7 +117,7 @@ public class Mp3Player {
      *
      * @param url
      */
-    public void startPlay(@NonNull String url) {
+    public void start(@NonNull String url) {
         try {
             MediaPlayer mediaMsgPlayer = AudioMsgPlayer.getInstance().getMediaPlayer();
             if (null != mediaMsgPlayer) {
@@ -164,10 +127,8 @@ public class Mp3Player {
             e.printStackTrace();
         }
         try {
-            stop();
-            mediaPlayer = null;
-            mediaPlayer = new MediaPlayer();
-            initPlayerListener();
+            toggle(Mp3PlayState.STOP);
+            initMp3Player();
             mediaPlayer.reset();
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepareAsync();
@@ -179,69 +140,59 @@ public class Mp3Player {
         }
     }
 
-    /**
-     * 播放
-     */
-    public void play() {
-        if (this.mediaPlayer != null) {
-            AudioFocusHelp.Companion.getInstance().requestAudioFocus();
-            this.mediaPlayer.seekTo(params.position);
-            this.mediaPlayer.start();
-            mediaDuration = Integer.parseInt(MediaUtils.timeFormat(this.mediaPlayer.getDuration(),
-                    TimeMode.MODE_SECOND));
-            mediaDurationFormat = MediaUtils.timeFormat(this.mediaPlayer.getDuration(), TimeMode.MODE_FORMAT);
-            if (null != onMP3PlayListenerList && !onMP3PlayListenerList.isEmpty()) {
-                for (OnMP3PlayListener mp3PlayListener : onMP3PlayListenerList) {
-                    mp3PlayListener.onMP3Play(mediaDuration, mediaDurationFormat);
+    public void toggle(@Mp3PlayState int state) {
+        switch (state) {
+            case Mp3PlayState.PLAY: {
+                if (this.mediaPlayer != null) {
+                    AudioFocusHelper.Companion.getInstance().requestAudioFocus();
+                    this.mediaPlayer.seekTo(params.getPosition());
+                    this.mediaPlayer.start();
+                    params.setDuration(this.mediaPlayer.getDuration());
+                    if (null != imp3PlayListeners && !imp3PlayListeners.isEmpty()) {
+                        for (IMP3PlayListener mp3PlayListener : imp3PlayListeners) {
+                            mp3PlayListener.onPlay(params.getDuration() / 1000, params.getDurationFormat());
+                        }
+                    }
+                    params.setPlayState(Mp3PlayState.PLAY);
+                    update();
                 }
+                break;
             }
-            playState = PLAY;
-            update();
-        }
-    }
-
-    /**
-     * 暂停
-     */
-    public void pause() {
-        if (mediaPlayer != null) {
-            AudioFocusHelp.Companion.getInstance().abandonAudioFocus();
-            mediaPlayer.pause();
-            params.position = mediaPlayer.getCurrentPosition();
-            params.pauseTimeMill = System.currentTimeMillis();
-            if (null != onMP3PlayListenerList && !onMP3PlayListenerList.isEmpty()) {
-                for (OnMP3PlayListener mp3PlayListener : onMP3PlayListenerList) {
-                    mp3PlayListener.onMP3Pause();
+            case Mp3PlayState.PAUSE: {
+                if (mediaPlayer != null) {
+                    AudioFocusHelper.Companion.getInstance().abandonAudioFocus();
+                    mediaPlayer.pause();
+                    params.setPosition(mediaPlayer.getCurrentPosition());
+                    for (IMP3PlayListener mp3PlayListener : imp3PlayListeners) {
+                        mp3PlayListener.onPause();
+                    }
                 }
+                params.setPlayState(Mp3PlayState.PAUSE);
+                mHandler.removeCallbacksAndMessages(null);
+                break;
             }
-        }
-        playState = PAUSE;
-        handler.removeCallbacksAndMessages(null);
-    }
-
-    /**
-     * 结束
-     */
-    public void stop() {
-        boolean isPlaying = false;
-        try {
-            if (null != mediaPlayer) {
-                isPlaying = mediaPlayer.isPlaying();
+            case Mp3PlayState.STOP: {
+                boolean isPlaying = false;
+                try {
+                    if (null != mediaPlayer) {
+                        isPlaying = mediaPlayer.isPlaying();
+                    }
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                }
+                if (mediaPlayer != null) {
+                    if (isPlaying) {
+                        mediaPlayer.stop();
+                        mediaPlayer.release();
+                    }
+                }
+                params.setPosition(0)
+                        .setPlayState(Mp3PlayState.STOP);
+                mHandler.removeCallbacksAndMessages(null);
+                break;
             }
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        }
-        if (mediaPlayer != null) {
-            if (isPlaying) {
-                mediaPlayer.stop();
-                mediaPlayer.release();
-            }
-            params.position = 0;
-        }
-        playState = STOP;
-        handler.removeCallbacksAndMessages(null);
-        if (null != notificationManager) {
-            notificationManager.cancel(notification_id);
+            default:
+                break;
         }
     }
 
@@ -249,7 +200,7 @@ public class Mp3Player {
      * 重置——停止播放并移除所有监听
      */
     public void reset() {
-        stop();
+        toggle(Mp3PlayState.STOP);
         removeAllPlayListener();
     }
 
@@ -258,28 +209,28 @@ public class Mp3Player {
      *
      * @param progress
      */
-    public void setCurrentPosition(float progress) {
-        if (null != params && progress >= 0) {
-            params.position = (int) (progress * mediaPlayer.getDuration());
-        }
+    public void setCurrentPosition(@FloatRange(from = 0.0, to = 1.0) float progress) {
+        params.setPosition((int) (progress * mediaPlayer.getDuration()));
     }
 
     /**
      * 定时更新
      */
     private void update() {
+        mHandler.removeCallbacks(this::update);
         if (mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration()) {
-            int second = Integer.parseInt(MediaUtils
+            int currentPosition = Integer.parseInt(MediaUtils
                     .timeFormat(mediaPlayer.getCurrentPosition(), TimeMode.MODE_SECOND));
-            int mediaRemainSecond = (mediaDuration - second) * 1000;//剩余时间（毫秒）
+            int mediaRemainSecond = (params.getDuration() / 1000 - currentPosition) * 1000;//剩余时间（毫秒）
             String mediaRemainFormat = MediaUtils.timeFormat(mediaRemainSecond, TimeMode.MODE_FORMAT);
-            if (null != onMP3PlayListenerList && !onMP3PlayListenerList.isEmpty()) {
-                for (OnMP3PlayListener mp3PlayListener : onMP3PlayListenerList) {
-                    mp3PlayListener.onMP3Update(mediaDuration, mediaDurationFormat, second,
-                            mediaRemainFormat, bufferPercent);
-                }
+            for (IMP3PlayListener mp3PlayListener : imp3PlayListeners) {
+                mp3PlayListener.onInfoUpdate(params.getDuration() / 1000,
+                        params.getDurationFormat(),
+                        currentPosition,
+                        mediaRemainFormat,
+                        params.getBufferPercent());
             }
-            handler.postDelayed(this::update, 1000);
+            mHandler.postDelayed(this::update, 1000);
         }
     }
 }

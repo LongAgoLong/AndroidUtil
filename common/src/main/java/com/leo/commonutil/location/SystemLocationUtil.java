@@ -15,7 +15,7 @@ import androidx.annotation.RequiresPermission;
 import android.text.TextUtils;
 
 import com.leo.commonutil.asyn.threadPool.ThreadPoolHelp;
-import com.leo.system.context.ContextHelp;
+import com.leo.system.context.ContextHelper;
 import com.leo.system.log.LogUtil;
 import com.leo.system.util.SystemUtils;
 
@@ -51,7 +51,7 @@ public class SystemLocationUtil implements LocationListener {
 
     public String getBestProvider() {
         LocationManager locationManager =
-                (LocationManager) ContextHelp.INSTANCE.getContext().getSystemService(LOCATION_SERVICE);
+                (LocationManager) ContextHelper.INSTANCE.getContext().getSystemService(LOCATION_SERVICE);
         if (null == locationManager) {
             LogUtil.INSTANCE.e(TAG, "LocationManager is null");
             return null;
@@ -76,7 +76,7 @@ public class SystemLocationUtil implements LocationListener {
      */
     @RequiresPermission(allOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     public void start(String provider, long minMillisecond, @Nullable OnLocationCallback onLocationCallback) {
-        Context context = ContextHelp.INSTANCE.getContext();
+        Context context = ContextHelper.INSTANCE.getContext();
         if (null == context) {
             return;
         }
@@ -108,7 +108,7 @@ public class SystemLocationUtil implements LocationListener {
     @RequiresPermission(allOf = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     public void stop() {
         mOnLocationCallback = null;
-        Context context = ContextHelp.INSTANCE.getContext();
+        Context context = ContextHelper.INSTANCE.getContext();
         if (null == context) {
             return;
         }
@@ -188,7 +188,7 @@ public class SystemLocationUtil implements LocationListener {
      */
     private void reverGeo(double latitude, double longitude) {
         ThreadPoolHelp.execute(() -> {
-            Context context = ContextHelp.INSTANCE.getContext();
+            Context context = ContextHelper.INSTANCE.getContext();
             if (null == context) {
                 return;
             }

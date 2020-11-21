@@ -3,7 +3,7 @@ package com.leo.commonutil.storage
 import android.os.Build
 import android.os.Environment
 import android.os.StatFs
-import com.leo.system.context.ContextHelp
+import com.leo.system.context.ContextHelper
 import java.io.File
 
 object SDcardUtil {
@@ -32,7 +32,7 @@ object SDcardUtil {
      * android Q 之后会强制使用分区存储
      */
     val fileFolder: File?
-        get() = ContextHelp.context.getExternalFilesDir("")
+        get() = ContextHelper.context.getExternalFilesDir("")
 
     /**
      * 应用分区存储专有目录-会随着应用卸载而删除
@@ -40,7 +40,7 @@ object SDcardUtil {
      * android Q 之后会强制使用分区存储
      */
     val picFileFolder: File?
-        get() = ContextHelp.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        get() = ContextHelper.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
     /**
      * SD卡剩余存储空间

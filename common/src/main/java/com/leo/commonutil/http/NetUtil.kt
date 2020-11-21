@@ -6,7 +6,7 @@ import android.net.ConnectivityManager
 import android.telephony.TelephonyManager
 import androidx.annotation.RequiresPermission
 import com.leo.commonutil.enume.NetType
-import com.leo.system.context.ContextHelp.context
+import com.leo.system.context.ContextHelper.context
 import com.leo.system.log.LogUtil.i
 import java.io.IOException
 import java.net.InetSocketAddress

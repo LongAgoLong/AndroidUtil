@@ -13,6 +13,8 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * 分组ItemDecoration
  * Created by LEO
@@ -29,7 +31,8 @@ public class GroupItemDecoration extends RecyclerView.ItemDecoration {
     private boolean shouldOver;
 
     public GroupItemDecoration(Context context, int topGapDp, int paddingStartDp, int textSizeDp,
-                               @ColorRes int textColor, @ColorRes int bgColor, boolean shouldOver, @NonNull DecorationCallback decorationCallback) {
+                               @ColorRes int textColor, @ColorRes int bgColor, boolean shouldOver,
+                               @NonNull DecorationCallback decorationCallback) {
         Resources res = context.getResources();
         this.callback = decorationCallback;
         //设置悬浮栏的画笔---paint
@@ -49,12 +52,13 @@ public class GroupItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(@NotNull Rect outRect, @NotNull View view, @NotNull RecyclerView parent,
+                               @NotNull RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
         int pos = parent.getChildAdapterPosition(view);
         String groupId = callback.getGroupId(pos);
         if (TextUtils.isEmpty(groupId)) return;
-        //只有是同一组的第一个才显示悬浮栏
+        // 只有是同一组的第一个才显示悬浮栏
         if (pos == 0 || isFirstInGroup(pos)) {
             outRect.top = topGap;
         } else {
@@ -63,7 +67,7 @@ public class GroupItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+    public void onDraw(@NotNull Canvas c, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
         super.onDraw(c, parent, state);
         int left = parent.getPaddingLeft();
         int right = parent.getWidth() - parent.getPaddingRight();
@@ -83,9 +87,9 @@ public class GroupItemDecoration extends RecyclerView.ItemDecoration {
                 if (position == 0 || isFirstInGroup(position)) {
                     float top = view.getTop() - topGap;
                     float bottom = view.getTop();
-                    //绘制悬浮栏
+                    // 绘制悬浮栏
                     c.drawRect(left, top - topGap, right, bottom, paint);
-                    //绘制文本
+                    // 绘制文本
                     Paint.FontMetricsInt fontMetrics = textPaint.getFontMetricsInt();
                     int baseline = (int) ((bottom + top - fontMetrics.bottom - fontMetrics.top) / 2);
                     c.drawText(textLine, left + paddingStartDp, baseline, textPaint);
@@ -95,7 +99,7 @@ public class GroupItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+    public void onDrawOver(@NotNull Canvas c, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
         super.onDrawOver(c, parent, state);
         if (!shouldOver)
             return;
@@ -104,7 +108,7 @@ public class GroupItemDecoration extends RecyclerView.ItemDecoration {
         int left = parent.getPaddingLeft();
         int right = parent.getWidth() - parent.getPaddingRight();
 
-        String preGroupId = "";
+        String preGroupId;
         String groupId = "-1";
         for (int i = 0; i < childCount; i++) {
             View view = parent.getChildAt(i);
@@ -119,7 +123,7 @@ public class GroupItemDecoration extends RecyclerView.ItemDecoration {
 
             int viewBottom = view.getBottom();
             float textY = Math.max(topGap, view.getTop());
-            //下一个和当前不一样移动当前
+            // 下一个和当前不一样移动当前
             if (position + 1 < itemCount) {
                 String nextGroupId = callback.getGroupId(position + 1);
                 //组内最后一个view进入了header
@@ -127,7 +131,7 @@ public class GroupItemDecoration extends RecyclerView.ItemDecoration {
                     textY = viewBottom;
                 }
             }
-            //textY - topGap决定了悬浮栏绘制的高度和位置
+            // textY - topGap决定了悬浮栏绘制的高度和位置
             float top = textY - topGap;
             float bottom = textY;
             c.drawRect(left, textY - topGap, right, textY, paint);
@@ -145,6 +149,9 @@ public class GroupItemDecoration extends RecyclerView.ItemDecoration {
         if (pos == 0) {
             return true;
         } else {
+            if (null == callback) {
+                throw new RuntimeException("DecorationCallback can't be null");
+            }
             // 因为是根据 字符串内容的相同与否 来判断是不是同意组的，所以此处的标记id 要是String类型
             // 如果你只是做联系人列表，悬浮框里显示的只是一个字母，则标记id直接用 int 类型就行了
             String prevGroupId = callback.getGroupId(pos - 1);
@@ -154,7 +161,7 @@ public class GroupItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    //定义一个接口方便外界的调用
+    // 定义一个接口方便外界的调用
     public interface DecorationCallback {
         String getGroupId(int position);
 

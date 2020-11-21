@@ -1,7 +1,7 @@
 package com.leo.recyclerview_help.manager;
 
-public interface IScrollEnable {
+public interface IScrollEnabled {
     void setScrollEnable(boolean enable);
 
-    boolean getScrollEnable();
+    boolean isScrollEnabled();
 }

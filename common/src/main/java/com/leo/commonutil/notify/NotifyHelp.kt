@@ -7,7 +7,7 @@ import android.media.MediaPlayer
 import android.os.Vibrator
 import androidx.annotation.RawRes
 import androidx.annotation.RequiresPermission
-import com.leo.system.context.ContextHelp
+import com.leo.system.context.ContextHelper
 import com.leo.system.log.LogUtil
 import java.io.IOException
 
@@ -25,7 +25,7 @@ object NotifyHelp {
      */
     @RequiresPermission(android.Manifest.permission.VIBRATE)
     fun vibrate(milliseconds: Long) {
-        val vibrator = ContextHelp.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = ContextHelper.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         vibrator.vibrate(milliseconds)
     }
 
@@ -36,13 +36,13 @@ object NotifyHelp {
     @RequiresPermission(android.Manifest.permission.VIBRATE)
     @JvmOverloads
     fun vibrate(pattern: LongArray, isRepeat: Boolean = false) {
-        val vibrator = ContextHelp.context.getSystemService(Service.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = ContextHelper.context.getSystemService(Service.VIBRATOR_SERVICE) as Vibrator
         vibrator.vibrate(pattern, if (isRepeat) 1 else -1)
     }
 
     @JvmOverloads
     fun playBee(@RawRes mediaId: Int, listener: OnCompleteListener? = null) {
-        val audioService = ContextHelp.context
+        val audioService = ContextHelper.context
                 .getSystemService(Context.AUDIO_SERVICE) as AudioManager ?: return
         // 检查当前是否是静音模式
         if (audioService.ringerMode != AudioManager.RINGER_MODE_NORMAL) {
@@ -53,7 +53,7 @@ object NotifyHelp {
         mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
         mediaPlayer.setOnCompletionListener { player -> player.seekTo(0) }
 
-        val file = ContextHelp.context.resources.openRawResourceFd(mediaId)
+        val file = ContextHelper.context.resources.openRawResourceFd(mediaId)
         try {
             mediaPlayer.setDataSource(file.fileDescriptor, file.startOffset, file.length)
             file.close()

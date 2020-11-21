@@ -1,7 +1,7 @@
 package com.leo.system.util
 
 import android.content.pm.PackageManager
-import com.leo.system.context.ContextHelp
+import com.leo.system.context.ContextHelper
 
 /**
  * 获取清单文件中meta值工具类
@@ -16,8 +16,8 @@ object MetaHelp {
     fun getMetaValue(metaKey: String): String? {
         var metaValue: String? = null
         try {
-            val appInfo = ContextHelp.context.packageManager.getApplicationInfo(
-                    ContextHelp.context.packageName, PackageManager.GET_META_DATA)
+            val appInfo = ContextHelper.context.packageManager.getApplicationInfo(
+                    ContextHelper.context.packageName, PackageManager.GET_META_DATA)
             metaValue = appInfo.metaData.getString(metaKey)
         } catch (e: Exception) {
             e.printStackTrace()

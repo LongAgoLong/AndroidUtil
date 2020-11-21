@@ -11,7 +11,7 @@ import android.os.Build
 import android.text.TextUtils
 
 import com.leo.commonutil.enume.PkgName
-import com.leo.system.context.ContextHelp
+import com.leo.system.context.ContextHelper
 
 /**
  * Create by LEO
@@ -27,7 +27,7 @@ object AppInfoUtil {
      */
     val appName: String
         get() {
-            val context = ContextHelp.context
+            val context = ContextHelper.context
             val pm = context.packageManager
             return context.applicationInfo.loadLabel(pm).toString()
         }
@@ -39,7 +39,7 @@ object AppInfoUtil {
      */
     val appVersionName: String
         get() {
-            val context = ContextHelp.context
+            val context = ContextHelper.context
             var versionName = "0"
             try {
                 val packageManager = context.packageManager
@@ -65,7 +65,7 @@ object AppInfoUtil {
      */
     val packageInfo: PackageInfo?
         get() {
-            val context = ContextHelp.context
+            val context = ContextHelper.context
             var info: PackageInfo? = null
             try {
                 info = context.packageManager.getPackageInfo(context.packageName, 0)
@@ -112,7 +112,7 @@ object AppInfoUtil {
             return false
         }
         return try {
-            ContextHelp.context.packageManager
+            ContextHelper.context.packageManager
                     .getApplicationInfo(packageName, PackageManager.GET_UNINSTALLED_PACKAGES)
             true
         } catch (e: PackageManager.NameNotFoundException) {

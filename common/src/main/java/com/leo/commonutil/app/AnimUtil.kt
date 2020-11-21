@@ -11,7 +11,7 @@ import androidx.annotation.AnimRes
 import com.leo.commonutil.R
 import com.leo.commonutil.callback.AnimationListenerAdapter
 import com.leo.commonutil.callback.OnAnimEndCallback
-import com.leo.system.context.ContextHelp
+import com.leo.system.context.ContextHelper
 
 /**
  * Created by LEO
@@ -204,7 +204,7 @@ object AnimUtil {
             return
         }
         view.setTag(KEY_TAG, true)
-        val showAnimation = AnimationUtils.loadAnimation(ContextHelp.context, animRes)
+        val showAnimation = AnimationUtils.loadAnimation(ContextHelper.context, animRes)
         showAnimation.duration = time.toLong()
         showAnimation.setAnimationListener(object : AnimationListenerAdapter() {
             override fun onAnimationEnd(animation: Animation) {
@@ -233,7 +233,7 @@ object AnimUtil {
             return
         }
         view.setTag(KEY_TAG, false)
-        val showAnimation = AnimationUtils.loadAnimation(ContextHelp.context, animRes)
+        val showAnimation = AnimationUtils.loadAnimation(ContextHelper.context, animRes)
         showAnimation.duration = time.toLong()
         showAnimation.setAnimationListener(object : AnimationListenerAdapter() {
             override fun onAnimationStart(animation: Animation) {

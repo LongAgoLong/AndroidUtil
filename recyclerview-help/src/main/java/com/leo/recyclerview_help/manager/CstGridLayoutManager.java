@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
  * On 2019/6/8
  * Description:可设置是否滚动的GridLayoutManager
  */
-public class CstGridLayoutManager extends GridLayoutManager implements IScrollEnable {
+public class CstGridLayoutManager extends GridLayoutManager implements IScrollEnabled {
     private boolean isScrollEnable;
 
     public CstGridLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -35,7 +35,7 @@ public class CstGridLayoutManager extends GridLayoutManager implements IScrollEn
     }
 
     @Override
-    public boolean getScrollEnable() {
+    public boolean isScrollEnabled() {
         return isScrollEnable;
     }
 }

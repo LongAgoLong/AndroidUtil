@@ -4,7 +4,7 @@ import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import androidx.annotation.ArrayRes
-import com.leo.system.context.ContextHelp
+import com.leo.system.context.ContextHelper
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -19,7 +19,7 @@ object ResHelp {
      * 得到Resource对象
      */
     val resources: Resources
-        get() = ContextHelp.context.resources
+        get() = ContextHelper.context.resources
 
     /**
      * 得到String.xml中定义的字符信息

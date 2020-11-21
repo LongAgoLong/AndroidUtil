@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
  * On 2019/6/8
  * Description:可设置是否滚动的LinearLayoutManager
  */
-public class CstLinearLayoutManager extends LinearLayoutManager implements IScrollEnable {
+public class CstLinearLayoutManager extends LinearLayoutManager implements IScrollEnabled {
     private boolean isScrollEnable;
 
     public CstLinearLayoutManager(Context context) {
@@ -36,7 +36,7 @@ public class CstLinearLayoutManager extends LinearLayoutManager implements IScro
     }
 
     @Override
-    public boolean getScrollEnable() {
+    public boolean isScrollEnabled() {
         return isScrollEnable;
     }
 }

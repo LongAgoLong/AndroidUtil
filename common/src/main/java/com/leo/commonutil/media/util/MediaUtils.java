@@ -5,6 +5,14 @@ import android.media.AudioManager;
 import android.os.Build;
 
 public final class MediaUtils {
+
+    /**
+     * 时间格式转换
+     *
+     * @param millisecond
+     * @param formatType
+     * @return
+     */
     public static String timeFormat(int millisecond, @TimeMode String formatType) {
         int minute = millisecond / (1000 * 60);
         int second = millisecond % (1000 * 60) / 1000;
@@ -32,9 +40,12 @@ public final class MediaUtils {
         }
     }
 
-    /*
+    /**
      * 切换音频播放模式
-     * */
+     *
+     * @param context
+     * @param playAction
+     */
     public static void switchAudioPlayAction(Context context, @PlayAction int playAction) {
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         if (null == audioManager) {

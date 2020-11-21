@@ -1,7 +1,7 @@
 package com.leo.system.log
 
 import android.util.Log
-import com.leo.system.context.ContextHelp
+import com.leo.system.context.ContextHelper
 
 /**
  * 日志公共类
@@ -17,7 +17,7 @@ object LogUtil {
      */
     private val appName: String
         get() {
-            val context = ContextHelp.context
+            val context = ContextHelper.context
             val pm = context.packageManager
             return context.applicationInfo.loadLabel(pm).toString()
         }

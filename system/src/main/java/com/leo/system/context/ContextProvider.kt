@@ -7,7 +7,7 @@ import android.net.Uri
 
 class ContextProvider : ContentProvider() {
     override fun onCreate(): Boolean {
-        ContextHelp.context = context!!
+        ContextHelper.context = context!!
         return false
     }
 

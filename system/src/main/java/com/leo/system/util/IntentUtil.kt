@@ -41,22 +41,14 @@ object IntentUtil {
     @JvmOverloads
     fun startActivity(activity: Activity, cls: Class<*>, finishSelf: Boolean = false, bundle: Bundle? = null,
                       clearTop: Boolean = false, singleTop: Boolean = false, newTask: Boolean = false) {
-        val intent = generateIntent(activity, cls, bundle, clearTop, singleTop, newTask)
-        activity.startActivity(intent)
-        if (finishSelf) {
-            activity.finish()
-        }
+        startActivity(activity, cls, finishSelf, bundle, clearTop, singleTop, newTask)
     }
 
     @JvmOverloads
     fun startActivity(fragment: Fragment, cls: Class<*>, finishSelf: Boolean = false, bundle: Bundle? = null,
                       clearTop: Boolean = false, singleTop: Boolean = false, newTask: Boolean = false) {
         fragment.activity ?: return
-        val intent = generateIntent(fragment.activity!!, cls, bundle, clearTop, singleTop, newTask)
-        fragment.startActivity(intent)
-        if (finishSelf) {
-            fragment.activity!!.finish()
-        }
+        startActivity(fragment.activity!!, cls, finishSelf, bundle, clearTop, singleTop, newTask)
     }
 
     private fun generateIntent(context: Context, cls: Class<*>, bundle: Bundle?,

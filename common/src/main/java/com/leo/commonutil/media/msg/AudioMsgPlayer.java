@@ -4,7 +4,7 @@ import android.media.MediaPlayer;
 import androidx.annotation.NonNull;
 
 import com.leo.commonutil.media.mp3.Mp3Player;
-import com.leo.system.audiofocus.AudioFocusHelp;
+import com.leo.system.audiofocus.AudioFocusHelper;
 
 
 /**
@@ -112,7 +112,7 @@ public class AudioMsgPlayer {
     /*播放*/
     public void play() {
         if (mediaPlayer != null) {
-            AudioFocusHelp.Companion.getInstance().requestAudioFocus();
+            AudioFocusHelper.Companion.getInstance().requestAudioFocus();
             mediaPlayer.seekTo(params.position);
             mediaPlayer.start();
         }
@@ -143,7 +143,7 @@ public class AudioMsgPlayer {
      * 停止
      */
     public void reset() {
-        AudioFocusHelp.Companion.getInstance().abandonAudioFocus();
+        AudioFocusHelper.Companion.getInstance().abandonAudioFocus();
         stop();
         setPlayListener(null);
     }

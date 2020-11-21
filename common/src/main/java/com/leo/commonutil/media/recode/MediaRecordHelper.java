@@ -1,7 +1,6 @@
 package com.leo.commonutil.media.recode;
 
 import android.media.MediaRecorder;
-import android.os.Environment;
 
 import androidx.annotation.NonNull;
 
@@ -19,34 +18,24 @@ import java.io.IOException;
  * on 2017/5/11.
  * 录音封装类
  */
-public class MediaRecordHelp {
-    //文件路径
+public class MediaRecordHelper {
+    // 文件路径
     private String filePath;
-    //文件夹路径
+    // 文件夹路径
     private String FolderPath;
+    private long startTime;
+    private long endTime;
 
     private MediaRecorder mMediaRecorder;
     private static final String TAG = "Audio";
     private static int MAX_LENGTH = 1000 * 60 * 10;// 最大录音时长1000*60*10;
 
-    private OnMediaRecordListener onMediaRecordListener;
+    private IMediaRecordListener iMediaRecordListener;
     private long fileTime;
     private static final int BASE = 1;
-    private static final int SPACE = 500;// 间隔取样时间
+    private static final int SPACE = 500; // 间隔取样时间
 
-    /**
-     * 文件存储默认sdcard/record
-     */
-    public MediaRecordHelp() {
-        //默认保存路径为/sdcard/record/下
-        this(Environment.getExternalStorageDirectory() + "/record/");
-    }
-
-    public MediaRecordHelp(@NonNull String filePath) {
-        this(filePath, 600);
-    }
-
-    public MediaRecordHelp(@NonNull String filePath, int timeSecond) {
+    public MediaRecordHelper(@NonNull String filePath, int timeSecond) {
         MAX_LENGTH = timeSecond * 1000;
         File path = new File(filePath);
         if (!path.exists()) {
@@ -54,10 +43,6 @@ public class MediaRecordHelp {
         }
         this.FolderPath = filePath;
     }
-
-    private long startTime;
-    private long endTime;
-
 
     /**
      * 开始录音 使用amr格式
@@ -76,7 +61,9 @@ public class MediaRecordHelp {
 //            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 
-            String time = DateUtil.format(UnitTime.MILLIONSECOND, System.currentTimeMillis(), DatePresetFormat.DATA_YMDHM2);
+            String time = DateUtil.format(UnitTime.MILLIONSECOND,
+                    System.currentTimeMillis(),
+                    DatePresetFormat.DATA_YMDHM2);
             filePath = FolderPath + time + ".amr";
             mMediaRecorder.setOutputFile(filePath);
             /*
@@ -93,8 +80,8 @@ public class MediaRecordHelp {
             mMediaRecorder.prepare();
             /* ④开始 */
             mMediaRecorder.start();
-            if (null != onMediaRecordListener) {
-                onMediaRecordListener.onStart();
+            if (null != iMediaRecordListener) {
+                iMediaRecordListener.onStart();
             }
             updateMicStatus();
             LogUtil.INSTANCE.i(TAG, "startTime:" + startTime);
@@ -126,8 +113,8 @@ public class MediaRecordHelp {
             mMediaRecorder.reset();
             mMediaRecorder.release();
             mMediaRecorder = null;
-            if (null != onMediaRecordListener) {
-                onMediaRecordListener.onStop(filePath, fileTime);
+            if (null != iMediaRecordListener) {
+                iMediaRecordListener.onStop(filePath, fileTime);
             }
             filePath = "";
         } catch (RuntimeException e) {
@@ -154,8 +141,8 @@ public class MediaRecordHelp {
             mMediaRecorder.reset();
             mMediaRecorder.release();
             mMediaRecorder = null;
-            if (null != onMediaRecordListener) {
-                onMediaRecordListener.onCancel();
+            if (null != iMediaRecordListener) {
+                iMediaRecordListener.onCancel();
             }
         } catch (RuntimeException e) {
             if (null != mMediaRecorder) {
@@ -181,8 +168,8 @@ public class MediaRecordHelp {
         }
     };
 
-    public void setOnMediaRecordListener(OnMediaRecordListener onMediaRecordListener) {
-        this.onMediaRecordListener = onMediaRecordListener;
+    public void setMediaRecordListener(IMediaRecordListener iMediaRecordListener) {
+        this.iMediaRecordListener = iMediaRecordListener;
     }
 
     /**
@@ -195,8 +182,8 @@ public class MediaRecordHelp {
             fileTime = System.currentTimeMillis() - startTime;
             if (ratio > 1) {
                 db = 20 * Math.log10(ratio);
-                if (null != onMediaRecordListener)
-                    onMediaRecordListener.onProgress(db, fileTime);
+                if (null != iMediaRecordListener)
+                    iMediaRecordListener.onProgress(db, fileTime);
             }
             if (fileTime >= MAX_LENGTH) {
                 stopRecord();

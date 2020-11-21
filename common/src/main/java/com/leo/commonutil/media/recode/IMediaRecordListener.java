@@ -1,6 +1,6 @@
 package com.leo.commonutil.media.recode;
 
-public interface OnMediaRecordListener {
+public interface IMediaRecordListener {
     /**
      * 录音开始
      */

@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
-import com.leo.system.context.ContextHelp
+import com.leo.system.context.ContextHelper
 
 /**
  * Toast工具类
@@ -16,8 +16,8 @@ object ToastUtil {
 
     fun initToast(@LayoutRes layoutId: Int) {
         cancel()
-        toast = Toast(ContextHelp.context)
-        toast!!.view = LayoutInflater.from(ContextHelp.context).inflate(layoutId, null)
+        toast = Toast(ContextHelper.context)
+        toast!!.view = LayoutInflater.from(ContextHelper.context).inflate(layoutId, null)
     }
 
     @SuppressLint("ShowToast")
@@ -26,7 +26,7 @@ object ToastUtil {
              xOffset: Int = 0, yOffset: Int = 0, text: String,
              duration: Int = Toast.LENGTH_LONG) {
         if (toast == null) {
-            toast = Toast.makeText(ContextHelp.context, text, duration)
+            toast = Toast.makeText(ContextHelper.context, text, duration)
             toast!!.setGravity(gravity, xOffset, yOffset)
         } else {
             toast!!.duration = duration
@@ -42,7 +42,7 @@ object ToastUtil {
              xOffset: Int = 0, yOffset: Int = 0, @StringRes resId: Int,
              duration: Int = Toast.LENGTH_LONG) {
         if (toast == null) {
-            toast = Toast.makeText(ContextHelp.context, resId, duration)
+            toast = Toast.makeText(ContextHelper.context, resId, duration)
             toast!!.setGravity(gravity, xOffset, yOffset)
         } else {
             toast!!.duration = duration
