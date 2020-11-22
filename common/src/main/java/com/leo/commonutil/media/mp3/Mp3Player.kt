@@ -32,19 +32,7 @@ class Mp3Player private constructor() : IPlayer {
         mediaPlayer!!.setOnBufferingUpdateListener { mp: MediaPlayer?, percent: Int -> params.bufferPercent = percent }
     }
 
-    /**
-     * 设置播放完成回调
-     *
-     * @param listener
-     */
-    fun setOnCompletionListener(listener: OnCompletionListener) {
-        if (null != mediaPlayer) {
-            mediaPlayer!!.setOnCompletionListener(listener)
-        }
-    }
-
-    @get:Mp3PlayState
-    val playState: Int
+    val playState: Mp3PlayState
         get() = params.playState
 
     fun addPlayListener(iMP3PlayListener: IMP3PlayListener?) {
@@ -86,7 +74,7 @@ class Mp3Player private constructor() : IPlayer {
         }
     }
 
-    override fun toggle(@Mp3PlayState state: Int) {
+    override fun toggle(state: Mp3PlayState) {
         when (state) {
             Mp3PlayState.PLAY -> {
                 mediaPlayer?.run {
@@ -175,9 +163,9 @@ class Mp3Player private constructor() : IPlayer {
         mHandler.removeCallbacks { update() }
         if (mediaPlayer!!.currentPosition < mediaPlayer!!.duration) {
             val currentPosition = MediaUtils
-                    .timeFormat(mediaPlayer!!.currentPosition, TimeMode.MODE_SECOND).toInt()
+                    .timeFormat(mediaPlayer!!.currentPosition, TimeMode.SECOND).toInt()
             val mediaRemainSecond = (params.duration / 1000 - currentPosition) * 1000 //剩余时间（毫秒）
-            val mediaRemainFormat = MediaUtils.timeFormat(mediaRemainSecond, TimeMode.MODE_FORMAT)
+            val mediaRemainFormat = MediaUtils.timeFormat(mediaRemainSecond, TimeMode.FORMAT)
             for (mp3PlayListener in imp3PlayListeners) {
                 mp3PlayListener.onInfoUpdate(params.duration / 1000,
                         params.durationFormat,

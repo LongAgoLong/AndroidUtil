@@ -5,7 +5,6 @@ import com.leo.commonutil.media.IPlayer
 import com.leo.commonutil.media.mp3.Mp3PlayState
 import com.leo.commonutil.media.mp3.Mp3Player
 import com.leo.system.audiofocus.AudioFocusHelper
-import com.leo.system.audiofocus.AudioFocusHelper.Companion.getInstance
 
 /**
  * Create by LEO
@@ -57,7 +56,7 @@ class AudioMsgPlayer private constructor() : IPlayer {
         }
     }
 
-    override fun toggle(@Mp3PlayState state: Int) {
+    override fun toggle(state: Mp3PlayState) {
         when (state) {
             Mp3PlayState.PLAY -> {
                 if (mediaPlayer != null) {

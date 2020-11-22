@@ -12,13 +12,13 @@ object MediaUtils {
      * @param formatType
      * @return
      */
-    fun timeFormat(millisecond: Int, @TimeMode formatType: String?): String {
+    fun timeFormat(millisecond: Int,  formatType: TimeMode): String {
         val minute = millisecond / (1000 * 60)
         val second = millisecond % (1000 * 60) / 1000
         return when (formatType) {
-            TimeMode.MODE_SECOND ->  //转换成秒数
+            TimeMode.SECOND ->  //转换成秒数
                 "${minute * 60 + second}"
-            TimeMode.MODE_FORMAT -> {
+            TimeMode.FORMAT -> {
                 //转换成时间格式
                 val secondStr = if (second < 10) {
                     "0$second"
@@ -40,17 +40,17 @@ object MediaUtils {
      * 切换音频播放模式
      *
      * @param context
-     * @param playAction
+     * @param equipment
      */
-    fun switchAudioPlayAction(context: Context, @PlayAction playAction: Int) {
+    fun switchAudioPlayAction(context: Context, equipment: PlayEquipment) {
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
                 ?: return
-        when (playAction) {
-            PlayAction.SPEAKER -> {
+        when (equipment) {
+            PlayEquipment.SPEAKER -> {
                 audioManager.mode = AudioManager.MODE_NORMAL
                 audioManager.isSpeakerphoneOn = true
             }
-            PlayAction.RECEIVER -> {
+            PlayEquipment.RECEIVER -> {
                 audioManager.isSpeakerphoneOn = false
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
@@ -58,7 +58,7 @@ object MediaUtils {
                     audioManager.mode = AudioManager.MODE_IN_CALL
                 }
             }
-            PlayAction.HEADSET -> audioManager.isSpeakerphoneOn = false
+            PlayEquipment.HEADSET -> audioManager.isSpeakerphoneOn = false
             else -> {
             }
         }
