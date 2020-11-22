@@ -10,6 +10,6 @@ import java.lang.annotation.RetentionPolicy;
         TimeMode.MODE_FORMAT})
 @Retention(RetentionPolicy.SOURCE)
 public @interface TimeMode {
-    String MODE_SECOND = "SECOND";//转换成秒
-    String MODE_FORMAT = "FORMAT";//格式化
+    String MODE_SECOND = "SECOND"; // 转换成秒
+    String MODE_FORMAT = "FORMAT"; // 格式化
 }

@@ -1,10 +1,10 @@
-package com.leo.commonutil.media.recode;
+package com.leo.commonutil.media.recode
 
-public interface IMediaRecordListener {
+interface IMediaRecordListener {
     /**
      * 录音开始
      */
-    void onStart();
+    fun onStart()
 
     /**
      * 录音中...
@@ -12,17 +12,17 @@ public interface IMediaRecordListener {
      * @param db   当前声音分贝
      * @param time 录音时长
      */
-    void onProgress(double db, long time);
+    fun onProgress(db: Double, time: Long)
 
     /**
      * 停止录音
      *
      * @param filePath 保存路径
      */
-    void onStop(String filePath, long time);
+    fun onStop(filePath: String?, time: Long)
 
     /**
      * 取消录音
      */
-    void onCancel();
+    fun onCancel()
 }
