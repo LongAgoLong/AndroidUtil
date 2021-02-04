@@ -26,6 +26,7 @@ import javax.crypto.NoSuchPaddingException
 
 object RSAUtil {
     private const val KEY_ALGORITHM = "RSA"
+
     /**
      * 貌似默认是RSA/NONE/PKCS1Padding，未验证
      */
@@ -123,7 +124,7 @@ object RSAUtil {
      * @param plainText
      * @return
      */
-    fun encode(key: PublicKey, plainText: ByteArray): ByteArray? {
+    fun encrypt(key: PublicKey, plainText: ByteArray): ByteArray? {
         try {
             val cipher = Cipher.getInstance(CIPHER_ALGORITHM)
             cipher.init(Cipher.ENCRYPT_MODE, key)
@@ -139,9 +140,7 @@ object RSAUtil {
         } catch (e: BadPaddingException) {
             e.printStackTrace()
         }
-
         return null
-
     }
 
     /**
@@ -151,7 +150,7 @@ object RSAUtil {
      * @param encodedText
      * @return
      */
-    fun decode(key: PrivateKey, encodedText: ByteArray): String? {
+    fun decrypt(key: PrivateKey, encodedText: ByteArray): String? {
         try {
             val cipher = Cipher.getInstance(CIPHER_ALGORITHM)
             cipher.init(Cipher.DECRYPT_MODE, key)

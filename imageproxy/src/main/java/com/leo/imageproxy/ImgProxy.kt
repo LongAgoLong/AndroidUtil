@@ -9,7 +9,7 @@ import java.io.File
 /**
  * 对外调用方法
  */
-class ImgProxyHelp private constructor() {
+class ImgProxy private constructor() {
     private var proxyImpl: IImgProxy? = null
 
     /**
@@ -110,11 +110,11 @@ class ImgProxyHelp private constructor() {
 
     companion object {
         @Volatile
-        private var proxyHelp: ImgProxyHelp? = null
+        private var proxy: ImgProxy? = null
 
-        fun getInstance(): ImgProxyHelp {
-            return proxyHelp ?: synchronized(this) {
-                proxyHelp ?: ImgProxyHelp().also { proxyHelp = it }
+        fun getInstance(): ImgProxy {
+            return proxy ?: synchronized(this) {
+                proxy ?: ImgProxy().also { proxy = it }
             }
         }
     }

@@ -5,7 +5,7 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.leo.androidutil.R
 import com.leo.androidutil.databinding.ActivityRootBinding
-import com.leo.system.util.IntentUtil
+import com.leo.system.util.IntentHelp
 
 class RootActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mBinding: ActivityRootBinding
@@ -24,9 +24,9 @@ class RootActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.locationBtn -> IntentUtil.startActivity(this, LocationActivity::class.java)
-            R.id.pinyinBtn -> IntentUtil.startActivity(this, PinyinActivity::class.java)
-            R.id.rvDeleteBtn -> IntentUtil.startActivity(this, RvDeleteItemActivity::class.java)
+            R.id.locationBtn -> IntentHelp.startActivity(this, LocationActivity::class.java)
+            R.id.pinyinBtn -> IntentHelp.startActivity(this, PinyinActivity::class.java)
+            R.id.rvDeleteBtn -> IntentHelp.startActivity(this, RvDeleteItemActivity::class.java)
         }
     }
 }

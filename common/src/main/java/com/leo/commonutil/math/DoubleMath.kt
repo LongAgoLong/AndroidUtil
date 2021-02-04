@@ -7,7 +7,7 @@ import java.math.BigDecimal
  * On 2019/6/10
  * Description:Double计算辅助类
  */
-object MathDoubleHelp {
+object DoubleMath {
     private const val DEF_DIV_SCALE = 2
 
     /**

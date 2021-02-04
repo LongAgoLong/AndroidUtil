@@ -55,14 +55,11 @@ object SystemShareHelp {
     fun shareImage(imagePath: String) {
         try {
             val activity = AppStackManager.getInstance().currentActivity
-            //由文件得到uri
-            val imageUri: Uri
             val imgFile = File(imagePath)
-            //判断当前手机版本
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                imageUri = FileProvider.getUriForFile(activity!!, activity.packageName + ".fileprovider", imgFile)
+            val imageUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                FileProvider.getUriForFile(activity!!, "${activity.packageName}.fileprovider", imgFile)
             } else {
-                imageUri = Uri.fromFile(imgFile)
+                Uri.fromFile(imgFile)
             }
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
@@ -87,13 +84,11 @@ object SystemShareHelp {
             val uriList = ArrayList<Uri>()
             for (img in imgPaths) {
                 if (!TextUtils.isEmpty(img)) {
-                    val imageUri: Uri
                     val imgFile = File(img)
-                    //判断当前手机版本
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        imageUri = FileProvider.getUriForFile(activity!!, activity.packageName + ".fileprovider", imgFile)
+                    val imageUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        FileProvider.getUriForFile(activity!!, activity.packageName + ".fileprovider", imgFile)
                     } else {
-                        imageUri = Uri.fromFile(imgFile)
+                        Uri.fromFile(imgFile)
                     }
                     uriList.add(imageUri)
                 }

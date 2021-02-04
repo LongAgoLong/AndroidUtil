@@ -1,13 +1,12 @@
-package com.leo.commonutil.http
+package com.leo.system.net
 
 import android.Manifest
 import android.content.Context
 import android.net.ConnectivityManager
 import android.telephony.TelephonyManager
 import androidx.annotation.RequiresPermission
-import com.leo.commonutil.enume.NetType
 import com.leo.system.context.ContextHelper.context
-import com.leo.system.log.LogUtil.i
+import com.leo.system.log.ZLog.i
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -21,6 +20,7 @@ import java.util.*
  */
 object NetUtil {
     private val TAG = NetUtil::class.java.simpleName
+
     /**
      * 判断当前设备是否为手机
      *

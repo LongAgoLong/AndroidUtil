@@ -69,7 +69,7 @@ object SystemUtils {
             val context = weakReference.get() ?: return@post
             val imm = context.applicationContext
                     .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm?.showSoftInput(paramEditText, 0)
+            imm.showSoftInput(paramEditText, 0)
         }
     }
 
@@ -84,7 +84,7 @@ object SystemUtils {
             mEditText.clearFocus()
             val imm = mContext
                     .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm?.hideSoftInputFromWindow(mEditText.windowToken, 0)
+            imm.hideSoftInputFromWindow(mEditText.windowToken, 0)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -99,11 +99,9 @@ object SystemUtils {
         try {
             val inputMethodManager = activity
                     .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-            if (null != inputMethodManager) {
-                val currentFocus = activity.currentFocus
-                if (null != currentFocus) {
-                    inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
-                }
+            val currentFocus = activity.currentFocus
+            if (null != currentFocus) {
+                inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -116,13 +114,13 @@ object SystemUtils {
      * @param context
      * @param view
      */
-    fun setCanceledOnTouchOutsideET(context: Context, view: View) {
-        setCanceledOnTouchOutsideET(context, view, null)
+    fun setCancelOnTouchOutsideET(context: Context, view: View) {
+        setCancelOnTouchOutsideET(context, view, null)
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    fun setCanceledOnTouchOutsideET(context: Context, view: View,
-                                    iETClearFocus: IETClearFocus?) {
+    fun setCancelOnTouchOutsideET(context: Context, view: View,
+                                  iETClearFocus: IETClearFocus?) {
         //Set up touch listener for non-text box views to hide keyboard.
         if (view !is EditText) {
             view.setOnTouchListener { v: View?, event: MotionEvent? ->
@@ -136,7 +134,7 @@ object SystemUtils {
         if (view is ViewGroup) {
             for (i in 0 until view.childCount) {
                 val innerView = view.getChildAt(i)
-                setCanceledOnTouchOutsideET(context, innerView, iETClearFocus)
+                setCancelOnTouchOutsideET(context, innerView, iETClearFocus)
             }
         }
     }
@@ -303,8 +301,7 @@ object SystemUtils {
 
     //这里设置的时间间隔是2s-判断是否频繁点击
     val isFastClick: Boolean
-        get() = // 这里设置的时间间隔是2s-判断是否频繁点击
-            isFastClick(1000)
+        get() = isFastClick(1000)
 
     /**
      * @param intervalTime 时间间隔
@@ -424,28 +421,7 @@ object SystemUtils {
             val className2 = service.className
             // 将获取到的正在运行的服务的全类名和传递过来的服务的全类名比较,
             // 一致表示服务正在运行返回true,不一致表示服务没有运行返回false
-            if (className == className2) {
-                return true
-            }
-        }
-        return false
-    }
-
-    /**
-     * 判断当前App是否处于后台
-     *
-     * @param context
-     * @return
-     */
-    fun isAppBackground(context: Context): Boolean {
-        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val tasks = am.getRunningTasks(1)
-        if (tasks.isNotEmpty()) {
-            val topActivity = tasks[0].topActivity
-            if (null != topActivity
-                    && topActivity.packageName != context.packageName) {
-                return true
-            }
+            return TextUtils.equals(className, className2)
         }
         return false
     }
@@ -461,15 +437,15 @@ object SystemUtils {
         try {
             val km = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
             val kl = km.newKeyguardLock("unLock")
-            //解锁
+            // 解锁
             kl.disableKeyguard()
-            //获取电源管理器对象
+            // 获取电源管理器对象
             val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-            //获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
+            // 获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
             val wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.SCREEN_DIM_WAKE_LOCK, "bright")
-            //点亮屏幕
+            // 点亮屏幕
             wl.acquire()
-            //释放
+            // 释放
             wl.release()
         } catch (e: Exception) {
             e.printStackTrace()

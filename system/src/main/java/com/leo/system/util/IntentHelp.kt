@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
  * @author LEO
  * activity 之间跳转类
  */
-object IntentUtil {
+object IntentHelp {
 
     /**
      * @param context

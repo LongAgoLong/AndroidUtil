@@ -16,16 +16,16 @@ import android.text.style.ImageSpan;
  * TextView图文混排居中
  */
 
-public class CenteredImageSpan extends ImageSpan {
-    public CenteredImageSpan(Context context, final int drawableRes) {
+public class CenterImageSpan extends ImageSpan {
+    public CenterImageSpan(Context context, final int drawableRes) {
         super(context, drawableRes);
     }
 
-    public CenteredImageSpan(Context context, Bitmap b) {
+    public CenterImageSpan(Context context, Bitmap b) {
         super(context, b);
     }
 
-    public CenteredImageSpan(Drawable d) {
+    public CenterImageSpan(Drawable d) {
         super(d, ALIGN_BOTTOM);
     }
 

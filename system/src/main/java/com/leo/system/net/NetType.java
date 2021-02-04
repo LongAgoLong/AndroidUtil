@@ -1,4 +1,4 @@
-package com.leo.commonutil.enume;
+package com.leo.system.net;
 
 import androidx.annotation.IntDef;
 

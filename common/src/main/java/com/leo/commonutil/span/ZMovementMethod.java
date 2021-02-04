@@ -18,15 +18,15 @@ import com.leo.commonutil.R;
  * @Description:
  * @date 16/1/2 16:54
  */
-public class CstMovementMethod extends BaseMovementMethod {
-    public final String TAG = CstMovementMethod.class.getSimpleName();
+public class ZMovementMethod extends BaseMovementMethod {
+    public final String TAG = ZMovementMethod.class.getSimpleName();
     public final static int DEFAULT_COLOR = R.color.color_13b5b1;
     private int mClickableSpanBgClorId;
 
     private BackgroundColorSpan mBgSpan;
     private ClickableSpan[] mClickLinks;
     private boolean isPassToTv = true;
-    private static CstMovementMethod sInstance;
+    private static ZMovementMethod sInstance;
     private Context context;
 
     /**
@@ -40,14 +40,14 @@ public class CstMovementMethod extends BaseMovementMethod {
         this.isPassToTv = isPassToTv;
     }
 
-    public static CstMovementMethod getInstance(Context context) {
+    public static ZMovementMethod getInstance(Context context) {
         if (sInstance == null) {
-            sInstance = new CstMovementMethod(context.getApplicationContext());
+            sInstance = new ZMovementMethod(context.getApplicationContext());
         }
         return sInstance;
     }
 
-    public CstMovementMethod(Context context) {
+    public ZMovementMethod(Context context) {
         this.context = context;
         this.mClickableSpanBgClorId = DEFAULT_COLOR;
     }

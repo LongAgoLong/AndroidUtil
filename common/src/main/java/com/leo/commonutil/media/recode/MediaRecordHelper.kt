@@ -5,8 +5,8 @@ import com.leo.commonutil.asyn.WeakHandler
 import com.leo.commonutil.calendar.DatePresetFormat
 import com.leo.commonutil.calendar.DateUtil
 import com.leo.commonutil.enume.UnitTime
-import com.leo.system.log.LogUtil.e
-import com.leo.system.log.LogUtil.i
+import com.leo.system.log.ZLog.e
+import com.leo.system.log.ZLog.i
 import java.io.File
 import java.io.IOException
 

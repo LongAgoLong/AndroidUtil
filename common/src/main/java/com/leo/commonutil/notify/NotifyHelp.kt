@@ -8,7 +8,7 @@ import android.os.Vibrator
 import androidx.annotation.RawRes
 import androidx.annotation.RequiresPermission
 import com.leo.system.context.ContextHelper
-import com.leo.system.log.LogUtil
+import com.leo.system.log.ZLog
 import java.io.IOException
 
 /**
@@ -46,7 +46,7 @@ object NotifyHelp {
                 .getSystemService(Context.AUDIO_SERVICE) as AudioManager ?: return
         // 检查当前是否是静音模式
         if (audioService.ringerMode != AudioManager.RINGER_MODE_NORMAL) {
-            LogUtil.d(TAG, "静音模式")
+            ZLog.d(TAG, "静音模式")
             return
         }
         var mediaPlayer: MediaPlayer? = MediaPlayer()

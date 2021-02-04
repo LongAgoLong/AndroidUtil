@@ -6,7 +6,7 @@ import com.leo.system.context.ContextHelper
 /**
  * 日志公共类
  */
-object LogUtil {
+object ZLog {
     private val TAG_ = appName
     private var type = LogType.VERBOSE
 
@@ -23,7 +23,7 @@ object LogUtil {
         }
 
     fun setType(@LogType type: Int) {
-        LogUtil.type = type
+        ZLog.type = type
     }
 
     fun v(tag: String, msg: String?) {

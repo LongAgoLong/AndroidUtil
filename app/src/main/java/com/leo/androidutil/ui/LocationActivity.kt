@@ -7,7 +7,6 @@ import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.leo.androidutil.R
 import com.leo.androidutil.databinding.ActivityLocationBinding
 import com.leo.androidutil.viewmodels.LocationModel
@@ -19,7 +18,7 @@ import com.leo.commonutil.location.SystemLocationUtil
 import com.leo.lib_permission.annotations.PermissionApply
 import com.leo.lib_permission.annotations.PermissionRefused
 import com.leo.lib_permission.annotations.PermissionRefusedForever
-import com.leo.system.log.LogUtil
+import com.leo.system.log.ZLog
 
 /**
  * 系统定位demo
@@ -57,7 +56,7 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
 
     private fun initData() {
         mModel.mUpdateTime.observe(this, Observer {
-            LogUtil.d(TAG, "数据变化回调:${it}")
+            ZLog.d(TAG, "数据变化回调:${it}")
             val locationUtil = SystemLocationUtil.getInstance()
             val addressBean = locationUtil.addressBean ?: return@Observer
             mBinding.resultTv.run {
@@ -84,7 +83,7 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
         Manifest.permission.ACCESS_COARSE_LOCATION],
             requestCode = 1001)
     fun location() {
-        LogUtil.e(TAG, "授权成功")
+        ZLog.e(TAG, "授权成功")
         val bestProvider = SystemLocationUtil.getInstance().bestProvider
         SystemLocationUtil.getInstance().start(bestProvider,
                 10000, this)
@@ -92,12 +91,12 @@ class LocationActivity : BaseActivity(), OnLocationCallback, View.OnClickListene
 
     @PermissionRefused(requestCode = 1001)
     fun onPermissionRefused(s: Array<String?>) {
-        LogUtil.e(TAG, "lack of permission")
+        ZLog.e(TAG, "lack of permission")
     }
 
     @PermissionRefusedForever(requestCode = 1001)
     fun onPermissionRefusedForever(s: Array<String?>) {
-        LogUtil.e(TAG, "lack of permission")
+        ZLog.e(TAG, "lack of permission")
     }
 
     override fun onLocationChanged() {
