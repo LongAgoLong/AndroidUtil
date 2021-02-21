@@ -5,7 +5,9 @@ import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.os.Build;
+
 import androidx.annotation.NonNull;
+
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -221,7 +223,7 @@ public class AppStackManager {
 
     public boolean isActivityRecycler(@NonNull Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            if (activity.isDestroyed()) {
+            if (activity.isDestroyed() || activity.isFinishing()) {
                 return true;
             }
         }

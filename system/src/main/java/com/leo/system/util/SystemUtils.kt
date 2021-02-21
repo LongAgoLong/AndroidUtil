@@ -43,70 +43,6 @@ import java.lang.ref.WeakReference
 import java.util.*
 
 object SystemUtils {
-    /**
-     * 键盘是否在显示
-     *
-     * @param paramActivity
-     * @return
-     */
-    fun isSoftKeyboardShow(paramActivity: Activity?): Boolean {
-        val height = (getScreenHeight(paramActivity!!)
-                - getStatusBarHeight(paramActivity)
-                - getAppHeight(paramActivity))
-        return height != 0
-    }
-
-    /**
-     * 显示键盘
-     *
-     * @param mContext
-     * @param paramEditText
-     */
-    fun showSoftKeyboard(mContext: Context, paramEditText: EditText) {
-        val weakReference = WeakReference(mContext)
-        paramEditText.requestFocus()
-        paramEditText.post {
-            val context = weakReference.get() ?: return@post
-            val imm = context.applicationContext
-                    .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(paramEditText, 0)
-        }
-    }
-
-    /**
-     * 关闭软键盘
-     *
-     * @param mContext  上下文
-     * @param mEditText 获得焦点的输入框
-     */
-    fun hideSoftKeyboard(mContext: Context, mEditText: EditText) {
-        try {
-            mEditText.clearFocus()
-            val imm = mContext
-                    .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(mEditText.windowToken, 0)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    /**
-     * 关闭软键盘
-     *
-     * @param activity
-     */
-    fun hideSoftKeyboard(activity: Activity) {
-        try {
-            val inputMethodManager = activity
-                    .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-            val currentFocus = activity.currentFocus
-            if (null != currentFocus) {
-                inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
 
     /**
      * 设置外部点击隐藏软键盘,传入根布局.
@@ -124,7 +60,7 @@ object SystemUtils {
         //Set up touch listener for non-text box views to hide keyboard.
         if (view !is EditText) {
             view.setOnTouchListener { v: View?, event: MotionEvent? ->
-                hideSoftKeyboard(context as Activity)
+                KeyboardHelp.hideSoftKeyboard(context as Activity)
                 iETClearFocus?.onClearFocus()
                 false
             }
@@ -220,31 +156,6 @@ object SystemUtils {
         System.getProperties().remove("http.proxyPort")
         System.getProperties().remove("https.proxyHost")
         System.getProperties().remove("https.proxyPort")
-    }
-
-    /**
-     * 更改状态栏
-     *
-     * @param activity
-     * @param color
-     */
-    fun setStatusBarColorRes(activity: Activity?, @ColorRes color: Int) {
-        if (null == activity) {
-            return
-        }
-        setStatusBarColor(activity, activity.resources.getColor(color))
-    }
-
-    fun setStatusBarColor(activity: Activity?, @ColorInt color: Int) {
-        if (null == activity) {
-            return
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window = activity.window
-            if (null != window) {
-                window.statusBarColor = color
-            }
-        }
     }
 
     /**
