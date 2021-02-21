@@ -38,18 +38,20 @@ class NotificationHelp(context: Context) : ContextWrapper(context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(channelId, channelName,
                     if (isSound) NotificationManager.IMPORTANCE_HIGH else NotificationManager.IMPORTANCE_LOW)
-            if (isSound) {
-                channel.importance = NotificationManager.IMPORTANCE_HIGH
-                channel.enableLights(true)
-                channel.enableVibration(true)
-                // 设置在锁屏界面上显示这条通知
-                channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            } else {
-                channel.importance = NotificationManager.IMPORTANCE_LOW
-                channel.enableLights(false)
-                channel.enableVibration(false)
+            channel.run {
+                if (isSound) {
+                    importance = NotificationManager.IMPORTANCE_HIGH
+                    enableLights(true)
+                    enableVibration(true)
+                    // 设置在锁屏界面上显示这条通知
+                    lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                } else {
+                    importance = NotificationManager.IMPORTANCE_LOW
+                    enableLights(false)
+                    enableVibration(false)
+                }
+                setShowBadge(true)
             }
-            channel.setShowBadge(true)
             getManager()!!.createNotificationChannel(channel)
         }
     }
