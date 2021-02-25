@@ -6,6 +6,7 @@ import android.view.View
 import android.view.Window
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
+import androidx.annotation.RequiresApi
 import com.leo.system.rom.RomTarget
 import com.leo.system.rom.RomUtil
 import java.lang.Exception
@@ -98,14 +99,16 @@ object StatusBarHelp {
     }
 
     private fun setAndroidNativeLightStatusBar(activity: Activity, dark: Boolean) {
-        val decor: View = activity.window.decorView
-        if (dark) {
-            decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR)
-        } else {
-            // We want to change tint color to white again.
-            // You can also record the flags in advance so that you can turn UI back completely if
-            // you have set other flags before, such as translucent or full screen.
-            decor.setSystemUiVisibility(0)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val decor: View = activity.window.decorView
+            if (dark) {
+                decor.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            } else {
+                // We want to change tint color to white again.
+                // You can also record the flags in advance so that you can turn UI back completely if
+                // you have set other flags before, such as translucent or full screen.
+                decor.systemUiVisibility = 0
+            }
         }
     }
 }

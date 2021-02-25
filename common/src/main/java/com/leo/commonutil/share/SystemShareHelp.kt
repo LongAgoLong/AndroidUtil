@@ -21,7 +21,7 @@ object SystemShareHelp {
         intent.putExtra(Intent.EXTRA_STREAM, pdfUri)
         intent.type = "application/pdf"
         try {
-            AppStackManager.getInstance().currentActivity!!
+            AppStackManager.instance.currentActivity!!
                     .startActivity(Intent.createChooser(intent, title))
         } catch (e: Exception) {
             e.printStackTrace()
@@ -39,7 +39,7 @@ object SystemShareHelp {
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
         shareIntent.type = "text/plain"
         try {
-            AppStackManager.getInstance().currentActivity!!
+            AppStackManager.instance.currentActivity!!
                     .startActivity(Intent.createChooser(shareIntent, "分享到"))
         } catch (e: Exception) {
             e.printStackTrace()
@@ -54,7 +54,7 @@ object SystemShareHelp {
      */
     fun shareImage(imagePath: String) {
         try {
-            val activity = AppStackManager.getInstance().currentActivity
+            val activity = AppStackManager.instance.currentActivity
             val imgFile = File(imagePath)
             val imageUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 FileProvider.getUriForFile(activity!!, "${activity.packageName}.fileprovider", imgFile)
@@ -80,7 +80,7 @@ object SystemShareHelp {
      */
     fun shareImages(imgPaths: ArrayList<String>) {
         try {
-            val activity = AppStackManager.getInstance().currentActivity
+            val activity = AppStackManager.instance.currentActivity
             val uriList = ArrayList<Uri>()
             for (img in imgPaths) {
                 if (!TextUtils.isEmpty(img)) {

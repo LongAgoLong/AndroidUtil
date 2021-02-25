@@ -10,12 +10,12 @@ open class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initActionBar()
-        AppStackManager.getInstance().addActivity(this)
+        AppStackManager.instance.addActivity(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        AppStackManager.getInstance().killActivity(this)
+        AppStackManager.instance.killActivity(this)
     }
 
     /**
