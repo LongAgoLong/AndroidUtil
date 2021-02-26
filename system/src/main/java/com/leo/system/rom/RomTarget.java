@@ -5,5 +5,5 @@ package com.leo.system.rom;
  * on 2017/7/3.
  */
 public enum RomTarget {
-    MIUI, EMUI, FLYME, OTHER
+    MIUI, EMUI, FLYME, OPPO, VIVO, OTHER
 }
