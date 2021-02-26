@@ -3,7 +3,10 @@ package com.leo.system.net
 import android.Manifest
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.Proxy
+import android.os.Build
 import android.telephony.TelephonyManager
+import android.text.TextUtils
 import androidx.annotation.RequiresPermission
 import com.leo.system.context.ContextHelper.context
 import com.leo.system.log.ZLog.i
@@ -24,13 +27,13 @@ object NetUtil {
     /**
      * 判断当前设备是否为手机
      *
-     * @param context
      * @return
      */
-    fun isPhone(context: Context): Boolean {
-        val telephony = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        return telephony.phoneType != TelephonyManager.PHONE_TYPE_NONE
-    }
+    val isPhone: Boolean
+        get() {
+            val telephony = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            return telephony.phoneType != TelephonyManager.PHONE_TYPE_NONE
+        }
 
     /**
      * 获取当前网络类型
@@ -90,18 +93,18 @@ object NetUtil {
      * @param context
      * @return
      */
-    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-    fun isWifiConnected(context: Context?): Boolean {
-        context ?: return false
-        val mConnectivityManager = context
-                .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val mWiFiNetworkInfo = mConnectivityManager
-                .getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-        if (mWiFiNetworkInfo != null) {
-            return mWiFiNetworkInfo.isAvailable
+    @get:RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    val isWifiConnected: Boolean
+        get() {
+            val mConnectivityManager = context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val mWiFiNetworkInfo = mConnectivityManager
+                    .getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+            if (mWiFiNetworkInfo != null) {
+                return mWiFiNetworkInfo.isAvailable
+            }
+            return false
         }
-        return false
-    }
 
     /**
      * 判断MOBILE网络是否可用
@@ -109,18 +112,18 @@ object NetUtil {
      * @param context
      * @return
      */
-    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-    fun isMobileConnected(context: Context?): Boolean {
-        context ?: return false
-        val mConnectivityManager = context
-                .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val mMobileNetworkInfo = mConnectivityManager
-                .getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
-        if (mMobileNetworkInfo != null) {
-            return mMobileNetworkInfo.isAvailable
+    @get:RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    val isMobileConnected: Boolean
+        get() {
+            val mConnectivityManager = context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val mMobileNetworkInfo = mConnectivityManager
+                    .getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+            if (mMobileNetworkInfo != null) {
+                return mMobileNetworkInfo.isAvailable
+            }
+            return false
         }
-        return false
-    }
 
     fun pingIPs(vararg dnsAddress: String): Boolean {
         if (dnsAddress.isEmpty()) {
@@ -156,5 +159,37 @@ object NetUtil {
         } catch (e: IOException) {
             false
         }
+    }
+
+
+    /**
+     * 是否启用了代理
+     *
+     * @param context
+     * @return
+     */
+    fun isWifiProxy(context: Context?): Boolean {
+        val IS_ICS_OR_LATER = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH
+        val proxyAddress: String
+        val proxyPort: Int
+        if (IS_ICS_OR_LATER) {
+            proxyAddress = System.getProperty("http.proxyHost")
+            val portStr = System.getProperty("http.proxyPort")
+            proxyPort = (portStr ?: "-1").toInt()
+        } else {
+            proxyAddress = Proxy.getHost(context)
+            proxyPort = Proxy.getPort(context)
+        }
+        return !TextUtils.isEmpty(proxyAddress) && proxyPort != -1
+    }
+
+    /**
+     * 移除所有代理
+     */
+    fun removeAllWifiProxy() {
+        System.getProperties().remove("http.proxyHost")
+        System.getProperties().remove("http.proxyPort")
+        System.getProperties().remove("https.proxyHost")
+        System.getProperties().remove("https.proxyPort")
     }
 }

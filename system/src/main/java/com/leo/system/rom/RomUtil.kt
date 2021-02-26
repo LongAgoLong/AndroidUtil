@@ -46,8 +46,7 @@ object RomUtil {
     private val isMIUI: Boolean
         get() = try {
             val prop = BuildProperties.newInstance()
-            /*String rom = "" + prop.getProperty(KEY_MIUI_VERSION_CODE, null) + prop.getProperty(KEY_MIUI_VERSION_NAME, null)+prop.getProperty(KEY_MIUI_INTERNAL_STORAGE, null);
-            Log.d("Android_Rom", rom);*/(prop.containsKey(KEY_MIUI_VERSION_CODE)
+            (prop.containsKey(KEY_MIUI_VERSION_CODE)
                     || prop.containsKey(KEY_MIUI_VERSION_NAME)
                     || prop.containsKey(KEY_MIUI_REAL_BLUR)
                     || prop.containsKey(KEY_MIUI_HANDY_MODE_SF))
@@ -81,13 +80,7 @@ object RomUtil {
     fun rom(): RomTarget? {
         if (mRomTarget != null) return mRomTarget
         synchronized(this) {
-            if (isEMUI) {
-                return mRomTarget
-            }
-            if (isMIUI) {
-                return mRomTarget
-            }
-            if (isFlyme) {
+            if (isEMUI || isMIUI || isFlyme) {
                 return mRomTarget
             }
             mRomTarget = RomTarget.OTHER

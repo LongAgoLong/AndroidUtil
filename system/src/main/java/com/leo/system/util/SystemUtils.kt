@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.net.Proxy
 import android.net.Uri
 import android.os.Build
 import android.os.Looper
@@ -18,28 +17,20 @@ import android.os.Process
 import android.provider.Settings
 import android.telephony.TelephonyManager
 import android.text.TextUtils
-import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.leo.system.callback.IETClearFocus
 import com.leo.system.context.ContextHelper
 import com.leo.system.context.ContextHelper.context
-import com.leo.system.util.WindowUtils.getAppHeight
-import com.leo.system.util.WindowUtils.getScreenHeight
-import com.leo.system.util.WindowUtils.getStatusBarHeight
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
 import java.io.UnsupportedEncodingException
-import java.lang.ref.WeakReference
 import java.util.*
 
 object SystemUtils {
@@ -112,50 +103,6 @@ object SystemUtils {
         return if (scrollDifference == 0) {
             false
         } else scrollY > 0 || scrollY < scrollDifference - 1
-    }
-
-    /**
-     * 逐个删除EditText的输入元素
-     *
-     * @param editText
-     */
-    fun editTextDel(editText: EditText) {
-        val keyCode = KeyEvent.KEYCODE_DEL
-        val keyEventDown = KeyEvent(KeyEvent.ACTION_DOWN, keyCode)
-        val keyEventUp = KeyEvent(KeyEvent.ACTION_UP, keyCode)
-        editText.onKeyDown(keyCode, keyEventDown)
-        editText.onKeyUp(keyCode, keyEventUp)
-    }
-
-    /**
-     * 是否启用了代理
-     *
-     * @param context
-     * @return
-     */
-    fun isWifiProxy(context: Context?): Boolean {
-        val IS_ICS_OR_LATER = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH
-        val proxyAddress: String
-        val proxyPort: Int
-        if (IS_ICS_OR_LATER) {
-            proxyAddress = System.getProperty("http.proxyHost")
-            val portStr = System.getProperty("http.proxyPort")
-            proxyPort = (portStr ?: "-1").toInt()
-        } else {
-            proxyAddress = Proxy.getHost(context)
-            proxyPort = Proxy.getPort(context)
-        }
-        return !TextUtils.isEmpty(proxyAddress) && proxyPort != -1
-    }
-
-    /**
-     * 移除所有代理
-     */
-    fun removeAllWifiProxy() {
-        System.getProperties().remove("http.proxyHost")
-        System.getProperties().remove("http.proxyPort")
-        System.getProperties().remove("https.proxyHost")
-        System.getProperties().remove("https.proxyPort")
     }
 
     /**
@@ -404,7 +351,7 @@ object SystemUtils {
         return uuid
     }
 
-    fun getStartAppWithPkgName(packagename: String?): String? {
+    fun getLauncherActivityByPkg(packagename: String?): String? {
         // 通过包名获取此APP详细信息，包括Activities、services、versioncode、name等等
         var packageinfo: PackageInfo? = null
         try {
@@ -427,7 +374,7 @@ object SystemUtils {
         val resolveinfo = resolveinfoList.iterator().next()
         if (resolveinfo != null) {
             // packagename = 参数packname
-            val packageName = resolveinfo.activityInfo.packageName
+//            val packageName = resolveinfo.activityInfo.packageName
             // 这个就是我们要找的该APP的LAUNCHER的Activity[组织形式：packagename.mainActivityname]
             return resolveinfo.activityInfo.name
         }

@@ -1,14 +1,10 @@
 package com.leo.commonutil.app
 
 import android.app.Activity
-import android.text.TextUtils
 import android.app.ActivityManager
-import android.app.ActivityManager.RunningTaskInfo
-import android.content.ComponentName
 import android.content.Context
 import android.os.Build
-import com.leo.commonutil.app.AppStackManager
-import java.lang.Exception
+import android.text.TextUtils
 import java.util.*
 
 /**
@@ -216,16 +212,11 @@ class AppStackManager protected constructor() {
 
     companion object {
         private var mInstance: AppStackManager? = null
-        val instance: AppStackManager?
-            get() {
-                if (mInstance == null) {
-                    synchronized(AppStackManager::class.java) {
-                        if (null == mInstance) {
-                            mInstance = AppStackManager()
-                        }
-                    }
-                }
-                return mInstance
+
+        fun getInstance(): AppStackManager {
+            return mInstance ?: synchronized(this) {
+                mInstance ?: AppStackManager().also { mInstance = it }
             }
+        }
     }
 }
