@@ -18,13 +18,13 @@ allprojects {
 ### 全部依赖
 
 ```java
-def version = "1.6.7"
+def version = "1.6.8"
 implementation "com.github.LongAgoLong:AndroidUtil:$version"
 ```
 ### 单独依赖
 
 ```java
-def version = "1.6.7"
+def version = "1.6.8"
 implementation "com.github.LongAgoLong.AndroidUtil:system:$version"
 implementation "com.github.LongAgoLong.AndroidUtil:common:$version"
 implementation 'com.github.LongAgoLong.AndroidUtil:safety:$version"

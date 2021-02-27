@@ -1,9 +1,8 @@
 package com.leo.system.rom
 
-import com.leo.system.rom.RomTarget
-import com.leo.system.rom.BuildProperties
-import com.leo.system.rom.RomUtil
+import android.os.Build
 import java.io.IOException
+import java.util.*
 
 /**
  * Created by LEO
@@ -35,7 +34,9 @@ object RomUtil {
     private val isEMUI: Boolean
         get() = try {
             val prop = BuildProperties.newInstance()
-            prop.containsKey(KEY_EMUI_API_LEVEL) || prop.containsKey(KEY_EMUI_VERSION_CODE)
+            isEMUIByVendor()
+                    || prop.containsKey(KEY_EMUI_API_LEVEL)
+                    || prop.containsKey(KEY_EMUI_VERSION_CODE)
         } catch (e: IOException) {
             false
         }.also {
@@ -43,6 +44,12 @@ object RomUtil {
                 mRomTarget = RomTarget.EMUI
             }
         }
+
+    private fun isEMUIByVendor(): Boolean {
+        val vendor = Build.MANUFACTURER
+        val vendorUpperCase = vendor.toUpperCase(Locale.ENGLISH)
+        return vendorUpperCase.contains("HUAWEI")
+    }
 
     /**
      * 小米rom
@@ -52,10 +59,11 @@ object RomUtil {
     private val isMIUI: Boolean
         get() = try {
             val prop = BuildProperties.newInstance()
-            (prop.containsKey(KEY_MIUI_VERSION_CODE)
+            isMIUIByVendor()
+                    || prop.containsKey(KEY_MIUI_VERSION_CODE)
                     || prop.containsKey(KEY_MIUI_VERSION_NAME)
                     || prop.containsKey(KEY_MIUI_REAL_BLUR)
-                    || prop.containsKey(KEY_MIUI_HANDY_MODE_SF))
+                    || prop.containsKey(KEY_MIUI_HANDY_MODE_SF)
         } catch (e: IOException) {
             false
         }.also {
@@ -63,6 +71,12 @@ object RomUtil {
                 mRomTarget = RomTarget.MIUI
             }
         }
+
+    private fun isMIUIByVendor(): Boolean {
+        val vendor = Build.MANUFACTURER
+        val vendorUpperCase = vendor.toUpperCase(Locale.ENGLISH)
+        return vendorUpperCase.contains("XIAOMI")
+    }
 
     /**
      * 魅族rom
