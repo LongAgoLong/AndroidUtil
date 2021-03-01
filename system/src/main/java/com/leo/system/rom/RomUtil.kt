@@ -121,14 +121,14 @@ object RomUtil {
             }
         }
 
-    fun rom(): RomTarget? {
-        if (mRomTarget != null) return mRomTarget
+    fun rom(): RomTarget {
+        if (mRomTarget != null) return mRomTarget!!
         synchronized(this) {
             if (isEMUI || isMIUI || isFlyme || isOPPO || isVIVO) {
-                return mRomTarget
+                return mRomTarget!!
             }
             mRomTarget = RomTarget.OTHER
         }
-        return mRomTarget
+        return mRomTarget!!
     }
 }

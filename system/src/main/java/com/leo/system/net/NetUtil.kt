@@ -165,23 +165,23 @@ object NetUtil {
     /**
      * 是否启用了代理
      *
-     * @param context
      * @return
      */
-    fun isWifiProxy(context: Context?): Boolean {
-        val IS_ICS_OR_LATER = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH
-        val proxyAddress: String
-        val proxyPort: Int
-        if (IS_ICS_OR_LATER) {
-            proxyAddress = System.getProperty("http.proxyHost")
-            val portStr = System.getProperty("http.proxyPort")
-            proxyPort = (portStr ?: "-1").toInt()
-        } else {
-            proxyAddress = Proxy.getHost(context)
-            proxyPort = Proxy.getPort(context)
+    val isWifiProxy: Boolean
+        get() {
+            val IS_ICS_OR_LATER = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH
+            val proxyAddress: String
+            val proxyPort: Int
+            if (IS_ICS_OR_LATER) {
+                proxyAddress = System.getProperty("http.proxyHost")
+                val portStr = System.getProperty("http.proxyPort")
+                proxyPort = (portStr ?: "-1").toInt()
+            } else {
+                proxyAddress = Proxy.getHost(context)
+                proxyPort = Proxy.getPort(context)
+            }
+            return !TextUtils.isEmpty(proxyAddress) && proxyPort != -1
         }
-        return !TextUtils.isEmpty(proxyAddress) && proxyPort != -1
-    }
 
     /**
      * 移除所有代理
