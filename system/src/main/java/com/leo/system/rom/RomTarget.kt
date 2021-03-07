@@ -1,9 +1,9 @@
-package com.leo.system.rom;
+package com.leo.system.rom
 
 /**
  * Created by LEO
  * on 2017/7/3.
  */
-public enum RomTarget {
+enum class RomTarget {
     MIUI, EMUI, FLYME, OPPO, VIVO, OTHER
 }

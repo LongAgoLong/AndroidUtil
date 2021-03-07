@@ -9,7 +9,7 @@ import android.telephony.TelephonyManager
 import android.text.TextUtils
 import androidx.annotation.RequiresPermission
 import com.leo.system.context.ContextHelper.context
-import com.leo.system.log.ZLog.i
+import com.leo.system.log.XLog.i
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket

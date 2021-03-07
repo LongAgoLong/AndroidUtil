@@ -6,7 +6,7 @@ import com.leo.system.context.ContextHelper
 /**
  * 日志公共类
  */
-object ZLog {
+object XLog {
     private val TAG_ = appName
     private var type = LogType.VERBOSE
 
@@ -23,16 +23,16 @@ object ZLog {
         }
 
     fun setType(@LogType type: Int) {
-        ZLog.type = type
+        XLog.type = type
     }
 
     fun v(tag: String, msg: String?) {
         if (type <= LogType.VERBOSE) {
             // 控制台输出
             if (null != msg) {
-                Log.v(TAG_ + tag, msg)
+                Log.v("$TAG_$tag", msg)
             } else {
-                Log.v(TAG_ + tag, "the message is null")
+                Log.v("$TAG_$tag", "the message is null")
             }
         }
     }
@@ -41,9 +41,9 @@ object ZLog {
         if (type <= LogType.DEBUG) {
             // 控制台输出
             if (null != msg) {
-                Log.d(TAG_ + tag, msg)
+                Log.d("$TAG_$tag", msg)
             } else {
-                Log.d(TAG_ + tag, "the message is null")
+                Log.d("$TAG_$tag", "the message is null")
             }
         }
     }
@@ -52,9 +52,9 @@ object ZLog {
         if (type <= LogType.INFO) {
             // 控制台输出
             if (null != msg) {
-                Log.i(TAG_ + tag, msg)
+                Log.i("$TAG_$tag", msg)
             } else {
-                Log.i(TAG_ + tag, "the message is null")
+                Log.i("$TAG_$tag", "the message is null")
             }
         }
     }
@@ -63,9 +63,9 @@ object ZLog {
         if (type <= LogType.WARN) {
             // 控制台输出
             if (null != msg) {
-                Log.w(TAG_ + tag, msg)
+                Log.w("$TAG_$tag", msg)
             } else {
-                Log.w(TAG_ + tag, "the message is null")
+                Log.w("$TAG_$tag", "the message is null")
             }
         }
     }
@@ -74,9 +74,9 @@ object ZLog {
         if (type <= LogType.ERROR) {
             // 控制台输出
             if (null != msg) {
-                Log.e(TAG_ + tag, msg)
+                Log.e("$TAG_$tag", msg)
             } else {
-                Log.e(TAG_ + tag, "the message is null")
+                Log.e("$TAG_$tag", "the message is null")
             }
         }
     }

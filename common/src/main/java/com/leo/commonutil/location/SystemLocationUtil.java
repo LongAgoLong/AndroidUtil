@@ -16,7 +16,7 @@ import android.text.TextUtils;
 
 import com.leo.commonutil.asyn.threadPool.ThreadPoolHelp;
 import com.leo.system.context.ContextHelper;
-import com.leo.system.log.ZLog;
+import com.leo.system.log.XLog;
 import com.leo.system.util.SystemUtils;
 
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class SystemLocationUtil implements LocationListener {
         LocationManager locationManager =
                 (LocationManager) ContextHelper.INSTANCE.getContext().getSystemService(LOCATION_SERVICE);
         if (null == locationManager) {
-            ZLog.INSTANCE.e(TAG, "LocationManager is null");
+            XLog.INSTANCE.e(TAG, "LocationManager is null");
             return null;
         }
         List<String> providers = locationManager.getProviders(true);
@@ -86,20 +86,20 @@ public class SystemLocationUtil implements LocationListener {
         LocationManager locationManager =
                 (LocationManager) context.getSystemService(LOCATION_SERVICE);
         if (null == locationManager) {
-            ZLog.INSTANCE.e(TAG, "LocationManager is null");
+            XLog.INSTANCE.e(TAG, "LocationManager is null");
             return;
         }
         if (!SystemUtils.INSTANCE.checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION)) {
-            ZLog.INSTANCE.e(TAG, "lack of permission ACCESS_FINE_LOCATION or ACCESS_COARSE_LOCATION");
+            XLog.INSTANCE.e(TAG, "lack of permission ACCESS_FINE_LOCATION or ACCESS_COARSE_LOCATION");
             return;
         }
         if (!locationManager.isProviderEnabled(provider)) {
-            ZLog.INSTANCE.e(TAG, "provider is disable");
+            XLog.INSTANCE.e(TAG, "provider is disable");
             return;
         }
         locationManager.requestLocationUpdates(provider, minMillisecond, 0, this);
-        ZLog.INSTANCE.i(TAG, "system location start");
+        XLog.INSTANCE.i(TAG, "system location start");
     }
 
     /**
@@ -204,7 +204,7 @@ public class SystemLocationUtil implements LocationListener {
                     if (null != mOnLocationCallback) {
                         mOnLocationCallback.onLocationReverGeoResult();
                     }
-                    ZLog.INSTANCE.i(TAG, getAddressStr());
+                    XLog.INSTANCE.i(TAG, getAddressStr());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -235,7 +235,7 @@ public class SystemLocationUtil implements LocationListener {
                     if (null != onReverGeoCallback) {
                         onReverGeoCallback.onReverGeo(addr);
                     }
-                    ZLog.INSTANCE.i(TAG, getAddressStr());
+                    XLog.INSTANCE.i(TAG, getAddressStr());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -246,7 +246,7 @@ public class SystemLocationUtil implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
-            ZLog.INSTANCE.i(TAG, "location = " + location.toString());
+            XLog.INSTANCE.i(TAG, "location = " + location.toString());
             mLocationWGS84 = location;
             reverGeo(mLocationWGS84.getLatitude(), mLocationWGS84.getLongitude());
             // 系统返回的是wgs84坐标系
