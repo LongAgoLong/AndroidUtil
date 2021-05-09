@@ -16,7 +16,7 @@ import kotlin.collections.set
 /**
  * 拼音转化工具类
  */
-class PinyinHelp private constructor() {
+class PinyinHelper private constructor() {
     private val format: HanyuPinyinOutputFormat = HanyuPinyinOutputFormat()
     private val filterMap: HashMap<String, String> = HashMap()
 
@@ -24,11 +24,11 @@ class PinyinHelp private constructor() {
         private const val PINYIN_FILTER = "pinyin_filter.txt"
         private const val PINYIN_CUSTOM_FILTER = "pinyin_cst_filter.txt"
         @Volatile
-        private var instance: PinyinHelp? = null
+        private var instance: com.leo.pinyinlib.PinyinHelper? = null
 
-        fun getInstance(): PinyinHelp {
+        fun getInstance(): com.leo.pinyinlib.PinyinHelper {
             return instance ?: synchronized(this) {
-                instance ?: PinyinHelp().also { instance = it }
+                instance ?: PinyinHelper().also { instance = it }
             }
         }
     }
@@ -54,7 +54,7 @@ class PinyinHelp private constructor() {
          * pinyin4j会将‘这’转换为‘zhei’，‘那’转换为‘nei’
          * 因此提供一个HashMap用于注入部分自定义纠正
          */
-        val s = ResHelper.getFileFromAssets(PINYIN_FILTER)
+        val s = ResHelper.readFromAssets(PINYIN_FILTER)
         if (!TextUtils.isEmpty(s)) {
             val list = s!!.split("#")
             list.forEach {
@@ -71,7 +71,7 @@ class PinyinHelp private constructor() {
          * 提供一个放置于assets文件夹下的pinyin_cst_filter.txt文件供使用者赋值
          * 格式参考pinyin_filter.txt
          */
-        val cst = ResHelper.getFileFromAssets(PINYIN_CUSTOM_FILTER)
+        val cst = ResHelper.readFromAssets(PINYIN_CUSTOM_FILTER)
         if (!TextUtils.isEmpty(cst)) {
             val list = cst!!.split("#")
             list.forEach {

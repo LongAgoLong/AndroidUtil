@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import androidx.databinding.DataBindingUtil
 import com.leo.androidutil.databinding.ActivityPinyinBinding
-import com.leo.pinyinlib.PinyinHelp
+import com.leo.pinyinlib.PinyinHelper
 
 
 /**
@@ -52,10 +52,10 @@ class PinyinActivity : BaseActivity() {
                      */
                     s = s.replace(Regex("[\\p{P}\\s]+"), "")
                     mBinding.resultTv ?: return@run
-                    val pinyin = PinyinHelp.getInstance().parse(s)
-                    val allFirstLetter = PinyinHelp.getInstance().parseAllFirstLetter(s)
-                    val firstLetter = PinyinHelp.getInstance().parseFirstLetter(s)
-                    val nameSimpleQuanpin = PinyinHelp.getInstance().getNameSimpleQuanpin(s)
+                    val pinyin = PinyinHelper.getInstance().parse(s)
+                    val allFirstLetter = PinyinHelper.getInstance().parseAllFirstLetter(s)
+                    val firstLetter = PinyinHelper.getInstance().parseFirstLetter(s)
+                    val nameSimpleQuanpin = PinyinHelper.getInstance().getNameSimpleQuanpin(s)
                     val result = "纠正后字符串 : ${s}\n拼音：${pinyin}\n首字母：${allFirstLetter}\n第一个文字首字母：${firstLetter}\n人名音节：${nameSimpleQuanpin}"
                     mBinding.resultTv.text = result
                 }
