@@ -18,14 +18,14 @@ class ImgProxy private constructor() {
      *
      * @param proxyImpl
      */
-    fun setProxyImpl(proxyImpl: IImgProxy?) {
+    fun init(proxyImpl: IImgProxy) {
         this.proxyImpl ?: synchronized(this) {
             this.proxyImpl ?: proxyImpl.also { this.proxyImpl = it }
         }
     }
 
     private fun getProxyImpl(): IImgProxy {
-        proxyImpl ?: throw RuntimeException("ImgProxyHelp : must setProxyImpl in application first")
+        proxyImpl ?: throw RuntimeException("ImgProxyHelp : must init() in application first")
         return proxyImpl as IImgProxy
     }
 

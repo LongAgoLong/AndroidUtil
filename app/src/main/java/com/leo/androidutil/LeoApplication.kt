@@ -10,6 +10,6 @@ class LeoApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         XLog.setType(LogType.DEBUG)
-        ImgProxy.getInstance().setProxyImpl(GlideProxy())
+        ImgProxy.getInstance().init(GlideProxy())
     }
 }

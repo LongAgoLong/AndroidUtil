@@ -1,6 +1,6 @@
 package com.leo.commonutil.asyn.asynctask;
 
-public interface OnAsynListener <T> {
+public interface OnAsyncListener<T> {
     void onPreExecute();
 
     void onPostExecute(T result);

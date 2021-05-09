@@ -1,6 +1,6 @@
 package com.leo.commonutil.asyn.asynctask;
 
-public class OnSimpleAsynListener<T> implements OnAsynListener<T> {
+public class SimpleAsyncListener<T> implements OnAsyncListener<T> {
     @Override
     public void onPreExecute() {
 

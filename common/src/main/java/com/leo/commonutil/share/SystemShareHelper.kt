@@ -9,7 +9,7 @@ import com.leo.commonutil.app.AppStackManager
 import java.io.File
 import java.util.*
 
-object SystemShareHelp {
+object SystemShareHelper {
     /**
      * 分享文件
      */
