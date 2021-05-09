@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable
 import androidx.annotation.ColorRes
 import androidx.core.graphics.drawable.DrawableCompat
 
-object DrawableHelp {
+object DrawableHelper {
 
     /**
      * 着色

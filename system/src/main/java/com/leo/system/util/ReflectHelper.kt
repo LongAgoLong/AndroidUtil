@@ -10,7 +10,7 @@ import java.util.regex.Pattern
  * On 2019/6/16
  * Description:反射工具类
  */
-object ReflectHelp {
+object ReflectHelper {
 
     /**
      * Pattern for detecting CGLIB-renamed methods.

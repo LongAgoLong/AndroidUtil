@@ -212,9 +212,9 @@ object RegexHelp {
     }
 
     fun highLightAndClickHtml(context: Context, textView: TextView, source: String, replaceStr: String,
-                              @ColorRes color: Int, mIZClickCallback: IZClickCallback?): ZMovementMethod {
+                              @ColorRes color: Int, mIXClickCallback: IXClickCallback?): XMovementMethod {
         val spannableString = SpannableStringBuilder(source)
-        val movementMethod = ZMovementMethod.getInstance(context)
+        val movementMethod = XMovementMethod.getInstance(context)
         //设置正则
         val pattern = Pattern.compile(HTML)
         val matcher = pattern.matcher(spannableString)
@@ -232,9 +232,9 @@ object RegexHelp {
             if (end <= spannableString.length) {
                 val sbs = SpannableString(replaceStr)
                 spannableString.replace(start, end, sbs)
-                val clickableSpan = object : ZClickableSpan(color) {
+                val clickableSpan = object : XClickableSpan(color) {
                     override fun onClick(widget: View) {
-                        mIZClickCallback?.onClick(widget, html)
+                        mIXClickCallback?.onClick(widget, html)
                     }
                 }
                 spannableString.setSpan(clickableSpan, start, start + sbs.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)

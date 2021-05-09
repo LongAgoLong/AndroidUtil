@@ -17,8 +17,8 @@ import java.io.IOException
  * at 18:15
  * 消息提醒
  */
-object NotifyHelp {
-    private val TAG = NotifyHelp::class.java.simpleName
+object NotifyHelper {
+    private val TAG = NotifyHelper::class.java.simpleName
 
     /**
      * @param milliseconds 震动时长 , 单位毫秒

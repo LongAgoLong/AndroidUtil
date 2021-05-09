@@ -6,7 +6,7 @@ import com.leo.system.context.ContextHelper
 /**
  * 获取清单文件中meta值工具类
  */
-object MetaHelp {
+object MetaHelper {
     /**
      * 值不可以为纯数字，要不然会报错
      *

@@ -11,7 +11,7 @@ import com.leo.system.context.ContextHelper
 /**
  * 亮度调节工具类
  */
-object BrightnessHelp {
+object BrightnessHelper {
 
     @JvmOverloads
     fun isBrightnessAutoMode(context: Context = ContextHelper.context): Boolean {

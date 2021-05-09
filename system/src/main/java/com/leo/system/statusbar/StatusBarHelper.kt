@@ -11,7 +11,7 @@ import com.leo.system.rom.RomTarget
 import com.leo.system.rom.RomUtil
 import java.lang.Exception
 
-object StatusBarHelp {
+object StatusBarHelper {
     /**
      * 更改状态栏
      *

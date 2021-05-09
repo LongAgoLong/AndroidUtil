@@ -5,7 +5,7 @@ import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 
-object RecycleHelp {
+object RecycleHelper {
     /**
      * 回收每一帧的图片，释放内存资源
      * 取出AnimationDrawable中的每一帧逐个回收，并且设置Callback为null

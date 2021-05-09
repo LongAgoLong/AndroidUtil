@@ -8,7 +8,7 @@ import com.leo.system.context.ContextHelper
  * Created by LEO
  * on 2017/5/19.
  */
-class SPHelp private constructor() {
+class SPHelper private constructor() {
 
     private fun getSp(context: Context): SharedPreferences {
         return context.getSharedPreferences(KEY, Context.MODE_PRIVATE)
@@ -72,11 +72,11 @@ class SPHelp private constructor() {
 
     companion object {
         private const val KEY = "com.leo.sp_key"
-        private var instance: SPHelp? = null
+        private var instance: SPHelper? = null
 
-        fun getInstance(): SPHelp {
+        fun getInstance(): SPHelper {
             return instance ?: synchronized(this) {
-                instance ?: SPHelp().also { instance = it }
+                instance ?: SPHelper().also { instance = it }
             }
         }
     }

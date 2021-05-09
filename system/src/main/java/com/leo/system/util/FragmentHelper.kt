@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 
 
-object FragmentHelp {
+object FragmentHelper {
 
     fun clear(@NonNull fragmentManager: FragmentManager) {
         val fragments = fragmentManager.fragments

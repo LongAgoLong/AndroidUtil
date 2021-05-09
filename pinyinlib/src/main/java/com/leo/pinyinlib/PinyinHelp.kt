@@ -2,7 +2,7 @@ package com.leo.pinyinlib
 
 import android.text.TextUtils
 import androidx.annotation.NonNull
-import com.leo.system.util.ResHelp
+import com.leo.system.util.ResHelper
 import net.sourceforge.pinyin4j.PinyinHelper
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat
@@ -54,7 +54,7 @@ class PinyinHelp private constructor() {
          * pinyin4j会将‘这’转换为‘zhei’，‘那’转换为‘nei’
          * 因此提供一个HashMap用于注入部分自定义纠正
          */
-        val s = ResHelp.getFileFromAssets(PINYIN_FILTER)
+        val s = ResHelper.getFileFromAssets(PINYIN_FILTER)
         if (!TextUtils.isEmpty(s)) {
             val list = s!!.split("#")
             list.forEach {
@@ -71,7 +71,7 @@ class PinyinHelp private constructor() {
          * 提供一个放置于assets文件夹下的pinyin_cst_filter.txt文件供使用者赋值
          * 格式参考pinyin_filter.txt
          */
-        val cst = ResHelp.getFileFromAssets(PINYIN_CUSTOM_FILTER)
+        val cst = ResHelper.getFileFromAssets(PINYIN_CUSTOM_FILTER)
         if (!TextUtils.isEmpty(cst)) {
             val list = cst!!.split("#")
             list.forEach {

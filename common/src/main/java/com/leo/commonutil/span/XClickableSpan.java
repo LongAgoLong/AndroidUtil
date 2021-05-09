@@ -14,15 +14,15 @@ import android.view.View;
  * @author Rabbit_Lee
  */
 
-public class ZClickableSpan extends ClickableSpan {
+public class XClickableSpan extends ClickableSpan {
     private int textColor;
     private boolean underLine;
 
-    public ZClickableSpan(@ColorRes int color) {
+    public XClickableSpan(@ColorRes int color) {
         this(color, false);
     }
 
-    public ZClickableSpan(@ColorRes int textColor, boolean underLine) {
+    public XClickableSpan(@ColorRes int textColor, boolean underLine) {
         this.textColor = textColor;
         this.underLine = underLine;
     }

@@ -5,8 +5,8 @@ import com.leo.system.log.XLog
 
 abstract class AudioPerformWrapper : IAudioPerform {
     private val TAG: String = "AudioPerformWrapper"
-    protected var mAudioFocusChange: Int = 0
-    protected val mAudioFocusListeners: MutableList<AudioManager.OnAudioFocusChangeListener> = mutableListOf()
+    private var mAudioFocusChange: Int = 0
+    private val mAudioFocusListeners: MutableList<AudioManager.OnAudioFocusChangeListener> = mutableListOf()
 
     override fun addAudioFocusChangeListener(listener: AudioManager.OnAudioFocusChangeListener?) {
         listener.let {

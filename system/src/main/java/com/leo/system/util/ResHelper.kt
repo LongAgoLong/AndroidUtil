@@ -14,7 +14,7 @@ import java.io.InputStreamReader
  * On 2019/6/6
  * Description:资源获取工具类，方便操作资源
  */
-object ResHelp {
+object ResHelper {
     /**
      * 得到Resource对象
      */

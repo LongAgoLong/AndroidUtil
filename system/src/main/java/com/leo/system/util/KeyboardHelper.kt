@@ -6,7 +6,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import java.lang.ref.WeakReference
 
-object KeyboardHelp {
+object KeyboardHelper {
     /**
      * 键盘是否在显示
      *

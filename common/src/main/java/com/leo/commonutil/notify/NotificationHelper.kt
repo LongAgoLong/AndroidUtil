@@ -25,7 +25,7 @@ import java.util.*
  * Created by LEO
  * on 2017/12/28.
  */
-class NotificationHelp(context: Context) : ContextWrapper(context) {
+class NotificationHelper(context: Context) : ContextWrapper(context) {
 
     private var manager: NotificationManager? = null
 
@@ -222,11 +222,11 @@ class NotificationHelp(context: Context) : ContextWrapper(context) {
 
     companion object {
         @Volatile
-        private var instance: NotificationHelp? = null
+        private var instance: NotificationHelper? = null
 
-        fun getInstance(context: Context): NotificationHelp {
+        fun getInstance(context: Context): NotificationHelper {
             return instance ?: synchronized(this) {
-                instance ?: NotificationHelp(context).also { instance = it }
+                instance ?: NotificationHelper(context).also { instance = it }
             }
         }
 

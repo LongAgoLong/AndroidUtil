@@ -51,7 +51,7 @@ object SystemUtils {
         //Set up touch listener for non-text box views to hide keyboard.
         if (view !is EditText) {
             view.setOnTouchListener { v: View?, event: MotionEvent? ->
-                KeyboardHelp.hideSoftKeyboard(context as Activity)
+                KeyboardHelper.hideSoftKeyboard(context as Activity)
                 iETClearFocus?.onClearFocus()
                 false
             }

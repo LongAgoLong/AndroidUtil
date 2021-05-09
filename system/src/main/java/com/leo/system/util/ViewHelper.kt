@@ -8,7 +8,7 @@ import kotlin.math.min
 /**
  * 自定义View测量辅助工具类
  */
-object ViewHelp {
+object ViewHelper {
     /**
      * 获取竖直居中基准线
      *

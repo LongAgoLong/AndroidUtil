@@ -15,7 +15,7 @@ import java.util.*
  * on 2018/12/28
  * 基于HttpUrlConnect的简单封装
  */
-class SimpleHttpUtil private constructor() {
+class XSimpleHttpUtil private constructor() {
     private var readTimeOut = 8000
     private var connectTimeOut = 8000
     private val requestProPertyMap: HashMap<String, String> = HashMap()
@@ -169,11 +169,11 @@ class SimpleHttpUtil private constructor() {
 
     companion object {
         @Volatile
-        private var httpUtil: SimpleHttpUtil? = null
+        private var httpUtil: XSimpleHttpUtil? = null
 
-        fun getInstance(): SimpleHttpUtil {
+        fun getInstance(): XSimpleHttpUtil {
             return httpUtil ?: synchronized(this) {
-                httpUtil ?: SimpleHttpUtil().also { httpUtil = it }
+                httpUtil ?: XSimpleHttpUtil().also { httpUtil = it }
             }
         }
     }
