@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by LEO
@@ -22,10 +22,11 @@ public final class RvItemSwapHelper {
      * @param recyclerView
      * @param callback
      */
-    public static void attach(@NonNull RecyclerView recyclerView,
-                              @NonNull ItemTouchHelper.Callback callback) {
+    public static ItemTouchHelper attach(@NonNull RecyclerView recyclerView,
+                                         @NonNull ItemTouchHelper.Callback callback) {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+        return itemTouchHelper;
     }
 
     /**
@@ -35,7 +36,7 @@ public final class RvItemSwapHelper {
      * @param fromPosition
      * @param toPosition
      */
-    public static void swapData(ArrayList imgArrayList, int fromPosition, int toPosition) {
+    public static void swapData(List<?> imgArrayList, int fromPosition, int toPosition) {
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(imgArrayList, i, i + 1);
