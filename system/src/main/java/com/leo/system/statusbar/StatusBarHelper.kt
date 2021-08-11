@@ -1,15 +1,17 @@
 package com.leo.system.statusbar
 
 import android.app.Activity
+import android.content.Context
 import android.os.Build
 import android.view.View
 import android.view.Window
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
-import androidx.annotation.RequiresApi
+import androidx.annotation.RequiresPermission
 import com.leo.system.rom.RomTarget
 import com.leo.system.rom.RomUtil
-import java.lang.Exception
+import java.lang.reflect.Method
+
 
 object StatusBarHelper {
     /**
@@ -37,9 +39,9 @@ object StatusBarHelper {
         }
     }
 
-    /*
-    * 设置状态栏深色字体以及图标
-    * */
+    /**
+     * 设置状态栏深色字体以及图标
+     */
     fun setLightMode(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             try {
@@ -86,7 +88,11 @@ object StatusBarHelper {
                 val layoutParams = Class.forName("android.view.MiuiWindowManager\$LayoutParams")
                 val field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE")
                 darkModeFlag = field.getInt(layoutParams)
-                val extraFlagField = clazz.getMethod("setExtraFlags", Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
+                val extraFlagField = clazz.getMethod(
+                    "setExtraFlags",
+                    Int::class.javaPrimitiveType,
+                    Int::class.javaPrimitiveType
+                )
                 if (dark) {
                     extraFlagField.invoke(window, darkModeFlag, darkModeFlag) //状态栏透明且黑色字体
                 } else {
@@ -109,6 +115,54 @@ object StatusBarHelper {
                 // you have set other flags before, such as translucent or full screen.
                 decor.systemUiVisibility = 0
             }
+        }
+    }
+
+    /**
+     * 打开通知栏
+     */
+    @RequiresPermission(android.Manifest.permission.EXPAND_STATUS_BAR)
+    fun expand(context: Context) {
+        try {
+            val field = Context::class.java.getField("STATUS_BAR_SERVICE")
+            field.isAccessible = true
+            val name = field.get(Context::class.java) as String
+            val service = context.getSystemService(name)
+            val statusBarManager = Class
+                .forName("android.app.StatusBarManager")
+            val expand: Method = if (Build.VERSION.SDK_INT <= 16) {
+                statusBarManager.getMethod("expand")
+            } else {
+                statusBarManager.getMethod("expandNotificationsPanel")
+            }
+            expand.isAccessible = true
+            expand.invoke(service)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    /**
+     * 关闭通知栏
+     */
+    fun collapse(context: Context) {
+        try {
+            val field = Context::class.java.getField("STATUS_BAR_SERVICE")
+            field.isAccessible = true
+            val name = field.get(Context::class.java) as String
+            val service = context.getSystemService(name)
+            val statusBarManager = Class
+                .forName("android.app.StatusBarManager")
+            val expand: Method = if (Build.VERSION.SDK_INT <= 16) {
+                statusBarManager.getMethod("collapse")
+            } else {
+                statusBarManager.getMethod("collapsePanels")
+            }
+            expand.isAccessible = true
+            expand.invoke(service)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
