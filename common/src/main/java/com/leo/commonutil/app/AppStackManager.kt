@@ -6,32 +6,30 @@ import android.content.Context
 import android.os.Build
 import android.text.TextUtils
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by LEO on 2017/2/4.
  * 管理栈中的activity
  */
 class AppStackManager protected constructor() {
-    private var mStack: Stack<Activity>? = null
-    private var mActivities: ArrayList<Activity>? = null
+    private val mStack: Stack<Activity> = Stack()
+    private val mActivities: ArrayList<Activity> = ArrayList()
 
     /**
      * 添加Activity到栈中
      */
     fun addActivity(activity: Activity) {
-        if (null == mStack) {
-            mStack = Stack()
-        }
-        mStack!!.add(activity)
+        mStack.add(activity)
     }
 
     /**
      * 获取当前Activity
      */
     val currentActivity: Activity?
-        get() = if (null == mStack || mStack!!.empty()) {
+        get() = if (mStack.empty()) {
             null
-        } else mStack!!.lastElement()
+        } else mStack.lastElement()
 
     /**
      * 获取栈底的Activity
@@ -39,9 +37,9 @@ class AppStackManager protected constructor() {
      * @return
      */
     val firstActivity: Activity?
-        get() = if (null == mStack || mStack!!.empty()) {
+        get() = if (mStack.empty()) {
             null
-        } else mStack!!.firstElement()
+        } else mStack.firstElement()
 
     /**
      * 结束指定的Activity
@@ -50,8 +48,8 @@ class AppStackManager protected constructor() {
         if (activity == null) {
             return
         }
-        if (null != mStack && !mStack!!.empty()) {
-            mStack!!.remove(activity)
+        if (!mStack.empty()) {
+            mStack.remove(activity)
         }
         activity.finish()
     }
@@ -61,10 +59,10 @@ class AppStackManager protected constructor() {
      */
     fun killActivity(cls: Class<*>) {
         try {
-            if (null == mStack || mStack!!.empty()) {
+            if (mStack.empty()) {
                 return
             }
-            val iterator = mStack!!.iterator()
+            val iterator = mStack.iterator()
             while (iterator.hasNext()) {
                 val activity = iterator.next()
                 if (activity.javaClass == cls) {
@@ -81,23 +79,20 @@ class AppStackManager protected constructor() {
      * 结束多个Activity
      */
     fun killActivities(activities: ArrayList<Class<*>>) {
-        if (null == mStack || mStack!!.empty()) {
+        if (mStack.empty()) {
             return
-        }
-        if (mActivities == null) {
-            mActivities = ArrayList()
         }
         for (cls in activities) {
             val activity = isHere(cls)
             if (activity != null) {
-                mActivities!!.add(activity)
+                mActivities.add(activity)
             }
         }
-        mStack!!.removeAll(mActivities!!)
-        for (activity in mActivities!!) {
+        mStack.removeAll(mActivities)
+        for (activity in mActivities) {
             activity.finish()
         }
-        mActivities!!.clear()
+        mActivities.clear()
     }
 
     /**
@@ -107,10 +102,10 @@ class AppStackManager protected constructor() {
      */
     fun keepOnlyActivity(cls: Class<*>) {
         try {
-            if (null == mStack || mStack!!.empty()) {
+            if (mStack.empty()) {
                 return
             }
-            val iterator = mStack!!.iterator()
+            val iterator = mStack.iterator()
             while (iterator.hasNext()) {
                 val activity = iterator.next()
                 if (activity.javaClass != cls) {
@@ -128,10 +123,10 @@ class AppStackManager protected constructor() {
             return
         }
         try {
-            if (null == mStack || mStack!!.empty()) {
+            if (mStack.empty()) {
                 return
             }
-            val iterator = mStack!!.iterator()
+            val iterator = mStack.iterator()
             while (iterator.hasNext()) {
                 val act = iterator.next()
                 if (act !== activity) {
@@ -169,10 +164,10 @@ class AppStackManager protected constructor() {
      * 是否在栈中
      */
     fun isHere(cls: Class<*>): Activity? {
-        if (null == mStack || mStack!!.empty()) {
+        if (mStack.empty()) {
             return null
         }
-        for (activity in mStack!!) {
+        for (activity in mStack) {
             if (activity.javaClass == cls) {
                 return activity
             }
@@ -184,13 +179,13 @@ class AppStackManager protected constructor() {
      * 结束所有
      */
     fun killAllActivity() {
-        if (null == mStack || mStack!!.empty()) {
+        if (mStack.empty()) {
             return
         }
-        for (activity in mStack!!) {
+        for (activity in mStack) {
             activity.finish()
         }
-        mStack!!.clear()
+        mStack.clear()
     }
 
     fun isActivityRecycler(activity: Activity): Boolean {
