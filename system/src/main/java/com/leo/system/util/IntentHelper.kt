@@ -39,12 +39,6 @@ object IntentHelper {
     }
 
     @JvmOverloads
-    fun startActivity(activity: Activity, cls: Class<*>, finishSelf: Boolean = false, bundle: Bundle? = null,
-                      clearTop: Boolean = false, singleTop: Boolean = false, newTask: Boolean = false) {
-        startActivity(activity, cls, finishSelf, bundle, clearTop, singleTop, newTask)
-    }
-
-    @JvmOverloads
     fun startActivity(fragment: Fragment, cls: Class<*>, finishSelf: Boolean = false, bundle: Bundle? = null,
                       clearTop: Boolean = false, singleTop: Boolean = false, newTask: Boolean = false) {
         fragment.activity ?: return

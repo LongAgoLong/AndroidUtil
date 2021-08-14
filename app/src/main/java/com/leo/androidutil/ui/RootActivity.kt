@@ -17,9 +17,9 @@ class RootActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun initView() {
-        mBinding.locationBtn?.setOnClickListener(this)
-        mBinding.pinyinBtn?.setOnClickListener(this)
-        mBinding.rvDeleteBtn?.setOnClickListener(this)
+        mBinding.locationBtn.setOnClickListener(this)
+        mBinding.pinyinBtn.setOnClickListener(this)
+        mBinding.rvDeleteBtn.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {

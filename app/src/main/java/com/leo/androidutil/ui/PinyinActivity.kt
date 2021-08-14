@@ -3,7 +3,9 @@ package com.leo.androidutil.ui
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.databinding.DataBindingUtil
+import com.leo.androidutil.R
 import com.leo.androidutil.databinding.ActivityPinyinBinding
+import com.leo.androidutil.util.ClipboardHook
 import com.leo.pinyinlib.PinyinHelper
 
 
@@ -16,8 +18,9 @@ class PinyinActivity : BaseActivity() {
     private lateinit var mBinding: ActivityPinyinBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        ClipboardHook.hookService(this)
         super.onCreate(savedInstanceState)
-        mBinding = DataBindingUtil.setContentView(this, com.leo.androidutil.R.layout.activity_pinyin)
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_pinyin)
         initView()
     }
 
@@ -29,15 +32,14 @@ class PinyinActivity : BaseActivity() {
     }
 
     private fun initView() {
-        mBinding.searchStrEt?.setOnKeyListener { v, keyCode, event ->
+        mBinding.searchStrEt.setOnKeyListener { v, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER
-                    && event.action == KeyEvent.ACTION_DOWN) {
-                mBinding.searchStrEt?.run {
+                && event.action == KeyEvent.ACTION_DOWN) {
+                mBinding.searchStrEt.run {
                     var s = text.toString().trim()
                     if (s.isEmpty()) {
                         return@run
                     }
-//                    s = s.replace(Regex("[`~!@#\$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……& amp;*（）——+|{}【】‘；：”“’。，、？|-]+"), "")
                     /**
                      * 利用正则移除所有标点符号
                      * 小写 p 是 property 的意思，表示 Unicode 属性，用于 Unicode 正表达式的前缀
