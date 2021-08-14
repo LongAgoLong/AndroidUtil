@@ -9,8 +9,8 @@ import com.leo.androidutil.R
 import com.leo.androidutil.adapter.RvItemDeleteAdapter
 import com.leo.androidutil.databinding.ActivityRvDeleteItemBinding
 import com.leo.recyclerview_help.decoration.LineItemDecoration
-import com.leo.recyclerview_help.slide.slideslip.RvItemSideslipCallback
-import com.leo.recyclerview_help.slide.slideslip.RvItemSideslipHelper
+import com.leo.recyclerview_help.slide.slideslip.XItemSideslipCallback
+import com.leo.recyclerview_help.slide.slideslip.XItemSideslipHelper
 import com.leo.system.util.WindowUtils
 
 
@@ -33,14 +33,19 @@ class RvDeleteItemActivity : BaseActivity() {
 
     private fun initView() {
         mBinding.recyclerView.run {
-            layoutManager = LinearLayoutManager(this@RvDeleteItemActivity, LinearLayoutManager.VERTICAL, false)
+            layoutManager =
+                LinearLayoutManager(this@RvDeleteItemActivity, LinearLayoutManager.VERTICAL, false)
             adapter = RvItemDeleteAdapter(this@RvDeleteItemActivity, arrayList)
-            addItemDecoration(LineItemDecoration(this@RvDeleteItemActivity,
+            addItemDecoration(
+                LineItemDecoration(
+                    this@RvDeleteItemActivity,
                     OrientationHelper.VERTICAL, WindowUtils.dp2px(dpValue = 1f),
-                    false, false, Color.GRAY))
+                    false, false, Color.GRAY
+                )
+            )
             // ①关联
-            val callback = RvItemSideslipCallback(RvItemSideslipHelper.SLIDE_TYPE_ITEMVIEW)
-            val rvItemSideslipHelper = RvItemSideslipHelper(callback)
+            val callback = XItemSideslipCallback(XItemSideslipHelper.SLIDE_TYPE_ITEMVIEW)
+            val rvItemSideslipHelper = XItemSideslipHelper(callback)
             rvItemSideslipHelper.attachToRecyclerView(this)
         }
     }

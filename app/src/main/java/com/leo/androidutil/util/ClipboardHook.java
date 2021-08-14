@@ -41,7 +41,7 @@ public class ClipboardHook {
                 if (argsLength >= 2 && args[0] instanceof ClipData) {
                     ClipData data = (ClipData) args[0];
                     String text = data.getItemAt(0).getText().toString();
-                    text += "\t分享自：xxx";
+                    text += "\n分享自：xxx";
                     args[0] = ClipData.newPlainText(data.getDescription().getLabel(), text);
                 }
             }

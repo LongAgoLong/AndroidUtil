@@ -1,7 +1,6 @@
 package com.leo.recyclerview_help.slide.slideslip;
 
 import android.graphics.Canvas;
-import android.util.Log;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,10 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
  * Created by WANG on 18/3/14.
  */
 
-public class RvItemSideslipCallback extends RvItemSideslipHelper.Callback {
+public class XItemSideslipCallback extends XItemSideslipHelper.Callback {
     String type;
 
-    public RvItemSideslipCallback(String type) {
+    public XItemSideslipCallback(String type) {
         this.type = type;
     }
 
@@ -53,8 +52,8 @@ public class RvItemSideslipCallback extends RvItemSideslipHelper.Callback {
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX,
                             float dY, int actionState, boolean isCurrentlyActive) {
-        if (viewHolder instanceof RvItemSideslipViewHold) {
-            RvItemSideslipViewHold holder = (RvItemSideslipViewHold) viewHolder;
+        if (viewHolder instanceof XItemSideslipViewHold) {
+            XItemSideslipViewHold holder = (XItemSideslipViewHold) viewHolder;
             if (holder.canSlide()) {
                 float actionWidth = holder.getActionWidth();
                 if (dX < -actionWidth) {

@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.leo.androidutil.R
-import com.leo.recyclerview_help.slide.slideslip.RvItemSideslipViewHold
+import com.leo.recyclerview_help.slide.slideslip.XItemSideslipViewHold
 import com.leo.system.util.WindowUtils
 
 class RvItemDeleteAdapter
@@ -16,7 +16,7 @@ constructor(private val context: Context,
             private val list: ArrayList<String>?)
     : RecyclerView.Adapter<RvItemDeleteAdapter.ItemHoldI>() {
 
-    class ItemHoldI(itemView: View) : RvItemSideslipViewHold(itemView) {
+    class ItemHoldI(itemView: View) : XItemSideslipViewHold(itemView) {
         var tv: TextView = itemView.findViewById(R.id.tv)
         var slideItemCl: ConstraintLayout = itemView.findViewById(R.id.slideItemCl)
 

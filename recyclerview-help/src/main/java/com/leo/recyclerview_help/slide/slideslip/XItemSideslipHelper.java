@@ -20,6 +20,7 @@ import android.view.ViewParent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.core.view.ViewCompat;
@@ -35,7 +36,7 @@ import java.util.List;
  * Created by WANG on 2018/4/27.
  */
 
-public class RvItemSideslipHelper extends RecyclerView.ItemDecoration
+public class XItemSideslipHelper extends RecyclerView.ItemDecoration
         implements RecyclerView.OnChildAttachStateChangeListener {
     /**
      * 侧滑显示的布局 跟随 在滑动布局的下面的标记  看场景选择
@@ -306,7 +307,7 @@ public class RvItemSideslipHelper extends RecyclerView.ItemDecoration
 
     private final RecyclerView.OnItemTouchListener mOnItemTouchListener = new RecyclerView.OnItemTouchListener() {
         @Override
-        public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent event) {
+        public boolean onInterceptTouchEvent(@NonNull RecyclerView recyclerView, @NonNull MotionEvent event) {
             mGestureDetector.onTouchEvent(event);
             if (DEBUG) {
                 Log.d(TAG, "intercept: x:" + event.getX() + ",y:" + event.getY() + ", " + event);
@@ -322,7 +323,7 @@ public class RvItemSideslipHelper extends RecyclerView.ItemDecoration
                 if (mSelected == null) {
                     final RecoverAnimation animation = findAnimation(event);
                     if (animation != null) {
-                        //这里是当item侧滑已经展开的时候.如果animation不为null 说明Item的侧滑是展开的状态  需要进行关闭
+                        // 这里是当item侧滑已经展开的时候.如果animation不为null 说明Item的侧滑是展开的状态  需要进行关闭
                         mInitialTouchX -= animation.mX;
                         mInitialTouchY -= animation.mY;
                         endRecoverAnimation(animation.mViewHolder, true);
@@ -341,7 +342,7 @@ public class RvItemSideslipHelper extends RecyclerView.ItemDecoration
                 }
             } else if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
                 closePreItem = false;
-                //这边是新增的
+                // 这边是新增的
                 if (mClick && action == MotionEvent.ACTION_UP) {
                     doChildClickEvent(event.getRawX(), event.getRawY());
                 }
@@ -517,7 +518,7 @@ public class RvItemSideslipHelper extends RecyclerView.ItemDecoration
      *
      * @param callback The Callback which controls the behavior of this touch helper.
      */
-    public RvItemSideslipHelper(Callback callback) {
+    public XItemSideslipHelper(Callback callback) {
         mCallback = callback;
     }
 
@@ -554,7 +555,7 @@ public class RvItemSideslipHelper extends RecyclerView.ItemDecoration
             setupCallbacks();
             mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (newState == RecyclerView.SCROLL_STATE_DRAGGING && mPreOpened != null) {
                         closeOpenedPreItem(mPreOpened);
@@ -604,8 +605,8 @@ public class RvItemSideslipHelper extends RecyclerView.ItemDecoration
      */
     public View getItemFrontView(RecyclerView.ViewHolder viewHolder) {
         if (viewHolder == null) return null;
-        if (viewHolder instanceof IRvItemSideslipHoldExt) {
-            IRvItemSideslipHoldExt sideslipHoldExt = (IRvItemSideslipHoldExt) viewHolder;
+        if (viewHolder instanceof IXItemSideslipHoldExt) {
+            IXItemSideslipHoldExt sideslipHoldExt = (IXItemSideslipHoldExt) viewHolder;
             return sideslipHoldExt.getSlideView();
         } else {
             return viewHolder.itemView;
@@ -685,8 +686,8 @@ public class RvItemSideslipHelper extends RecyclerView.ItemDecoration
     }
 
     private float getSwipeWidth() {
-        if (mSelected instanceof IRvItemSideslipHoldExt) {
-            return ((IRvItemSideslipHoldExt) mSelected).getActionWidth();
+        if (mSelected instanceof IXItemSideslipHoldExt) {
+            return ((IXItemSideslipHoldExt) mSelected).getActionWidth();
         }
         return mRecyclerView.getWidth();
     }
@@ -1378,9 +1379,9 @@ public class RvItemSideslipHelper extends RecyclerView.ItemDecoration
                 }
             }
             int width = mRecyclerView.getWidth();
-            if (viewHolder instanceof IRvItemSideslipHoldExt && mCallback.getItemSlideType().equals(SLIDE_TYPE_ITEMVIEW)) {
-                IRvItemSideslipHoldExt IRvItemSideslipHoldExt = (IRvItemSideslipHoldExt) viewHolder;
-                width += (int) IRvItemSideslipHoldExt.getActionWidth();
+            if (viewHolder instanceof IXItemSideslipHoldExt && mCallback.getItemSlideType().equals(SLIDE_TYPE_ITEMVIEW)) {
+                IXItemSideslipHoldExt IXItemSideslipHoldExt = (IXItemSideslipHoldExt) viewHolder;
+                width += (int) IXItemSideslipHoldExt.getActionWidth();
             }
             final float threshold = width * mCallback
                     .getSwipeThreshold(viewHolder);
@@ -1456,12 +1457,12 @@ public class RvItemSideslipHelper extends RecyclerView.ItemDecoration
 
     /**
      * An interface which can be implemented by LayoutManager for better integration with
-     * {@link RvItemSideslipHelper}.
+     * {@link XItemSideslipHelper}.
      */
     public interface ViewDropHandler {
 
         /**
-         * Called by the {@link RvItemSideslipHelper} after a View is dropped over another View.
+         * Called by the {@link XItemSideslipHelper} after a View is dropped over another View.
          * <p>
          * A LayoutManager should implement this interface to get ready for the upcoming move
          * operation.
@@ -1553,9 +1554,9 @@ public class RvItemSideslipHelper extends RecyclerView.ItemDecoration
 
         static {
             if (Build.VERSION.SDK_INT >= 21) {
-                sUICallback = new RvItemSideslipUiImpl.Lollipop();
+                sUICallback = new XItemSideslipUiImpl.Lollipop();
             } else {
-                sUICallback = new RvItemSideslipUiImpl.Honeycomb();
+                sUICallback = new XItemSideslipUiImpl.Honeycomb();
             }
         }
 
@@ -1677,7 +1678,7 @@ public class RvItemSideslipHelper extends RecyclerView.ItemDecoration
          * This flag is composed of 3 sets of 8 bits, where first 8 bits are for IDLE state, next
          * 8 bits are for SWIPE state and third 8 bits are for DRAG state.
          * Each 8 bit sections can be constructed by simply OR'ing direction flags defined in
-         * {@link RvItemSideslipHelper}.
+         * {@link XItemSideslipHelper}.
          * <p>
          * For example, if you want it to allow swiping LEFT and RIGHT but only allow starting to
          * swipe by swiping RIGHT, you can return:
@@ -2017,9 +2018,9 @@ public class RvItemSideslipHelper extends RecyclerView.ItemDecoration
          *
          * @param viewHolder  The new ViewHolder that is being swiped or dragged. Might be null if
          *                    it is cleared.
-         * @param actionState One of {@link RvItemSideslipHelper#ACTION_STATE_IDLE},
-         *                    {@link RvItemSideslipHelper#ACTION_STATE_SWIPE} or
-         *                    {@link RvItemSideslipHelper#ACTION_STATE_DRAG}.
+         * @param actionState One of {@link XItemSideslipHelper#ACTION_STATE_IDLE},
+         *                    {@link XItemSideslipHelper#ACTION_STATE_SWIPE} or
+         *                    {@link XItemSideslipHelper#ACTION_STATE_DRAG}.
          * @see #clearView(RecyclerView, RecyclerView.ViewHolder)
          */
         public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {

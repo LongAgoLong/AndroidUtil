@@ -4,10 +4,10 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public abstract class RvItemSideslipViewHold extends RecyclerView.ViewHolder implements IRvItemSideslipHoldExt {
+public abstract class XItemSideslipViewHold extends RecyclerView.ViewHolder implements IXItemSideslipHoldExt {
     private boolean canSlide = true;
 
-    public RvItemSideslipViewHold(View itemView) {
+    public XItemSideslipViewHold(View itemView) {
         super(itemView);
     }
 

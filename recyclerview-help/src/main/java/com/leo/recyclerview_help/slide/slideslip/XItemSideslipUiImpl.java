@@ -30,7 +30,7 @@ import com.leo.recyclerview_help.R;
  * Package private class to keep implementations. Putting them inside ItemTouchUIUtil makes them
  * public API, which is not desired in this case.
  */
-class RvItemSideslipUiImpl {
+class XItemSideslipUiImpl {
     static class Lollipop extends Honeycomb {
         @Override
         public void onDraw(Canvas c, RecyclerView recyclerView, View view,

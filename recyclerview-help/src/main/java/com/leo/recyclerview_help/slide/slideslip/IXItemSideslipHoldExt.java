@@ -2,7 +2,7 @@ package com.leo.recyclerview_help.slide.slideslip;
 
 import android.view.View;
 
-public interface IRvItemSideslipHoldExt {
+public interface IXItemSideslipHoldExt {
 
     float getActionWidth();
 
