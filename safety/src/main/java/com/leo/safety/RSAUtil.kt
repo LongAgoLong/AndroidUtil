@@ -37,9 +37,7 @@ object RSAUtil {
     /**
      * RSA密钥长度必须是64的倍数，在512~65536之间。默认是1024
      */
-    val KEY_SIZE = 2048
-
-    val PLAIN_TEXT = "MANUTD is the greatest club in the world"
+    const val KEY_SIZE = 2048
 
     //        Map<String, byte[]> keyMap = generateKeyBytes();
     //        // 加密
@@ -67,7 +65,6 @@ object RSAUtil {
             keyMap[PRIVATE_KEY] = privateKey.encoded
             return keyMap
         } catch (e: NoSuchAlgorithmException) {
-            // TODO Auto-generated catch block
             e.printStackTrace()
         }
 
@@ -106,7 +103,7 @@ object RSAUtil {
         try {
             val factory = KeyFactory.getInstance(KEY_ALGORITHM)
             return factory
-                    .generatePrivate(pkcs8EncodedKeySpec)
+                .generatePrivate(pkcs8EncodedKeySpec)
         } catch (e: NoSuchAlgorithmException) {
             // TODO Auto-generated catch block
             e.printStackTrace()
@@ -129,15 +126,7 @@ object RSAUtil {
             val cipher = Cipher.getInstance(CIPHER_ALGORITHM)
             cipher.init(Cipher.ENCRYPT_MODE, key)
             return cipher.doFinal(plainText)
-        } catch (e: NoSuchAlgorithmException) {
-            e.printStackTrace()
-        } catch (e: NoSuchPaddingException) {
-            e.printStackTrace()
-        } catch (e: InvalidKeyException) {
-            e.printStackTrace()
-        } catch (e: IllegalBlockSizeException) {
-            e.printStackTrace()
-        } catch (e: BadPaddingException) {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
         return null
@@ -155,15 +144,7 @@ object RSAUtil {
             val cipher = Cipher.getInstance(CIPHER_ALGORITHM)
             cipher.init(Cipher.DECRYPT_MODE, key)
             return String(cipher.doFinal(encodedText))
-        } catch (e: NoSuchAlgorithmException) {
-            e.printStackTrace()
-        } catch (e: NoSuchPaddingException) {
-            e.printStackTrace()
-        } catch (e: InvalidKeyException) {
-            e.printStackTrace()
-        } catch (e: IllegalBlockSizeException) {
-            e.printStackTrace()
-        } catch (e: BadPaddingException) {
+        } catch (e: Exception) {
             e.printStackTrace()
         }
         return null

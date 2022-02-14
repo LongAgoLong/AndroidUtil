@@ -13,8 +13,8 @@ import java.util.concurrent.atomic.AtomicInteger
  * Description:线程安全的数据库操作辅助类
  */
 class DBPerformHelper(
-        private val sqLiteOpenHelper: SQLiteOpenHelper,
-        private val idbCursorToBean: IDBCursorToBean
+    private val sqLiteOpenHelper: SQLiteOpenHelper,
+    private val idbCursorToBean: IDBCursorToBean
 ) : IDBPerformDefine {
     private var sqliteDb: SQLiteDatabase? = null
 
@@ -107,7 +107,12 @@ class DBPerformHelper(
      * @param where     筛选条件
      * @param whereArgs 筛选值
      */
-    override fun update(tableName: String, values: ContentValues, where: String, vararg whereArgs: String) {
+    override fun update(
+        tableName: String,
+        values: ContentValues,
+        where: String,
+        vararg whereArgs: String
+    ) {
         sqliteDb!!.update(tableName, values, where, whereArgs)
     }
 
@@ -119,29 +124,56 @@ class DBPerformHelper(
      * @param selectionArgs 筛选值
      * @return
      */
-    override fun query(tableName: String, selection: String?, vararg selectionArgs: String?): Cursor {
+    override fun query(
+        tableName: String,
+        selection: String?,
+        vararg selectionArgs: String?
+    ): Cursor {
         return query(tableName, ROWS_NOT_LIMIT, selection, *selectionArgs)
     }
 
-    override fun query(tableName: String, limit: Long, selection: String?, vararg selectionArgs: String?): Cursor {
+    override fun query(
+        tableName: String,
+        limit: Long,
+        selection: String?,
+        vararg selectionArgs: String?
+    ): Cursor {
         return if (limit == ROWS_NOT_LIMIT) {
             sqliteDb!!.query(tableName, null, selection, selectionArgs, null, null, null)
         } else {
-            sqliteDb!!.query(tableName, null, selection, selectionArgs, null, null, null, limit.toString())
+            sqliteDb!!.query(
+                tableName,
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null,
+                limit.toString()
+            )
         }
     }
 
-    override fun <T> query(tableName: String, cls: Class<T>?, selection: String?, vararg selectionArgs: String?): List<T> {
+    override fun <T> query(
+        tableName: String,
+        cls: Class<T>?,
+        selection: String?,
+        vararg selectionArgs: String?
+    ): List<T> {
         return query(tableName, cls, ROWS_NOT_LIMIT, selection, *selectionArgs)
     }
 
-    override fun <T> query(tableName: String, cls: Class<T>?, limit: Long, selection: String?, vararg selectionArgs: String?): List<T> {
+    override fun <T> query(
+        tableName: String,
+        cls: Class<T>?,
+        limit: Long,
+        selection: String?,
+        vararg selectionArgs: String?
+    ): List<T> {
         val list: MutableList<T> = ArrayList()
         val cursor = query(tableName, limit, selection, *selectionArgs)
         while (cursor.moveToNext()) {
-            idbCursorToBean.run {
-                list.add(onTrans(cursor, cls))
-            }
+            list.add(idbCursorToBean.onTrans(cursor, cls))
         }
         cursor.close()
         return list
@@ -155,7 +187,11 @@ class DBPerformHelper(
      * @param selectionArgs 筛选值
      * @return
      */
-    override fun isDataExist(tableName: String, selection: String?, vararg selectionArgs: String?): Boolean {
+    override fun isDataExist(
+        tableName: String,
+        selection: String?,
+        vararg selectionArgs: String?
+    ): Boolean {
         val cursor = query(tableName, selection, *selectionArgs)
         val moveToNext = cursor.moveToNext()
         if (!cursor.isClosed) {
@@ -172,7 +208,12 @@ class DBPerformHelper(
      * @param selection     筛选条件
      * @param selectionArgs 筛选值
      */
-    override fun insertOrUpdate(tableName: String, values: ContentValues, selection: String, vararg selectionArgs: String) {
+    override fun insertOrUpdate(
+        tableName: String,
+        values: ContentValues,
+        selection: String,
+        vararg selectionArgs: String
+    ) {
         if (isDataExist(tableName, selection, *selectionArgs)) {
             update(tableName, values, selection, *selectionArgs)
         } else {

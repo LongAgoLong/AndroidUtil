@@ -1,4 +1,4 @@
-package com.leo.system.callback
+package com.leo.system.database.callback
 
 interface IETClearFocus {
     fun onClearFocus()

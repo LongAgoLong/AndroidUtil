@@ -21,16 +21,12 @@ object StatusBarHelper {
      * @param color
      */
     fun setColorRes(activity: Activity?, @ColorRes color: Int) {
-        if (null == activity) {
-            return
-        }
+        activity ?: return
         setColor(activity, activity.resources.getColor(color))
     }
 
     fun setColor(activity: Activity?, @ColorInt color: Int) {
-        if (null == activity) {
-            return
-        }
+        activity ?: return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val window = activity.window
             if (null != window) {
@@ -45,12 +41,16 @@ object StatusBarHelper {
     fun setLightMode(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             try {
-                if (RomUtil.rom() == RomTarget.FLYME) {
-                    FlymeStatusbarColorUtils.setStatusBarDarkIcon(activity, true)
-                } else if (RomUtil.rom() == RomTarget.MIUI) {
-                    miuiSetStatusBarLightMode(activity.window, true)
-                } else {
-                    setAndroidNativeLightStatusBar(activity, true)
+                when (RomUtil.rom()) {
+                    RomTarget.FLYME -> {
+                        FlymeStatusbarColorUtils.setStatusBarDarkIcon(activity, true)
+                    }
+                    RomTarget.MIUI -> {
+                        miuiSetStatusBarLightMode(activity.window, true)
+                    }
+                    else -> {
+                        setAndroidNativeLightStatusBar(activity, true)
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -61,12 +61,16 @@ object StatusBarHelper {
     fun setDarkMode(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             try {
-                if (RomUtil.rom() == RomTarget.FLYME) {
-                    FlymeStatusbarColorUtils.setStatusBarDarkIcon(activity, false)
-                } else if (RomUtil.rom() == RomTarget.MIUI) {
-                    miuiSetStatusBarLightMode(activity.window, false)
-                } else {
-                    setAndroidNativeLightStatusBar(activity, false)
+                when (RomUtil.rom()) {
+                    RomTarget.FLYME -> {
+                        FlymeStatusbarColorUtils.setStatusBarDarkIcon(activity, false)
+                    }
+                    RomTarget.MIUI -> {
+                        miuiSetStatusBarLightMode(activity.window, false)
+                    }
+                    else -> {
+                        setAndroidNativeLightStatusBar(activity, false)
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -120,6 +124,7 @@ object StatusBarHelper {
 
     /**
      * 打开通知栏
+     * @param context Context
      */
     @RequiresPermission(android.Manifest.permission.EXPAND_STATUS_BAR)
     fun expand(context: Context) {
@@ -145,6 +150,7 @@ object StatusBarHelper {
 
     /**
      * 关闭通知栏
+     * @param context Context
      */
     fun collapse(context: Context) {
         try {
@@ -152,8 +158,7 @@ object StatusBarHelper {
             field.isAccessible = true
             val name = field.get(Context::class.java) as String
             val service = context.getSystemService(name)
-            val statusBarManager = Class
-                .forName("android.app.StatusBarManager")
+            val statusBarManager = Class.forName("android.app.StatusBarManager")
             val expand: Method = if (Build.VERSION.SDK_INT <= 16) {
                 statusBarManager.getMethod("collapse")
             } else {

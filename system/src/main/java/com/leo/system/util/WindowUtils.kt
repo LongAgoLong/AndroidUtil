@@ -107,7 +107,8 @@ object WindowUtils {
         val window = context.window ?: return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            window.decorView.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = Color.TRANSPARENT
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -120,7 +121,7 @@ object WindowUtils {
                 - getStatusBarHeight(paramActivity)
                 - getAppHeight(paramActivity))
         val preferences = paramActivity
-                .getSharedPreferences("com.leo.sp_key", Context.MODE_PRIVATE)
+            .getSharedPreferences("com.leo.sp_key", Context.MODE_PRIVATE)
         if (height == 0) {
             //295dp-787为默认软键盘高度 基本差不离
             height = preferences.getInt("KeyboardHeight", dp2px(paramActivity, 295f))
@@ -132,21 +133,27 @@ object WindowUtils {
 
     /**
      * 隐藏虚拟按键，并且全屏
+     * @param activity Activity
      */
-    fun hideBottomUIMenu(activity: Activity) {
+    fun hideNavigationBar(activity: Activity) {
         val decorView = activity.window.decorView
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB
-                && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) { // lower api
-            decorView.setSystemUiVisibility(View.GONE);
+            && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT
+        ) { // lower api
+            decorView.systemUiVisibility = View.GONE;
         } else if (Build.VERSION.SDK_INT >= 19) {
             // for new api versions.
-            val uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN;
-            decorView.setSystemUiVisibility(uiOptions);
+            val uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
+                    View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.systemUiVisibility = uiOptions;
         }
     }
 
     /**
      * 得到设备屏幕的高度
+     * @param context Context
+     * @return Int
      */
     fun getScreenHeight(context: Context): Int {
         val dm = context.resources.displayMetrics
@@ -155,6 +162,8 @@ object WindowUtils {
 
     /**
      * 得到设备屏幕的宽度
+     * @param context Context
+     * @return Int
      */
     fun getScreenWidth(context: Context): Int {
         val dm = context.resources.displayMetrics
@@ -163,6 +172,8 @@ object WindowUtils {
 
     /**
      * statusBar高度
+     * @param paramActivity Activity
+     * @return Int
      */
     fun getStatusBarHeight(paramActivity: Activity): Int {
         val localRect = Rect()
@@ -173,6 +184,8 @@ object WindowUtils {
 
     /**
      * 可见屏幕高度
+     * @param paramActivity Activity
+     * @return Int
      */
     fun getAppHeight(paramActivity: Activity): Int {
         val localRect = Rect()
@@ -194,26 +207,32 @@ object WindowUtils {
 
     /**
      * 获取actiobar高度
+     * @param paramActivity Activity
+     * @return Int
      */
     fun getActionBarHeight(paramActivity: Activity): Int {
         val attrs = intArrayOf(android.R.attr.actionBarSize)
         val ta = paramActivity.obtainStyledAttributes(attrs)
         return ta.getDimensionPixelSize(0, dp2px(paramActivity, 48f))
-                .also {
-                    ta.recycle()
-                }
+            .also {
+                ta.recycle()
+            }
     }
 
     /**
      * 全屏
+     * @param window Window?
      */
     fun fullScreen(window: Window?) {
-        window?.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        window?.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
     }
 
     /**
      * 保持屏幕常亮
+     * @param window Window?
      */
     fun keepScreenOn(window: Window?) {
         window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -221,6 +240,9 @@ object WindowUtils {
 
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
+     * @param context Context
+     * @param dpValue Float
+     * @return Int
      */
     @JvmOverloads
     fun dp2px(context: Context = ContextHelper.context, dpValue: Float): Int {
@@ -230,6 +252,9 @@ object WindowUtils {
 
     /**
      * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
+     * @param context Context
+     * @param pxValue Float
+     * @return Int
      */
     @JvmOverloads
     fun px2dp(context: Context = ContextHelper.context, pxValue: Float): Int {

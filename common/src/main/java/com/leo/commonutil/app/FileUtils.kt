@@ -1,21 +1,23 @@
 package com.leo.commonutil.app
 
-import android.os.Build
-import android.provider.DocumentsContract
-import android.os.Environment
-import android.content.ContentUris
-import android.provider.MediaStore
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.text.TextUtils
 import android.webkit.MimeTypeMap
+import androidx.core.content.FileProvider
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.text.DecimalFormat
 import java.util.regex.Pattern
+
 
 /**
  * Created by LEO
@@ -25,7 +27,11 @@ import java.util.regex.Pattern
 object FileUtils {
     fun getPath(context: Context, uri: Uri): String? {
         // DocumentProvider
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, uri)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(
+                context,
+                uri
+            )
+        ) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
                 val docId = DocumentsContract.getDocumentId(uri)
@@ -38,7 +44,8 @@ object FileUtils {
                 // DownloadsProvider
                 val id = DocumentsContract.getDocumentId(uri)
                 val contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), id.toLong())
+                    Uri.parse("content://downloads/public_downloads"), id.toLong()
+                )
                 return getDataColumn(context, contentUri, null, null)
             } else if (isMediaDocument(uri)) {
                 // MediaProvider
@@ -55,7 +62,7 @@ object FileUtils {
                 }
                 val selection = "_id=?"
                 val selectionArgs = arrayOf(
-                        split[1]
+                    split[1]
                 )
                 return getDataColumn(context, contentUri, selection, selectionArgs)
             }
@@ -79,11 +86,18 @@ object FileUtils {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    fun getDataColumn(context: Context, uri: Uri?, selection: String?, selectionArgs: Array<String>?): String {
+    fun getDataColumn(
+        context: Context,
+        uri: Uri?,
+        selection: String?,
+        selectionArgs: Array<String>?
+    ): String {
         var cursor: Cursor? = null
         try {
-            cursor = context.contentResolver.query(uri!!, arrayOf(MediaStore.Images.ImageColumns.DATA),
-                    selection, selectionArgs, null)
+            cursor = context.contentResolver.query(
+                uri!!, arrayOf(MediaStore.Images.ImageColumns.DATA),
+                selection, selectionArgs, null
+            )
             if (null != cursor) {
                 if (cursor.moveToFirst()) {
                     val index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
@@ -143,7 +157,7 @@ object FileUtils {
      * @param fileS
      * @return
      */
-    fun formetFileSize(fileS: Long): String { //转换文件大小
+    fun formatFileSize(fileS: Long): String { //转换文件大小
         val df = DecimalFormat("#.00")
         var fileSizeString = ""
         fileSizeString = if (fileS < 1024) {
@@ -236,5 +250,17 @@ object FileUtils {
             }
         }
         return null
+    }
+
+    fun getUri(context: Context, file: File): Uri {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                file
+            )
+        } else {
+            Uri.fromFile(file)
+        }
     }
 }
