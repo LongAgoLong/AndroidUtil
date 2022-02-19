@@ -20,6 +20,7 @@ class RootActivity : BaseActivity(), View.OnClickListener {
         mBinding.locationBtn.setOnClickListener(this)
         mBinding.pinyinBtn.setOnClickListener(this)
         mBinding.rvDeleteBtn.setOnClickListener(this)
+        mBinding.trieBtn.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -27,6 +28,7 @@ class RootActivity : BaseActivity(), View.OnClickListener {
             R.id.locationBtn -> IntentHelper.startActivity(this, LocationActivity::class.java)
             R.id.pinyinBtn -> IntentHelper.startActivity(this, PinyinActivity::class.java)
             R.id.rvDeleteBtn -> IntentHelper.startActivity(this, RvDeleteItemActivity::class.java)
+            R.id.trieBtn -> IntentHelper.startActivity(this, TrieActivity::class.java)
         }
     }
 }

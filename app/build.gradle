@@ -45,6 +45,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$rootProject.xappcompat_version"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.xconstraintlayoutVersion"
     implementation "androidx.recyclerview:recyclerview:$rootProject.xrecyclerview_version"
+    implementation project(path: ':trie')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation "androidx.test.ext:junit:$rootProject.xjunit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.xespresso_core_version"
