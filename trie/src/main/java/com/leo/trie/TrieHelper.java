@@ -1,12 +1,11 @@
 package com.leo.trie;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 public class TrieHelper {
-    private volatile static TrieHelper mInstance;
+    private static volatile TrieHelper mInstance;
     private final TrieNode rootNode = new TrieNode();
 
     private TrieHelper() {
@@ -54,9 +53,9 @@ public class TrieHelper {
         int begin = 0; // 单词遍历起点指针
         int position = 0; // 文本字符遍历指针
         TrieNode tempNode = rootNode; // 对应字典树上的遍历指针
-
+        int length = text.length();
         // 对文本的每个字符进行遍历
-        while (position < text.length()) {
+        while (position < length) {
             Character c = text.charAt(position);
 
             // 如果当前字符是干扰符号，则直接跳过；
@@ -82,7 +81,7 @@ public class TrieHelper {
                     tempNode = rootNode;
                     begin = position;
                 }
-                if (position == text.length()) {
+                if (position == length) {
                     for (int i = begin; i < position; i++) {
                         sb.append(text.charAt(i));
                     }
