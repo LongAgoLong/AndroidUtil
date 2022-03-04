@@ -45,7 +45,17 @@ public class TrieHelper {
         }
     }
 
+
     public String filter(String text) {
+        return filter(text, true);
+    }
+
+    /**
+     * @param text
+     * @param isBacktracking 是否使用回溯方式
+     * @return
+     */
+    public String filter(String text, boolean isBacktracking) {
         if (TextUtils.isEmpty(text)) {
             return text;
         }
@@ -57,7 +67,6 @@ public class TrieHelper {
         // 对文本的每个字符进行遍历
         while (position < length) {
             Character c = text.charAt(position);
-
             // 如果当前字符是干扰符号，则直接跳过；
             // 如果字典树遍历还未开始则将头指针begin++，并且将当前字符添加到暂存区sb中
             if (isSymbol(c)) {
@@ -88,14 +97,24 @@ public class TrieHelper {
                     break;
                 }
             } else {
-                // 如果当前Node下不包含c字符对应的Node，则position指针移动一位，并将begin与position同步
-                // 同时将字典树的指针tempNode回归到根结点
-                // 将begin到position之间的字符串添加到暂存区sb
-                position++;
-                for (int i = begin; i < position; i++) {
-                    sb.append(text.charAt(i));
+                if (isBacktracking) {
+                    // 带回溯，从begin的下一位开始
+                    if (begin < length) {
+                        sb.append(text.charAt(begin));
+                    }
+                    begin++;
+                    position = begin;
+                } else {
+                    // 不带回溯，从position的下一位开始
+                    // 如果当前Node下不包含c字符对应的Node，则position指针移动一位，并将begin与position同步
+                    // 同时将字典树的指针tempNode回归到根结点
+                    // 将begin到position之间的字符串添加到暂存区sb
+                    position++;
+                    for (int i = begin; i < position; i++) {
+                        sb.append(text.charAt(i));
+                    }
+                    begin = position;
                 }
-                begin = position;
                 tempNode = rootNode;
             }
         }
