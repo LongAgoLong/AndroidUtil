@@ -9,22 +9,26 @@ import com.leo.trie.TrieHelper
 
 class TrieActivity : BaseActivity() {
     private lateinit var mBinding: ActivityTrieBinding
+    private lateinit var trieHelp: TrieHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        trieHelp = TrieHelper()
+
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_trie)
         mBinding.ensureBtn.setOnClickListener {
             val text = mBinding.inputEt.text
             if (text.isNullOrEmpty()) {
                 return@setOnClickListener
             }
-            val filter = TrieHelper.getInstance().filter(text.toString())
+            val filter = trieHelp.filter(text.toString())
             mBinding.resultTv.append("$filter\n")
         }
 
         ThreadPoolHelp.execute {
-            TrieHelper.getInstance().addWord("左全", "左前")
-            TrieHelper.getInstance().addWord("右全", "右前")
-            TrieHelper.getInstance().addWord("carplay", "CarPlay")
+            trieHelp.addWord("左全", "左前")
+            trieHelp.addWord("右全", "右前")
+            trieHelp.addWord("carplay", "CarPlay")
         }
     }
 

@@ -5,22 +5,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 public class TrieHelper {
-    private static volatile TrieHelper mInstance;
     private final TrieNode rootNode = new TrieNode();
-
-    private TrieHelper() {
-    }
-
-    public static TrieHelper getInstance() {
-        if (mInstance == null) {
-            synchronized (TrieHelper.class) {
-                if (mInstance == null) {
-                    mInstance = new TrieHelper();
-                }
-            }
-        }
-        return mInstance;
-    }
 
     /**
      * 对每一个敏感词进行遍历，将该关键字的每个字添加到字典树的每个结点上
