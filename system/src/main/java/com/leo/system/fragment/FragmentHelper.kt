@@ -1,4 +1,4 @@
-package com.leo.system.util
+package com.leo.system.fragment
 
 import androidx.annotation.IdRes
 import androidx.annotation.NonNull
@@ -16,11 +16,13 @@ object FragmentHelper {
      */
     fun clear(@NonNull fragmentManager: FragmentManager) {
         val fragments = fragmentManager.fragments
-        //遍历list容器,清除所有的碎片
+        // 遍历list容器,清除所有的碎片
         if (fragments.isNotEmpty()) {
+            val beginTransaction = fragmentManager.beginTransaction()
             for (fragmentTemp in fragments) {
-                fragmentManager.beginTransaction().remove(fragmentTemp).commit()
+                beginTransaction.remove(fragmentTemp)
             }
+            beginTransaction.commit()
         }
     }
 
@@ -32,24 +34,32 @@ object FragmentHelper {
      * @param viewGroupId Int
      */
     fun switch(
-        @NonNull fragmentManager: FragmentManager, @NonNull fragment: Fragment,
-        @NonNull tag: String, @IdRes viewGroupId: Int
+        @NonNull fragmentManager: FragmentManager,
+        @NonNull fragment: Fragment,
+        @NonNull tag: String,
+        @IdRes viewGroupId: Int
     ) {
         val fragments = fragmentManager.fragments
         // 遍历list容器,隐藏所有的fragment
-        for (fragmentTemp in fragments) {
-            if (fragmentTemp.isHidden) {
-                continue
+        if (!fragments.isNullOrEmpty()) {
+            val beginTransaction = fragmentManager.beginTransaction()
+            for (fragmentTemp in fragments) {
+                if (fragmentTemp.isHidden) {
+                    continue
+                }
+                beginTransaction.hide(fragmentTemp)
             }
-            fragmentManager.beginTransaction().hide(fragmentTemp).commit()
+            beginTransaction.commit()
         }
+        val transaction = fragmentManager.beginTransaction()
         if (!fragment.isAdded
             && fragmentManager.findFragmentByTag(tag) == null
             && !fragments.contains(fragment)
         ) {
-            fragmentManager.beginTransaction().add(viewGroupId, fragment, tag).commit()
+            transaction.add(viewGroupId, fragment, tag)
         } else {
-            fragmentManager.beginTransaction().show(fragment).commit()
+            transaction.show(fragment)
         }
+        transaction.commit()
     }
 }
