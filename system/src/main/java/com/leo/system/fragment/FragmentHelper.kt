@@ -1,6 +1,6 @@
 package com.leo.system.fragment
 
-import androidx.annotation.IdRes
+import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -13,8 +13,9 @@ object FragmentHelper {
     /**
      * 清空FragmentManager
      * @param fragmentManager FragmentManager
+     * @param group ViewGroup?
      */
-    fun clear(@NonNull fragmentManager: FragmentManager) {
+    fun clear(@NonNull fragmentManager: FragmentManager, group: ViewGroup? = null) {
         val fragments = fragmentManager.fragments
         // 遍历list容器,清除所有的碎片
         if (fragments.isNotEmpty()) {
@@ -24,6 +25,7 @@ object FragmentHelper {
             }
             beginTransaction.commit()
         }
+        group?.removeAllViews()
     }
 
     /**
@@ -31,13 +33,13 @@ object FragmentHelper {
      * @param fragmentManager FragmentManager
      * @param fragment Fragment
      * @param tag String
-     * @param viewGroupId Int
+     * @param group ViewGroup
      */
     fun switch(
         @NonNull fragmentManager: FragmentManager,
         @NonNull fragment: Fragment,
         @NonNull tag: String,
-        @IdRes viewGroupId: Int
+        group: ViewGroup
     ) {
         val fragments = fragmentManager.fragments
         // 遍历list容器,隐藏所有的fragment
@@ -54,9 +56,8 @@ object FragmentHelper {
         val transaction = fragmentManager.beginTransaction()
         if (!fragment.isAdded
             && fragmentManager.findFragmentByTag(tag) == null
-            && !fragments.contains(fragment)
         ) {
-            transaction.add(viewGroupId, fragment, tag)
+            transaction.add(group.id, fragment, tag)
         } else {
             transaction.show(fragment)
         }
