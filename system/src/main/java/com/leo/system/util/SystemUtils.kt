@@ -18,13 +18,10 @@ import android.provider.Settings
 import android.telephony.TelephonyManager
 import android.text.TextUtils
 import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
-import com.leo.system.database.callback.IETClearFocus
 import com.leo.system.context.ContextHelper
 import com.leo.system.context.ContextHelper.context
 import java.io.BufferedReader
@@ -34,37 +31,6 @@ import java.io.UnsupportedEncodingException
 import java.util.*
 
 object SystemUtils {
-
-    /**
-     * 设置外部点击隐藏软键盘,传入根布局.
-     *
-     * @param context
-     * @param view
-     */
-    fun setCancelOnTouchOutsideET(context: Context, view: View) {
-        setCancelOnTouchOutsideET(context, view, null)
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    fun setCancelOnTouchOutsideET(context: Context, view: View,
-                                  iETClearFocus: IETClearFocus?) {
-        //Set up touch listener for non-text box views to hide keyboard.
-        if (view !is EditText) {
-            view.setOnTouchListener { v: View?, event: MotionEvent? ->
-                KeyboardHelper.hideSoftKeyboard(context as Activity)
-                iETClearFocus?.onClearFocus()
-                false
-            }
-        }
-
-        //If a layout container, iterate over children and seed recursion.
-        if (view is ViewGroup) {
-            for (i in 0 until view.childCount) {
-                val innerView = view.getChildAt(i)
-                setCancelOnTouchOutsideET(context, innerView, iETClearFocus)
-            }
-        }
-    }
 
     /**
      * 设置scrollview中的Edittext可滚动
@@ -113,7 +79,8 @@ object SystemUtils {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive")
         } else {
-            val apkUri = FileProvider.getUriForFile(context, context.packageName + ".fileprovider", file!!)
+            val apkUri =
+                FileProvider.getUriForFile(context, context.packageName + ".fileprovider", file!!)
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             intent.setDataAndType(apkUri, "application/vnd.android.package-archive")
         }
@@ -141,13 +108,19 @@ object SystemUtils {
      * @return 返回检查结果
      */
     @JvmOverloads
-    fun checkPermissions(context: Context = ContextHelper.context, vararg permissions: String?): Boolean {
+    fun checkPermissions(
+        context: Context = ContextHelper.context,
+        vararg permissions: String?
+    ): Boolean {
         if (permissions.isEmpty()) {
             return true
         }
         var isGranted = true
         permissions.forEach {
-            isGranted = ActivityCompat.checkSelfPermission(context, it!!) == PackageManager.PERMISSION_GRANTED
+            isGranted = ActivityCompat.checkSelfPermission(
+                context,
+                it!!
+            ) == PackageManager.PERMISSION_GRANTED
             if (!isGranted) {
                 return@forEach
             }
@@ -227,8 +200,10 @@ object SystemUtils {
      * 判断是否打开了允许虚拟位置
      */
     fun isAllowMockLocation(context: Activity): Boolean {
-        var isOpen = Settings.Secure.getInt(context.contentResolver,
-                Settings.Secure.ALLOW_MOCK_LOCATION, 0) != 0
+        var isOpen = Settings.Secure.getInt(
+            context.contentResolver,
+            Settings.Secure.ALLOW_MOCK_LOCATION, 0
+        ) != 0
         /**
          * 该判断API是androidM以下的API,由于Android M中已经没有了关闭允许模拟位置的入口,
          * 所以这里一旦检测到开启了模拟位置,并且是android M以上,则默认设置为未有开启模拟位置
@@ -272,7 +247,8 @@ object SystemUtils {
     fun isServiceRunning(context: Context, className: String): Boolean {
         val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         // 获取正在运行的服务
-        val runningServices = activityManager.getRunningServices(1000) //maxNum 返回正在运行的服务的上限个数,最多返回多少个服务
+        val runningServices =
+            activityManager.getRunningServices(1000) //maxNum 返回正在运行的服务的上限个数,最多返回多少个服务
         for (runningServiceInfo in runningServices) {
             val service = runningServiceInfo.service
             // 获取正在运行的服务的全类名
@@ -300,7 +276,10 @@ object SystemUtils {
             // 获取电源管理器对象
             val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
             // 获取PowerManager.WakeLock对象,后面的参数|表示同时传入两个值,最后的是LogCat里用的Tag
-            val wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.SCREEN_DIM_WAKE_LOCK, "bright")
+            val wl = pm.newWakeLock(
+                PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.SCREEN_DIM_WAKE_LOCK,
+                "bright"
+            )
             // 点亮屏幕
             wl.acquire()
             // 释放
@@ -323,19 +302,35 @@ object SystemUtils {
         if (uuid == null) {
             synchronized(PREFS_FILE) {
                 if (uuid == null) {
-                    val prefs = context.applicationContext.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE)
+                    val prefs = context.applicationContext.getSharedPreferences(
+                        PREFS_FILE,
+                        Context.MODE_PRIVATE
+                    )
                     val id = prefs.getString(PREFS_DEVICE_ID, null)
                     if (id != null) {
                         uuid = id
                     } else {
-                        val androidId = Settings.Secure.getString(context.applicationContext.contentResolver, Settings.Secure.ANDROID_ID)
+                        val androidId = Settings.Secure.getString(
+                            context.applicationContext.contentResolver,
+                            Settings.Secure.ANDROID_ID
+                        )
                         uuid = try {
                             if ("9774d56d682e549c" != androidId) {
-                                UUID.nameUUIDFromBytes(androidId.toByteArray(charset("utf8"))).toString()
+                                UUID.nameUUIDFromBytes(androidId.toByteArray(charset("utf8")))
+                                    .toString()
                             } else {
-                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                                    val deviceId = (context.applicationContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager).deviceId
-                                    if (deviceId != null) UUID.nameUUIDFromBytes(deviceId.toByteArray(charset("utf8"))).toString() else UUID.randomUUID().toString()
+                                if (ActivityCompat.checkSelfPermission(
+                                        context,
+                                        Manifest.permission.READ_PHONE_STATE
+                                    ) == PackageManager.PERMISSION_GRANTED
+                                ) {
+                                    val deviceId =
+                                        (context.applicationContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager).deviceId
+                                    if (deviceId != null) UUID.nameUUIDFromBytes(
+                                        deviceId.toByteArray(
+                                            charset("utf8")
+                                        )
+                                    ).toString() else UUID.randomUUID().toString()
                                 } else {
                                     UUID.randomUUID().toString()
                                 }
@@ -370,7 +365,7 @@ object SystemUtils {
 
         // 通过getPackageManager()的queryIntentActivities方法遍历
         val resolveinfoList = context.packageManager
-                .queryIntentActivities(resolveIntent, 0)
+            .queryIntentActivities(resolveIntent, 0)
         val resolveinfo = resolveinfoList.iterator().next()
         if (resolveinfo != null) {
             // packagename = 参数packname

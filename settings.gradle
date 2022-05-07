@@ -1,2 +1,3 @@
 include ':app', ':common', ':system', ':safety', ':imageproxy', ':imageproxy-ext-glide', ':recyclerview-help', ':pinyinlib'
 include ':trie'
+include ':usblibrary'
