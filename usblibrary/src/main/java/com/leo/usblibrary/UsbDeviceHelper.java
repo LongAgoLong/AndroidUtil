@@ -10,6 +10,9 @@ import android.hardware.usb.UsbManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.ArrayMap;
+
+import androidx.annotation.Nullable;
 
 import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.github.mjdev.libaums.fs.FileSystem;
@@ -23,6 +26,7 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class UsbDeviceHelper {
     private static final String TAG = "UsbDeviceManager";
@@ -184,6 +188,84 @@ public class UsbDeviceHelper {
     }
 
     /**
+     * 搜索文件
+     *
+     * @param targetFileName
+     * @param rootDirectory
+     * @param searchType
+     * @param iUsbFileSearchRule
+     * @return
+     */
+    public ArrayMap<String, List<UsbFile>> search(String targetFileName,
+                                                  UsbFile rootDirectory,
+                                                  @SearchType int searchType,
+                                                  @Nullable IUsbFileSearchRule iUsbFileSearchRule) {
+        ArrayMap<String, List<UsbFile>> result = new ArrayMap<>();
+        search(targetFileName, rootDirectory, searchType, result, iUsbFileSearchRule);
+        return result;
+    }
+
+    private void search(String targetFileName,
+                        UsbFile cFolder,
+                        @SearchType int searchType,
+                        ArrayMap<String, List<UsbFile>> result,
+                        @Nullable IUsbFileSearchRule iUsbFileSearchRule) {
+        try {
+            UsbFile[] usbFiles = cFolder.listFiles();
+            if (usbFiles.length == 0) {
+                return;
+            }
+            for (UsbFile file : usbFiles) {
+                if (searchType == SearchType.FILE) {
+                    if (file.isDirectory()) {
+                        search(targetFileName, file, searchType, result, iUsbFileSearchRule);
+                        continue;
+                    }
+                    collect(targetFileName, cFolder, file, result, iUsbFileSearchRule);
+                } else if (searchType == SearchType.FOLDER) {
+                    if (file.isDirectory()) {
+                        collect(targetFileName, cFolder, file, result, iUsbFileSearchRule);
+                        search(targetFileName, file, searchType, result, iUsbFileSearchRule);
+                    }
+                } else if (searchType == SearchType.ANY) {
+                    collect(targetFileName, cFolder, file, result, iUsbFileSearchRule);
+                    if (file.isDirectory()) {
+                        search(targetFileName, file, searchType, result, iUsbFileSearchRule);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void collect(String targetFileName,
+                         UsbFile cFolder,
+                         UsbFile file,
+                         ArrayMap<String, List<UsbFile>> result,
+                         @Nullable IUsbFileSearchRule iUsbFileSearchRule) {
+        if (iUsbFileSearchRule != null) {
+            if (iUsbFileSearchRule.isMatch(targetFileName, file)) {
+                String absolutePath = cFolder.getAbsolutePath();
+                List<UsbFile> list = result.get(absolutePath);
+                if (list == null) {
+                    list = new ArrayList<>();
+                    result.put(absolutePath, list);
+                }
+                list.add(file);
+            }
+        } else if (TextUtils.equals(file.getName(), targetFileName)) {
+            String absolutePath = cFolder.getAbsolutePath();
+            List<UsbFile> list = result.get(absolutePath);
+            if (list == null) {
+                list = new ArrayList<>();
+                result.put(absolutePath, list);
+            }
+            list.add(file);
+        }
+    }
+
+    /**
      * 拷贝文件到U盘
      *
      * @param cFolder 目标usb文件夹
@@ -271,7 +353,7 @@ public class UsbDeviceHelper {
 
     /**
      * @param directory 目标usb文件夹
-     * @param folder
+     * @param folder    需要拷贝的资源文件夹
      * @throws IOException
      */
     private void copyAll(UsbFile directory, File folder) throws IOException {
