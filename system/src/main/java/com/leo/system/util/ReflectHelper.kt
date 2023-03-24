@@ -98,7 +98,8 @@ object ReflectHelper {
         } catch (ex: IllegalAccessException) {
             handleReflectionException(ex)
             throw IllegalStateException(
-                    "Unexpected reflection exception - " + ex.javaClass.name + ": " + ex.message)
+                "Unexpected reflection exception - " + ex.javaClass.name + ": " + ex.message
+            )
         }
 
     }
@@ -121,7 +122,8 @@ object ReflectHelper {
         } catch (ex: IllegalAccessException) {
             handleReflectionException(ex)
             throw IllegalStateException(
-                    "Unexpected reflection exception - " + ex.javaClass.name + ": " + ex.message)
+                "Unexpected reflection exception - " + ex.javaClass.name + ": " + ex.message
+            )
         }
 
     }
@@ -143,7 +145,8 @@ object ReflectHelper {
         //Assert.notNull(name, "Method name must not be null");
         var searchType: Class<*>? = clazz
         while (searchType != null) {
-            val methods = if (searchType.isInterface) searchType.methods else searchType.declaredMethods
+            val methods =
+                if (searchType.isInterface) searchType.methods else searchType.declaredMethods
             for (method in methods) {
                 if (name == method.name) {
                     return method
@@ -159,7 +162,8 @@ object ReflectHelper {
         //Assert.notNull(name, "Method name must not be null");
         var searchType: Class<*>? = clazz
         while (searchType != null) {
-            val methods = if (searchType.isInterface) searchType.methods else searchType.declaredMethods
+            val methods =
+                if (searchType.isInterface) searchType.methods else searchType.declaredMethods
             for (method in methods) {
                 if (name == method.name && Arrays.equals(paramTypes, method.parameterTypes)) {
                     return method
@@ -329,7 +333,9 @@ object ReflectHelper {
      */
     fun isPublicStaticFinal(field: Field): Boolean {
         val modifiers = field.modifiers
-        return Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)
+        return Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && Modifier.isFinal(
+            modifiers
+        )
     }
 
     /**
@@ -401,7 +407,8 @@ object ReflectHelper {
      */
     fun makeAccessible(field: Field) {
         if ((!Modifier.isPublic(field.modifiers) || !Modifier.isPublic(field.declaringClass.modifiers) ||
-                        Modifier.isFinal(field.modifiers)) && !field.isAccessible) {
+                    Modifier.isFinal(field.modifiers)) && !field.isAccessible
+        ) {
             field.isAccessible = true
         }
     }
@@ -459,8 +466,10 @@ object ReflectHelper {
             try {
                 mc.doWith(method)
             } catch (ex: IllegalAccessException) {
-                throw IllegalStateException("Shouldn't be illegal to access method '" + method.name
-                        + "': " + ex)
+                throw IllegalStateException(
+                    "Shouldn't be illegal to access method '" + method.name
+                            + "': " + ex
+                )
             }
         }
         if (clazz.superclass != null) {
@@ -500,9 +509,16 @@ object ReflectHelper {
                 var knownSignature = false
                 var methodBeingOverriddenWithCovariantReturnType: Method? = null
                 for (existingMethod in methods) {
-                    if (method.name == existingMethod.name && Arrays.equals(method.parameterTypes, existingMethod.parameterTypes)) {
+                    if (method.name == existingMethod.name && Arrays.equals(
+                            method.parameterTypes,
+                            existingMethod.parameterTypes
+                        )
+                    ) {
                         // Is this a covariant return type situation?
-                        if (existingMethod.returnType != method.returnType && existingMethod.returnType.isAssignableFrom(method.returnType)) {
+                        if (existingMethod.returnType != method.returnType && existingMethod.returnType.isAssignableFrom(
+                                method.returnType
+                            )
+                        ) {
                             methodBeingOverriddenWithCovariantReturnType = existingMethod
                         } else {
                             knownSignature = true
@@ -546,7 +562,8 @@ object ReflectHelper {
                     fc.doWith(field)
                 } catch (ex: IllegalAccessException) {
                     throw IllegalStateException(
-                            "Shouldn't be illegal to access field '" + field.name + "': " + ex)
+                        "Shouldn't be illegal to access field '" + field.name + "': " + ex
+                    )
                 }
 
             }
@@ -635,5 +652,34 @@ object ReflectHelper {
          * @param field the field to check
          */
         fun matches(field: Field): Boolean
+    }
+
+    fun <T> newInstance(
+        cls: Class<T>,
+        parameterTypes: Array<Class<*>?>,
+        parameters: Array<Any?>
+    ): T {
+        return try {
+            val constructor = cls.getConstructor(*parameterTypes)
+            constructor.newInstance(*parameters)
+        } catch (e: IllegalAccessException) {
+            throw java.lang.RuntimeException(e)
+        } catch (e: InstantiationException) {
+            throw java.lang.RuntimeException(e)
+        } catch (e: NoSuchMethodException) {
+            throw java.lang.RuntimeException(e)
+        } catch (e: InvocationTargetException) {
+            throw java.lang.RuntimeException(e)
+        }
+    }
+
+    fun <T> newInstance(cls: Class<T>): T {
+        return try {
+            cls.newInstance()
+        } catch (e: IllegalAccessException) {
+            throw java.lang.RuntimeException(e)
+        } catch (e: InstantiationException) {
+            throw java.lang.RuntimeException(e)
+        }
     }
 }
